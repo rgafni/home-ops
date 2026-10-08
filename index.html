@@ -476,6 +476,44 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
 .opt-row.is-current .opt-row__name { font-weight: 800; color: var(--accent-dark); }
 .opt-row.is-current .opt-row__check { visibility: visible; }
 .opt-row.is-current .opt-row__count { background: var(--accent); color: #fff; }
+/* ---------- My day (personal portal; shown only when the server says so) ---------- */
+.me-seg { margin-bottom: var(--s5); }
+.me-seg .seg__btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 var(--s2); }
+.me-seg .chip__count { min-width: 22px; height: 22px; padding: 0 6px; border-radius: var(--r-pill); display: grid; place-items: center;
+  font-size: var(--fs-badge); font-weight: 800; background: var(--accent-soft); color: var(--accent-dark); }
+.me-seg .seg__btn.is-active .chip__count { background: rgba(255, 255, 255, .24); color: #fff; }
+.me-row { cursor: default; }
+.me-row:active { background: transparent; }
+.me-time { flex: none; width: 78px; align-self: stretch; display: flex; flex-direction: column; justify-content: center;
+  padding-left: var(--s4); font-size: var(--fs-chip); font-weight: 800; color: var(--ink); line-height: 1.15; }
+.me-time small { font-size: var(--fs-badge); font-weight: 700; color: var(--muted); letter-spacing: .02em; }
+.me-row .row__body { padding-right: var(--s4); }
+.row.is-past .row__title, .row.is-past .me-time { color: var(--muted); font-weight: 500; }
+.row.is-now { background: var(--accent-soft); }
+.row.is-now:active { background: var(--accent-soft); }
+.pill--now { background: var(--paper); color: var(--accent-dark); box-shadow: inset 0 0 0 1.5px var(--accent); }
+.dot-red { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--danger); }
+.me-empty { padding: var(--s4); font-size: var(--fs-body); font-weight: 600; color: var(--muted); }
+.me-foot { margin: var(--s6) 0 0; text-align: center; font-size: var(--fs-label); font-weight: 600; color: var(--muted); }
+.me-details { display: block; margin-top: 4px; font-size: var(--fs-meta); font-weight: 600; color: var(--muted); line-height: 1.35; overflow-wrap: anywhere; }
+.note-card { padding: var(--s4); }
+.note-card textarea { display: block; width: 100%; min-height: 150px; padding: var(--s3) var(--s4); border: 1.5px solid var(--line-strong);
+  border-radius: var(--r-md); background: var(--paper); font-size: var(--fs-item); font-weight: 500; line-height: 1.4; resize: vertical; }
+.note-card textarea::placeholder { color: var(--faint); }
+.note-card textarea:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus); }
+.note-actions { display: flex; gap: var(--s2); margin-top: var(--s3); }
+.note-actions .btn { flex: 1; }
+.mic-btn { flex: none; width: var(--tap-lg); height: var(--tap-lg); display: grid; place-items: center; padding: 0;
+  border: 1.5px solid var(--line-strong); border-radius: var(--r-md); background: var(--paper); color: var(--accent); }
+.mic-btn:active { background: var(--wash); }
+.mic-btn.is-on { border-color: var(--danger); background: var(--danger-soft); color: var(--danger); }
+.mic-live { display: flex; align-items: center; gap: var(--s2); margin-top: var(--s3); font-size: var(--fs-meta); font-weight: 700; color: var(--danger); }
+.mic-live .dot-red { animation: updPulse 1s ease-in-out infinite; }
+.sent { display: flex; align-items: center; gap: var(--s3); margin-top: var(--s4); padding: var(--s4); border-radius: var(--r-lg);
+  background: var(--accent-soft); color: var(--accent-dark); }
+.sent__icon { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #fff; }
+.sent__title { font-size: var(--fs-item); font-weight: 800; line-height: 1.2; }
+.sent__text { font-size: var(--fs-meta); font-weight: 600; color: var(--ink); }
 
   </style>
 </head>
@@ -560,6 +598,39 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
   </header>
 
   <main id="app" hidden>
+    <!-- MY DAY (personal; the server only sends it for the right link) -->
+    <section class="screen" id="screen-me" hidden>
+      <div class="seg me-seg" id="meSeg" role="tablist" aria-label="My day">
+        <button type="button" class="seg__btn is-active" data-me="today" role="tab" aria-selected="true">Today</button>
+        <button type="button" class="seg__btn" data-me="work" role="tab" aria-selected="false">Work <span class="chip__count" id="meWorkCount" hidden></span></button>
+        <button type="button" class="seg__btn" data-me="note" role="tab" aria-selected="false">Note</button>
+      </div>
+      <div id="mePane-today"><div id="meToday"></div></div>
+      <div id="mePane-work" hidden>
+        <div class="add">
+          <input class="field" id="newWork" type="text" placeholder="Add a work item…" aria-label="Add a work item" autocomplete="off" enterkeyhint="done">
+          <button type="button" class="btn" id="addWorkBtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Add</button>
+        </div>
+        <div id="meWork"></div>
+      </div>
+      <div id="mePane-note" hidden>
+        <div class="sec"><h2 class="sec__title">Send a note</h2><span class="sec__meta">to your assistant</span></div>
+        <div class="card note-card">
+          <textarea id="noteText" rows="5" placeholder="Type a note…" aria-label="Note" autocomplete="off"></textarea>
+          <div class="mic-live" id="micLive" hidden><span class="dot-red" aria-hidden="true"></span>Listening… tap the mic to stop</div>
+          <div class="note-actions">
+            <button type="button" class="mic-btn" id="micBtn" aria-label="Speak your note" hidden><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><path d="M12 18v4"/></svg></button>
+            <button type="button" class="btn" id="sendNoteBtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>Send note</button>
+          </div>
+        </div>
+        <div class="sent" id="noteSent" role="status" hidden>
+          <span class="sent__icon"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <div><div class="sent__title">Note sent</div><div class="sent__text" id="noteSentText"></div></div>
+        </div>
+        <div id="meNotes"></div>
+      </div>
+    </section>
+
     <!-- GROCERY -->
     <section class="screen" id="screen-grocery">
       <button type="button" class="picker" id="storePicker" aria-haspopup="dialog" aria-controls="storeSheetBg">
@@ -648,6 +719,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
   </main>
 
   <nav class="nav" aria-label="Main" id="mainNav" hidden>
+    <button type="button" class="nav__item" data-screen="me" id="meNavBtn" hidden><span class="nav__pill"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></span>My day</button>
     <button type="button" class="nav__item is-active" data-screen="grocery" aria-current="page"><span class="nav__pill"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span>Grocery<span class="nav__badge" id="openBadge" hidden></span></button>
     <button type="button" class="nav__item" data-screen="dinners"><span class="nav__pill"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg></span>Dinners</button>
     <button type="button" class="nav__item" data-screen="closet"><span class="nav__pill"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg></span>Closet</button>
@@ -679,7 +751,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
 
   <script>
   (function () {
-    var SCREENS = ['grocery', 'dinners', 'closet', 'todo', 'budget'];
+    var SCREENS = ['me', 'grocery', 'dinners', 'closet', 'todo', 'budget'];
     var DAY_NAMES = {
       Sun: 'Sunday', Mon: 'Monday', Tue: 'Tuesday', Wed: 'Wednesday',
       Thu: 'Thursday', Fri: 'Friday', Sat: 'Saturday'
@@ -735,7 +807,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       var prof = CLOSET_PROFILES[PERSON_PROFILE[person] || 'default'] || CLOSET_PROFILES['default'];
       return prof.map(function (k) { return CLOSET_GROUPS[k]; });
     }
-    var TITLES = { grocery: 'Grocery', dinners: 'Dinners', closet: 'Closet', todo: 'To-do', budget: 'Budget' };
+    var TITLES = { me: 'My day', grocery: 'Grocery', dinners: 'Dinners', closet: 'Closet', todo: 'To-do', budget: 'Budget' };
 
     /* Inline SVG icons (from Maya's mocks) */
     var P = {
@@ -913,10 +985,13 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       var parent = isParent(state.viewer);
       $('budgetNavBtn').hidden = !parent;
       if (!parent && state.screen === 'budget') showScreen('grocery');
+      $('meNavBtn').hidden = !portalOn();
+      if (!portalOn() && state.screen === 'me') showScreen('grocery');
     }
     function showScreen(name) {
       if (SCREENS.indexOf(name) < 0) return;
       if (name === 'budget' && !isParent(state.viewer)) name = 'grocery';
+      if (name === 'me' && !portalOn()) name = 'grocery';
       state.screen = name;
       closeAllMore();
       closeSheet();
@@ -1688,7 +1763,297 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       fillViewerSelect();
       applyRoleNav();
       renderGrocery(); renderDinners(); renderCloset(); renderTodo(); renderBudget();
+      afterDataPortal();
     }
+
+
+    /* ---------- My day (personal portal) ----------
+       Only shown when the server marks this link's data with portal:true; the server refuses
+       getPortal/portal* calls for anyone else, so nothing personal ever reaches other phones. */
+    var PORTAL_CACHE_KEY = 'homeops.data.portal.' + (window.__homeopsKeyId || 'app');
+    var DAY_SHORT = DAY_KEYS;
+    function portalOn() { return !!(state.data && state.data.portal); }
+    function savePortalCache() {
+      try { if (state.portal && portalOn()) localStorage.setItem(PORTAL_CACHE_KEY, JSON.stringify({ at: Date.now(), data: state.portal })); } catch (e) {}
+    }
+    function dropPortalCache() {
+      try { Object.keys(localStorage).forEach(function (k) { if (k.indexOf('homeops.data.portal.') === 0) localStorage.removeItem(k); }); } catch (e) {}
+    }
+    function afterDataPortal() {
+      if (!portalOn()) { state.portal = null; dropPortalCache(); return; }
+      if (!state.portal) {
+        try { var c = JSON.parse(localStorage.getItem(PORTAL_CACHE_KEY) || 'null'); if (c && c.data) state.portal = c.data; } catch (e) {}
+      }
+      renderMe();
+      if (!state._portalAsked) { state._portalAsked = true; loadPortal(false); }
+    }
+    function loadPortal(fresh) {
+      var seq = (state._portalSeq = (state._portalSeq || 0) + 1);
+      run('getPortal', fresh ? [{ fresh: true }] : [],
+        function (p) {
+          if (seq !== state._portalSeq || !p) return;
+          state.portal = p; state._portalErr = false;
+          savePortalCache(); renderMe();
+        },
+        function () { state._portalErr = true; if (!state.portal) renderMe(); });
+    }
+    function ymdLocal(d) { return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+    function dayTitle(ymd) {
+      var d = parseYmd(ymd); if (!d) return ymd;
+      return DAY_SHORT[d.getDay()] + ', ' + MONTHS[d.getMonth()] + ' ' + d.getDate();
+    }
+    function hmParts(hm) {
+      var p = String(hm || '').split(':'); if (p.length < 2) return null;
+      var h = +p[0], m = p[1];
+      return { t: ((h % 12) || 12) + ':' + m, ap: h < 12 ? 'AM' : 'PM', mins: h * 60 + (+m) };
+    }
+    function hmLabel(hm) { var x = hmParts(hm); return x ? x.t + ' ' + x.ap : ''; }
+    function stampLabel(s) {   // 'yyyy-MM-dd HH:mm' (or similar) -> 'Today 7:52 AM' / 'Oct 7, 7:52 AM'
+      var m = String(s || '').match(/(\d{4})-(\d{1,2})-(\d{1,2})[ T]+(\d{1,2}):(\d{2})\s*(am|pm)?/i);
+      if (!m) return String(s || '');
+      var h = +m[4]; if (m[6]) { var pm = /p/i.test(m[6]); if (pm && h < 12) h += 12; if (!pm && h === 12) h = 0; }
+      var ymd = m[1] + '-' + ('0' + m[2]).slice(-2) + '-' + ('0' + m[3]).slice(-2);
+      var t = hmLabel(h + ':' + m[5]), today = ymdLocal(new Date());
+      var y = new Date(); y.setDate(y.getDate() - 1);
+      if (ymd === today) return 'Today ' + t;
+      if (ymd === ymdLocal(y)) return 'Yesterday ' + t;
+      var d = parseYmd(ymd); return MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + t;
+    }
+    function meRow(o) {
+      var row = el('div', 'row me-row' + (o.cls ? ' ' + o.cls : ''));
+      var tm = el('div', 'me-time');
+      var x = hmParts(o.time);
+      if (x) { tm.appendChild(document.createTextNode(x.t)); tm.appendChild(el('small', '', x.ap)); }
+      else tm.appendChild(el('small', '', o.noTime || 'All day'));
+      row.appendChild(tm);
+      var body = el('div', 'row__body');
+      body.appendChild(el('div', 'row__title', o.title));
+      if (o.meta && o.meta.childNodes && o.meta.childNodes.length) { var m = el('div', 'row__meta'); m.appendChild(o.meta); body.appendChild(m); }
+      if (o.details) body.appendChild(el('span', 'me-details', o.details));
+      row.appendChild(body);
+      return row;
+    }
+    function metaFrag(parts) {
+      var f = document.createDocumentFragment();
+      parts.forEach(function (p) { if (p) f.appendChild(typeof p === 'string' ? el('span', '', p) : p); });
+      return f;
+    }
+    function nowPill() { var p = el('span', 'pill pill--now'); p.appendChild(el('span', 'dot-red')); p.appendChild(document.createTextNode('Now')); return p; }
+    function setMePane(name) {
+      state.mePane = name;
+      ['today', 'work', 'note'].forEach(function (k) { $('mePane-' + k).hidden = k !== name; });
+      $('meSeg').querySelectorAll('.seg__btn').forEach(function (b) {
+        var on = b.getAttribute('data-me') === name;
+        b.classList.toggle('is-active', on); b.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+    }
+    function renderMe() {
+      if (!portalOn()) return;
+      setMePane(state.mePane || 'today');
+      renderMeToday(); renderMeWork(); renderMeNotes();
+    }
+    function renderMeToday() {
+      var root = $('meToday'); root.innerHTML = '';
+      var P = state.portal;
+      if (!P) {
+        root.appendChild(state._portalErr ? makeEmpty('cal', 'Couldn\u2019t load', 'Check your connection, then tap refresh.')
+          : makeEmpty('cal', 'Loading your day\u2026', ''));
+        return;
+      }
+      var now = new Date(), today = ymdLocal(now), nowMin = now.getHours() * 60 + now.getMinutes();
+      var events = (P.events || []).filter(function (e) { return e.date >= today; });
+      // Today
+      root.appendChild(makeSec('Calendar', dayTitle(today)));
+      var todays = events.filter(function (e) { return e.date === today; });
+      var card = el('div', 'card');
+      if (!todays.length) card.appendChild(el('div', 'me-empty', 'Nothing on the calendar today.'));
+      todays.forEach(function (e) {
+        var s = hmParts(e.start), en = hmParts(e.end);
+        var endMin = en ? (en.mins <= (s ? s.mins : 0) ? 1440 : en.mins) : (s ? s.mins + 30 : 0);
+        var past = !e.allDay && s && endMin <= nowMin;
+        var isNow = !e.allDay && s && s.mins <= nowMin && nowMin < endMin;
+        card.appendChild(meRow({
+          time: e.allDay ? '' : e.start, title: e.title, cls: past ? 'is-past' : (isNow ? 'is-now' : ''),
+          meta: metaFrag([isNow ? nowPill() : '', e.where, e.cal === 'Family' ? pill('Family', 'pill--person') : ''])
+        }));
+      });
+      root.appendChild(card);
+      // Learning
+      var dow = now.getDay();
+      var all = !!state.meLearnAll;
+      root.appendChild(makeSec('Learning', null, { link: { label: all ? 'Today only' : 'Whole week', onClick: function () { state.meLearnAll = !all; renderMeToday(); } } }));
+      var learn = (P.learning || []).filter(function (l) {
+        if (all) return true;
+        if (l.starts && l.starts > today) return false;
+        return (l.days || []).indexOf(dow) >= 0;
+      });
+      var lc = el('div', 'card');
+      if (!learn.length) lc.appendChild(el('div', 'me-empty', 'No learning set for today.'));
+      learn.forEach(function (l) {
+        var bits = [];
+        if (all) bits.push(pill(l.daysLabel || 'Daily'));
+        if (l.starts && l.starts > today) bits.push(pill('Starts ' + dayTitle(l.starts), 'pill--person', 'cal'));
+        if (l.where) bits.push(l.where);
+        var noTime = /night/i.test(l.details || '') || /night/i.test(l.title) ? 'Night' : (all ? '' : 'Today');
+        lc.appendChild(meRow({ time: l.time, noTime: noTime || ' ', title: l.title, meta: metaFrag(bits),
+          details: (l.details && !/^nightly$/i.test(l.details)) ? l.details : '' }));
+      });
+      root.appendChild(lc);
+      // Coming up
+      var later = events.filter(function (e) { return e.date > today; });
+      if (later.length) {
+        root.appendChild(makeSec('Coming up'));
+        var byDay = {};
+        later.forEach(function (e) { (byDay[e.date] = byDay[e.date] || []).push(e); });
+        Object.keys(byDay).sort().forEach(function (d) {
+          var t = parseYmd(d), tm = new Date(now); tm.setDate(tm.getDate() + 1);
+          root.appendChild(makeSec(d === ymdLocal(tm) ? 'Tomorrow \u00b7 ' + dayTitle(d) : dayTitle(d), null, { sub: true }));
+          var c = el('div', 'card');
+          byDay[d].forEach(function (e) {
+            c.appendChild(meRow({ time: e.allDay ? '' : e.start, title: e.title,
+              meta: metaFrag([e.where, e.cal === 'Family' ? pill('Family', 'pill--person') : '']) }));
+          });
+          root.appendChild(c);
+        });
+      }
+      if (P.snapshotAt) root.appendChild(el('p', 'me-foot', 'Calendar as of ' + stampLabel(P.snapshotAt).replace(/^(Today|Yesterday)/, function (w) { return w.toLowerCase(); })));
+    }
+    function renderMeWork() {
+      var root = $('meWork'); root.innerHTML = '';
+      var P = state.portal;
+      var work = (P && P.work) || [];
+      var open = work.filter(function (w) { return !w.done; }), done = work.filter(function (w) { return w.done; });
+      var cnt = $('meWorkCount'); cnt.hidden = !open.length; cnt.textContent = String(open.length);
+      if (!P) { root.appendChild(makeEmpty('checksq', state._portalErr ? 'Couldn\u2019t load' : 'Loading\u2026', '')); return; }
+      root.appendChild(makeSec('TTG open items', open.length + ' open'));
+      if (open.length) {
+        var c = el('div', 'card');
+        open.forEach(function (w) { c.appendChild(workRow(w)); });
+        root.appendChild(c);
+      } else root.appendChild(makeEmpty('checksq', 'All clear', 'Nothing open at work.'));
+      if (done.length) {
+        root.appendChild(makeSec('Done \u00b7 ' + done.length, null, { sub: true }));
+        var dc = el('div', 'card');
+        done.forEach(function (w) { dc.appendChild(workRow(w)); });
+        root.appendChild(dc);
+      }
+    }
+    function workRow(w) {
+      var row = el('div', 'row' + (w.done ? ' is-done' : '') + (w._saving ? ' is-saving' : ''));
+      var c = el('button', 'row__check'); c.type = 'button';
+      c.setAttribute('aria-label', (w.done ? 'Not done: ' : 'Done: ') + w.title);
+      c.setAttribute('aria-pressed', w.done ? 'true' : 'false');
+      row.appendChild(c);
+      var body = el('div', 'row__body');
+      body.style.paddingRight = 'var(--s4)';
+      body.appendChild(el('div', 'row__title', w.title));
+      if (!w.done && (w.due || w.time)) {
+        var m = el('div', 'row__meta');
+        var dd = el('span', 'ico-text'); dd.innerHTML = svg('cal', 'i--sm');
+        dd.appendChild(document.createTextNode((w.due ? dueLabel(w.due) : '') + (w.time ? (w.due ? ' \u00b7 ' : '') + hmLabel(w.time) : '')));
+        m.appendChild(dd);
+        if (w.due && w.due < ymdLocal(new Date())) m.appendChild(pill('Overdue', 'pill--strong'));
+        body.appendChild(m);
+      }
+      if (w.details && !w.done) body.appendChild(el('span', 'me-details', w.details));
+      row.appendChild(body);
+      row.addEventListener('click', function () { toggleWork(w); });
+      return row;
+    }
+    function toggleWork(w) {
+      if (w._saving || !w.id || String(w.id).indexOf('tmp-') === 0) return;
+      var next = !w.done;
+      w.done = next; w._saving = true; renderMeWork();
+      run('portalSetDone', [w.id, next],
+        function () { w._saving = false; renderMeWork(); savePortalCache(); toast(next ? 'Marked done' : 'Back on the list'); },
+        function () { w._saving = false; w.done = !next; renderMeWork(); toast('Couldn\u2019t save \u2014 try again'); });
+    }
+    function addWork() {
+      var input = $('newWork'), title = (input.value || '').trim();
+      if (!title) { input.focus(); return; }
+      var btn = $('addWorkBtn'); btn.disabled = true;
+      var tmp = { id: 'tmp-' + Date.now(), title: title, done: false, _saving: true };
+      if (state.portal) { state.portal.work = (state.portal.work || []).concat([tmp]); renderMeWork(); }
+      run('portalAddWork', [{ title: title }],
+        function (res) {
+          btn.disabled = false; input.value = '';
+          tmp.id = (res && res.id) || tmp.id; tmp._saving = false; renderMeWork(); savePortalCache();
+          toast('Added'); loadPortal(true);
+        },
+        function () {
+          btn.disabled = false;
+          if (state.portal) state.portal.work = state.portal.work.filter(function (x) { return x !== tmp; });
+          renderMeWork(); toast('Couldn\u2019t add \u2014 try again');
+        });
+    }
+    function renderMeNotes() {
+      var root = $('meNotes'); root.innerHTML = '';
+      var notes = (state.portal && state.portal.notes) || [];
+      if (!notes.length) return;
+      root.appendChild(makeSec('Recent notes', null, { sub: true }));
+      var c = el('div', 'card');
+      notes.slice(0, 5).forEach(function (n) {
+        var row = el('div', 'row row--plain me-row');
+        var b = el('div', 'row__body');
+        b.style.paddingRight = 'var(--s4)';
+        b.appendChild(el('div', 'row__title', n.note));
+        b.appendChild(el('div', 'row__meta', stampLabel(n.at)));
+        row.appendChild(b); c.appendChild(row);
+      });
+      root.appendChild(c);
+    }
+    function sendNote() {
+      var ta = $('noteText'), text = (ta.value || '').trim();
+      if (!text) { ta.focus(); toast('Type a note first'); return; }
+      micStop();
+      var btn = $('sendNoteBtn'); btn.disabled = true;
+      $('noteSent').hidden = true;
+      run('portalAddNote', [{ text: text, voice: !!state.noteVoice }],
+        function (res) {
+          btn.disabled = false; ta.value = ''; state.noteVoice = false;
+          try { localStorage.removeItem('homeops.data.portal.draft.' + (window.__homeopsKeyId || 'app')); } catch (e) {}
+          $('noteSentText').textContent = 'Saved ' + stampLabel((res && res.at) || '') .replace(/^Today /, 'today at ') + ' for your assistant.';
+          $('noteSent').hidden = false;
+          if (state.portal) { state.portal.notes = [{ at: (res && res.at) || '', note: text, status: 'new' }].concat(state.portal.notes || []).slice(0, 5); renderMeNotes(); savePortalCache(); }
+          toast('Note sent');
+        },
+        function () { btn.disabled = false; toast('Couldn\u2019t send \u2014 your note is still here'); });
+    }
+    /* Mic: the phone's speech-to-text (Chrome on Android). The keyboard mic works too. */
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition, rec = null, recBase = '';
+    function micStop() { if (rec) { try { rec.stop(); } catch (e) {} } }
+    function micSet(on) { $('micBtn').classList.toggle('is-on', on); $('micLive').hidden = !on; $('micBtn').setAttribute('aria-label', on ? 'Stop listening' : 'Speak your note'); }
+    if (SR) {
+      $('micBtn').hidden = false;
+      $('micBtn').addEventListener('click', function () {
+        if (rec) { micStop(); return; }
+        try {
+          rec = new SR(); rec.lang = 'en-US'; rec.interimResults = true; rec.continuous = true;
+          var ta = $('noteText'); recBase = ta.value ? ta.value.replace(/\s*$/, ' ') : '';
+          rec.onresult = function (ev) {
+            var fin = '', interim = '';
+            for (var i = 0; i < ev.results.length; i++) { if (ev.results[i].isFinal) fin += ev.results[i][0].transcript; else interim += ev.results[i][0].transcript; }
+            ta.value = recBase + fin + interim; state.noteVoice = true;
+          };
+          rec.onerror = function (ev) { if (ev && ev.error === 'not-allowed') toast('Allow the microphone to use voice'); };
+          rec.onend = function () { rec = null; micSet(false); };
+          rec.start(); micSet(true);
+        } catch (e) { rec = null; micSet(false); toast('Voice isn\u2019t available here'); }
+      });
+    }
+    $('meSeg').addEventListener('click', function (e) {
+      var b = e.target.closest('.seg__btn[data-me]'); if (!b) return;
+      setMePane(b.getAttribute('data-me')); if (b.getAttribute('data-me') !== 'note') micStop();
+      window.scrollTo(0, 0);
+    });
+    $('addWorkBtn').addEventListener('click', addWork);
+    $('newWork').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); addWork(); } });
+    $('sendNoteBtn').addEventListener('click', sendNote);
+    $('noteText').addEventListener('input', function () {
+      $('noteSent').hidden = true;
+      try { localStorage.setItem('homeops.data.portal.draft.' + (window.__homeopsKeyId || 'app'), $('noteText').value); } catch (e) {}
+    });
+    try { var draft = localStorage.getItem('homeops.data.portal.draft.' + (window.__homeopsKeyId || 'app')); if (draft) $('noteText').value = draft; } catch (e) {}
 
     /* ---------- Load + boot hardening ---------- */
     var BOOT_LOADING = $('boot').innerHTML;
@@ -1732,6 +2097,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       $('boot').hidden = true;
       setAppVisible(true);
       renderAll();
+      if (portalOn() && !state._navTouched && state.screen !== 'me') showScreen('me');
       if (!window.__booted) resetOpts();
       window.__booted = true;
     }
@@ -1919,9 +2285,10 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       var b = e.target.closest('.nav__item[data-screen]');
       if (!b) return;
       e.preventDefault();
+      state._navTouched = true;
       showScreen(b.getAttribute('data-screen'));
     });
-    $('refreshBtn').addEventListener('click', function () { loadData(true); });
+    $('refreshBtn').addEventListener('click', function () { loadData(true); if (portalOn()) loadPortal(true); });
     $('addBtn').addEventListener('click', addItem);
     $('newItem').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); addItem(); } });
     $('autoUploadBtn').addEventListener('click', autoUploadList);
