@@ -514,6 +514,55 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
 .sent__icon { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #fff; }
 .sent__title { font-size: var(--fs-item); font-weight: 800; line-height: 1.2; }
 .sent__text { font-size: var(--fs-meta); font-weight: 600; color: var(--ink); }
+/* ---------- Providers (inside My day; Roni only, server-gated) ---------- */
+.me-seg .seg__btn { flex: 1 1 auto; padding: 0 10px; white-space: nowrap; }
+.pv-search { position: relative; margin-bottom: var(--s3); }
+.pv-search svg.i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); width: 22px; height: 22px; }
+.pv-search .field { width: 100%; padding-left: 46px; }
+.pv-list .pv-card + .pv-card { margin-top: var(--s2); }
+.pv-card { width: 100%; display: flex; align-items: center; gap: var(--s3); padding: var(--s3) var(--s3) var(--s3) var(--s4);
+  border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--paper); box-shadow: var(--sh-card);
+  color: var(--ink); text-align: left; }
+.pv-card:active { background: var(--wash); }
+.pv-card__body { flex: 1; min-width: 0; }
+.pv-card__top { display: flex; align-items: center; gap: var(--s2); min-width: 0; }
+.pv-card__name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-item); font-weight: 800; }
+.pv-card__cases { margin-top: 2px; font-size: var(--fs-meta); font-weight: 600; color: var(--muted); }
+.pv-card__cases b { color: var(--ink); font-weight: 800; }
+.pv-card > svg.i { color: var(--faint); }
+.pv-role { flex: none; display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: var(--r-pill);
+  font-size: var(--fs-badge); font-weight: 800; letter-spacing: .02em; background: var(--accent-soft); color: var(--accent-dark); }
+.pv-role--bcba { background: var(--accent); color: #fff; }
+.pv-role--none { background: var(--surface); color: var(--muted); }
+.pv-status { margin-top: 4px; font-size: var(--fs-label); font-weight: 700; color: var(--muted); line-height: 1.35; }
+.pv-status .dot-red { margin: 0 6px 1px 0; vertical-align: middle; }
+.pv-status b { color: var(--danger); font-weight: 800; }
+.pv-status--ok { color: var(--accent-dark); }
+.pv-status--ok svg.i { width: 16px; height: 16px; margin: 0 4px 2px 0; vertical-align: middle; color: var(--accent); }
+.pv-back { margin-bottom: var(--s4); }
+.pv-head__name { margin: 0; font-size: var(--fs-h2); font-weight: 800; letter-spacing: -.015em; line-height: 1.2; }
+.pv-head__roles { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: var(--s2); font-size: var(--fs-meta); font-weight: 600; color: var(--muted); }
+.pv-contact { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); }
+.pv-act { height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  border-radius: var(--r-md); background: var(--accent); color: #fff; font-size: var(--fs-label); font-weight: 800; text-decoration: none; }
+.pv-act:active { background: var(--accent-dark); }
+.pv-act.is-off { background: var(--surface); color: var(--faint); pointer-events: none; }
+.pv-contact__lines { margin-top: var(--s3); font-size: var(--fs-meta); font-weight: 600; color: var(--muted); overflow-wrap: anywhere; }
+.pv-contact__lines div + div { margin-top: 2px; }
+.pv-missing { display: flex; align-items: center; gap: var(--s2); margin-top: var(--s3); font-size: var(--fs-meta); font-weight: 700; color: var(--danger); }
+.pv-case { padding: var(--s3) var(--s4); border-bottom: 1px solid var(--line); }
+.pv-case:last-child { border-bottom: 0; }
+.pv-case__top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px var(--s2); }
+.pv-case__student { font-size: var(--fs-item); font-weight: 800; margin-right: auto; }
+.pv-sched { margin: 6px 0 0; padding: 0; list-style: none; font-size: var(--fs-meta); font-weight: 600; color: var(--ink); }
+.pv-sched li { line-height: 1.45; }
+.pv-kv { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: 48px; padding: 0 var(--s4);
+  border-bottom: 1px solid var(--line); font-size: var(--fs-body); font-weight: 650; }
+.pv-kv:last-child { border-bottom: 0; }
+.pv-kv span:last-child { flex: none; font-size: var(--fs-meta); font-weight: 700; color: var(--muted); text-align: right; }
+.pv-kv .is-yes { color: var(--accent-dark); }
+.pv-kv .is-due { color: var(--danger); }
+.pv-notes { padding: var(--s4); font-size: var(--fs-body); font-weight: 500; line-height: 1.45; overflow-wrap: anywhere; }
 
   </style>
 </head>
@@ -603,6 +652,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       <div class="seg me-seg" id="meSeg" role="tablist" aria-label="My day">
         <button type="button" class="seg__btn is-active" data-me="today" role="tab" aria-selected="true">Today</button>
         <button type="button" class="seg__btn" data-me="work" role="tab" aria-selected="false">Work <span class="chip__count" id="meWorkCount" hidden></span></button>
+        <button type="button" class="seg__btn" data-me="prov" role="tab" aria-selected="false" id="meProvTab">Providers</button>
         <button type="button" class="seg__btn" data-me="note" role="tab" aria-selected="false">Note</button>
       </div>
       <div id="mePane-today"><div id="meToday"></div></div>
@@ -612,6 +662,15 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
           <button type="button" class="btn" id="addWorkBtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Add</button>
         </div>
         <div id="meWork"></div>
+      </div>
+      <div id="mePane-prov" hidden>
+        <div id="pvListView">
+          <div class="pv-search"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input class="field" id="pvSearch" type="search" placeholder="Search name or student" aria-label="Search providers" autocomplete="off" enterkeyhint="search"></div>
+          <div class="chips" id="pvFilters" role="tablist" aria-label="Filter providers"></div>
+          <div id="pvList" class="pv-list"></div>
+        </div>
+        <div id="pvDetail" hidden></div>
       </div>
       <div id="mePane-note" hidden>
         <div class="sec"><h2 class="sec__title">Send a note</h2><span class="sec__meta">to your assistant</span></div>
@@ -829,6 +888,11 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       back: '<path d="m15 18-6-6 6-6"/>',
       kid: '<circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/>',
       dress: '<path d="M9 2v3l-1.5 4L4 21h16l-3.5-12L15 5V2"/><path d="M7.5 9h9"/>',
+      phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+      msg: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+      mail: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>',
+      chev: '<path d="m9 18 6-6-6-6"/>',
+      person: '<circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/>',
       tag: '<path d="M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z"/><circle cx="7.5" cy="7.5" r="1"/>'
     };
     function svg(name, cls) {
@@ -1780,7 +1844,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       try { Object.keys(localStorage).forEach(function (k) { if (k.indexOf('homeops.data.portal.') === 0) localStorage.removeItem(k); }); } catch (e) {}
     }
     function afterDataPortal() {
-      if (!portalOn()) { state.portal = null; dropPortalCache(); return; }
+      if (!portalOn()) { state.portal = null; state.prov = null; dropPortalCache(); return; }
       if (!state.portal) {
         try { var c = JSON.parse(localStorage.getItem(PORTAL_CACHE_KEY) || 'null'); if (c && c.data) state.portal = c.data; } catch (e) {}
       }
@@ -1794,6 +1858,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
           if (seq !== state._portalSeq || !p) return;
           state.portal = p; state._portalErr = false;
           savePortalCache(); renderMe();
+          if (!state._provAsked) setTimeout(ensureProviders, 1500);
         },
         function () { state._portalErr = true; if (!state.portal) renderMe(); });
     }
@@ -1841,7 +1906,8 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
     function nowPill() { var p = el('span', 'pill pill--now'); p.appendChild(el('span', 'dot-red')); p.appendChild(document.createTextNode('Now')); return p; }
     function setMePane(name) {
       state.mePane = name;
-      ['today', 'work', 'note'].forEach(function (k) { $('mePane-' + k).hidden = k !== name; });
+      ['today', 'work', 'prov', 'note'].forEach(function (k) { $('mePane-' + k).hidden = k !== name; });
+      if (name === 'prov') { ensureProviders(); renderProviders(); }
       $('meSeg').querySelectorAll('.seg__btn').forEach(function (b) {
         var on = b.getAttribute('data-me') === name;
         b.classList.toggle('is-active', on); b.setAttribute('aria-selected', on ? 'true' : 'false');
@@ -2067,6 +2133,278 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       try { localStorage.setItem('homeops.data.portal.draft.' + (window.__homeopsKeyId || 'app'), $('noteText').value); } catch (e) {}
     });
     try { var draft = localStorage.getItem('homeops.data.portal.draft.' + (window.__homeopsKeyId || 'app')); if (draft) $('noteText').value = draft; } catch (e) {}
+
+    /* ---------- Providers (My day → Providers; Roni only) ----------
+       Data comes from getProviders, which the server refuses (403) for every link but Roni's.
+       Phone copy: stale-while-revalidate under homeops.data.portal.providers.<id> (cleared with the portal cache). */
+    var PROV_CACHE_KEY = 'homeops.data.portal.providers.' + (window.__homeopsKeyId || 'app');
+    var PV_FILTERS = [['all', 'All'], ['due', 'Check-in due'], ['missing', 'Missing contact'], ['bcba', 'BCBA'], ['aba', 'ABA']];
+    state.pvFilter = 'all'; state.pvQuery = ''; state.pvOpen = null;
+    function ensureProviders() {
+      if (!portalOn()) return;
+      if (!state.prov) {
+        try { var c = JSON.parse(localStorage.getItem(PROV_CACHE_KEY) || 'null'); if (c && c.data) state.prov = c.data; } catch (e) {}
+      }
+      if (!state._provAsked) { state._provAsked = true; loadProviders(false); }
+    }
+    function loadProviders(fresh) {
+      if (!portalOn()) return;
+      var seq = (state._provSeq = (state._provSeq || 0) + 1);
+      run('getProviders', fresh ? [{ fresh: true }] : [],
+        function (d) {
+          if (seq !== state._provSeq || !d || !portalOn()) return;
+          state.prov = d; state._provErr = false;
+          try { localStorage.setItem(PROV_CACHE_KEY, JSON.stringify({ at: Date.now(), data: d })); } catch (e) {}
+          if (state.mePane === 'prov') renderProviders();
+        },
+        function () { state._provErr = true; if (!state.prov && state.mePane === 'prov') renderProviders(); });
+    }
+    function pvToday() { return ymdLocal(new Date()); }
+    function pvRoles(p) { return (p.roles || []).map(function (r) { return String(r).toUpperCase(); }); }
+    function pvHas(p, role) { return pvRoles(p).indexOf(role) >= 0; }
+    function pvMissing(p) { return !p.phone && !p.email; }
+    function pvDue(p) { return !p.next || p.next <= pvToday(); }
+    function pvDocsUnknown(p) { return !p.docs || /unknown/i.test(p.docs.status || 'unknown'); }
+    function pvFlags(p) {
+      var f = [];
+      if (pvMissing(p)) f.push({ t: 'Missing contact', urgent: true });
+      if (pvDue(p)) f.push({ t: 'Check-in due', urgent: true });
+      if (pvDocsUnknown(p)) f.push({ t: 'Docs unknown' });
+      else if (!/complete/i.test(p.docs.status)) f.push({ t: 'Docs ' + String(p.docs.status).replace(/^partial\s*/i, '').replace('/', ' of ') });
+      return f;
+    }
+    function pvMatch(p, key) {
+      if (key === 'due') return pvDue(p);
+      if (key === 'missing') return pvMissing(p);
+      if (key === 'bcba') return pvHas(p, 'BCBA');
+      if (key === 'aba') return pvHas(p, 'ABA');
+      return true;
+    }
+    function pvSearchHit(p, q) {
+      if (!q) return true;
+      var hay = [p.name, p.settings, p.discipline, (p.roles || []).join(' ')].concat((p.cases || []).map(function (c) { return c.student + ' ' + c.setting; })).join(' ').toLowerCase();
+      return q.split(/\s+/).every(function (w) { return hay.indexOf(w) >= 0; });
+    }
+    function pvPhoneLabel(ph) {
+      var d = String(ph || '').replace(/\D/g, '');
+      if (d.length === 11 && d.charAt(0) === '1') d = d.slice(1);
+      return d.length === 10 ? '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6) : String(ph || '');
+    }
+    function pvDate(ymd) {
+      var d = parseYmd(ymd); if (!d) return String(ymd || '');
+      return MONTHS[d.getMonth()] + ' ' + d.getDate() + (d.getFullYear() !== new Date().getFullYear() ? ', ' + d.getFullYear() : '');
+    }
+    /* 'Mon 3:00-7:00 PM; Tue 3:00-7:00 PM; …' -> ['Mon–Fri 3–7 PM'] (consecutive days with the same hours are joined) */
+    function pvSchedule(s) {
+      var parts = String(s || '').split(/\s*;\s*/).filter(Boolean), out = [];
+      parts.forEach(function (x) {
+        var m = x.match(/^(Sun|Mon|Tue|Wed|Thu|Fri|Sat)\s+(.+)$/);
+        var t = (m ? m[2] : x).replace(/:00/g, '').replace(/(\d|AM|PM)\s*-\s*(\d)/g, '$1\u2013$2');
+        var last = out[out.length - 1];
+        if (m && last && last.d1 != null && last.t === t && (last.d1 + 1) % 7 === DAY_KEYS.indexOf(m[1])) { last.d1 = DAY_KEYS.indexOf(m[1]); return; }
+        out.push(m ? { d0: DAY_KEYS.indexOf(m[1]), d1: DAY_KEYS.indexOf(m[1]), t: t } : { t: t.replace(/^(Sun|Mon|Tue|Wed|Thu|Fri|Sat)-(Sun|Mon|Tue|Wed|Thu|Fri|Sat)/, '$1\u2013$2') });
+      });
+      return out.map(function (o) {
+        if (o.d0 == null) return o.t;
+        return DAY_KEYS[o.d0] + (o.d1 !== o.d0 ? (o.d1 === (o.d0 + 1) % 7 ? ', ' : '\u2013') + DAY_KEYS[o.d1] : '') + ' ' + o.t;
+      });
+    }
+    function pvRoleBadges(p, host) {
+      var roles = pvRoles(p);
+      if (!roles.length) host.appendChild(el('span', 'pv-role pv-role--none', 'Role ?'));
+      roles.forEach(function (r) { host.appendChild(el('span', 'pv-role' + (r === 'BCBA' ? ' pv-role--bcba' : ''), r)); });
+    }
+    function pvStatusLine(p) {
+      var f = pvFlags(p), line = el('div', 'pv-status');
+      if (!f.length) {
+        line.className = 'pv-status pv-status--ok'; line.innerHTML = svg('check');
+        line.appendChild(document.createTextNode('All set')); return line;
+      }
+      if (f[0].urgent) line.appendChild(el('span', 'dot-red'));
+      f.forEach(function (x, i) {
+        if (i) line.appendChild(document.createTextNode(' \u00b7 '));
+        line.appendChild(i === 0 && x.urgent ? el('b', '', x.t) : document.createTextNode(x.t));
+      });
+      return line;
+    }
+    function renderProviders() {
+      if (!portalOn()) return;
+      var D = state.prov;
+      if (state.pvOpen && D) {
+        var hit = (D.providers || []).filter(function (p) { return p.id === state.pvOpen; })[0];
+        if (hit) { $('pvListView').hidden = true; $('pvDetail').hidden = false; renderPvDetail(hit); return; }
+        state.pvOpen = null;
+      }
+      $('pvListView').hidden = false; $('pvDetail').hidden = true;
+      var list = $('pvList'), chips = $('pvFilters'), keepX = chips.scrollLeft;
+      list.innerHTML = ''; chips.innerHTML = '';
+      if (!D) {
+        list.appendChild(makeEmpty('person', state._provErr ? 'Couldn\u2019t load' : 'Loading providers\u2026', state._provErr ? 'Check your connection, then tap refresh.' : ''));
+        return;
+      }
+      var all = D.providers || [];
+      PV_FILTERS.forEach(function (f) {
+        var n = all.filter(function (p) { return pvMatch(p, f[0]); }).length;
+        var b = el('button', 'chip' + (state.pvFilter === f[0] ? ' is-active' : ''));
+        b.type = 'button'; b.setAttribute('data-pvf', f[0]); b.setAttribute('role', 'tab');
+        b.setAttribute('aria-selected', state.pvFilter === f[0] ? 'true' : 'false');
+        b.appendChild(document.createTextNode(f[1]));
+        b.appendChild(el('span', 'chip__count', String(n)));
+        chips.appendChild(b);
+      });
+      chips.scrollLeft = keepX;
+      var act = chips.querySelector('.chip.is-active');
+      if (act && (act.offsetLeft < chips.scrollLeft || act.offsetLeft + act.offsetWidth > chips.scrollLeft + chips.clientWidth)) {
+        chips.scrollLeft = Math.max(0, act.offsetLeft - 16);
+      }
+      var q = state.pvQuery.trim().toLowerCase();
+      var shown = all.filter(function (p) { return pvMatch(p, state.pvFilter) && pvSearchHit(p, q); });
+      if (!shown.length) {
+        list.appendChild(makeEmpty('person', 'No providers match', q ? 'Try another name or clear the search.' : 'Nobody in this filter right now.'));
+      }
+      shown.forEach(function (p) {
+        var c = el('button', 'pv-card'); c.type = 'button'; c.setAttribute('data-pv', p.id);
+        var body = el('div', 'pv-card__body');
+        var top = el('div', 'pv-card__top');
+        top.appendChild(el('span', 'pv-card__name', p.name));
+        pvRoleBadges(p, top);
+        body.appendChild(top);
+        var cases = el('div', 'pv-card__cases');
+        cases.appendChild(el('b', '', String(p.activeCases || 0)));
+        cases.appendChild(document.createTextNode(' active case' + (p.activeCases === 1 ? '' : 's')));
+        body.appendChild(cases);
+        body.appendChild(pvStatusLine(p));
+        c.appendChild(body);
+        c.insertAdjacentHTML('beforeend', svg('chev'));
+        list.appendChild(c);
+      });
+      if (D.snapshotAt) list.appendChild(el('p', 'me-foot', 'Provider list as of ' + stampLabel(D.snapshotAt).replace(/^(Today|Yesterday)/, function (w) { return w.toLowerCase(); })));
+    }
+    function pvKv(label, value, cls) {
+      var r = el('div', 'pv-kv'); r.appendChild(el('span', '', label));
+      r.appendChild(el('span', cls || '', value)); return r;
+    }
+    function renderPvDetail(p) {
+      var root = $('pvDetail'); root.innerHTML = '';
+      var back = el('button', 'back pv-back'); back.type = 'button'; back.id = 'pvBack';
+      back.innerHTML = svg('back'); back.appendChild(document.createTextNode('Providers'));
+      back.addEventListener('click', closeProvider);
+      root.appendChild(back);
+      root.appendChild(el('h2', 'pv-head__name', p.name));
+      var roles = el('div', 'pv-head__roles'); pvRoleBadges(p, roles);
+      var sub = [plural(p.activeCases || 0, 'active case')];
+      if (p.discipline) sub.push(p.discipline);
+      roles.appendChild(el('span', '', sub.join(' \u00b7 ')));
+      root.appendChild(roles);
+      root.appendChild(pvStatusLine(p));
+      // Contact
+      root.appendChild(makeSec('Contact'));
+      var cc = el('div', 'card card--pad'), grid = el('div', 'pv-contact');
+      function act(label, icon, href) {
+        var a = el('a', 'pv-act' + (href ? '' : ' is-off')); a.innerHTML = svg(icon);
+        a.appendChild(document.createTextNode(label));
+        if (href) a.href = href; else a.setAttribute('aria-disabled', 'true');
+        a.setAttribute('aria-label', label + ' ' + p.name);
+        grid.appendChild(a);
+      }
+      act('Call', 'phone', p.phone ? 'tel:' + p.phone : '');
+      act('Text', 'msg', p.phone ? 'sms:' + p.phone : '');
+      act('Email', 'mail', p.email ? 'mailto:' + p.email : '');
+      cc.appendChild(grid);
+      var lines = el('div', 'pv-contact__lines');
+      if (p.phone) lines.appendChild(el('div', '', pvPhoneLabel(p.phone)));
+      if (p.email) lines.appendChild(el('div', '', p.email));
+      if (lines.childNodes.length) cc.appendChild(lines);
+      if (pvMissing(p) || !p.phone || !p.email) {
+        var miss = el('div', 'pv-missing'); miss.appendChild(el('span', 'dot-red'));
+        miss.appendChild(document.createTextNode(pvMissing(p) ? 'No phone or email on file' : (!p.phone ? 'No phone on file' : 'No email on file')));
+        cc.appendChild(miss);
+      }
+      root.appendChild(cc);
+      // Cases
+      var cases = p.cases || [];
+      root.appendChild(makeSec('Cases', String(cases.length)));
+      var kc = el('div', 'card');
+      if (!cases.length) kc.appendChild(el('div', 'me-empty', 'No cases listed.'));
+      cases.forEach(function (c) {
+        var row = el('div', 'pv-case'), top = el('div', 'pv-case__top');
+        top.appendChild(el('span', 'pv-case__student', c.student));
+        if (c.role) top.appendChild(pill(c.role, 'pill--person'));
+        if (c.setting) top.appendChild(pill(c.setting));
+        row.appendChild(top);
+        var sch = pvSchedule(c.schedule);
+        if (sch.length) {
+          var ul = el('ul', 'pv-sched');
+          sch.forEach(function (t) { ul.appendChild(el('li', '', t)); });
+          row.appendChild(ul);
+        } else row.appendChild(el('span', 'me-details', 'No schedule on file'));
+        if (c.notes) row.appendChild(el('span', 'me-details', c.notes));
+        kc.appendChild(row);
+      });
+      root.appendChild(kc);
+      // Check-ins
+      root.appendChild(makeSec('Check-ins'));
+      var oc = el('div', 'card');
+      oc.appendChild(pvKv('How often', p.cadence || 'Not set'));
+      oc.appendChild(pvKv('Last', p.last ? pvDate(p.last) : 'Never'));
+      oc.appendChild(pvKv('Next due', !p.next ? 'Due now' : (p.next <= pvToday() ? (p.next === pvToday() ? 'Today' : 'Overdue \u00b7 ' + pvDate(p.next)) : pvDate(p.next)), pvDue(p) ? 'is-due' : ''));
+      if (p.nextStep) oc.appendChild(pvKv('Next step', p.nextStep));
+      if (p.lastSummary) { var ls = el('div', 'pv-notes'); ls.appendChild(el('span', 'me-details', p.lastSummary)); oc.appendChild(ls); }
+      root.appendChild(oc);
+      // Docs
+      var docs = (p.docs && p.docs.items) || [];
+      var dmeta = pvDocsUnknown(p) ? 'Unknown' : (/complete/i.test(p.docs.status) ? 'Complete' : String(p.docs.status).replace(/^partial\s*/i, '').replace('/', ' of '));
+      root.appendChild(makeSec('Docs', dmeta));
+      var dc = el('div', 'card');
+      docs.forEach(function (d) {
+        var v = d.value || '', label = 'Unknown', cls = '';
+        if (/^\d{4}-\d{2}-\d{2}$/.test(v)) { label = (/expiry/i.test(d.label) ? 'Expires ' : '\u2713 ') + pvDate(v); cls = 'is-yes'; }
+        else if (/^(yes|on file)$/i.test(v)) { label = '\u2713 On file'; cls = 'is-yes'; }
+        else if (/^no$/i.test(v)) { label = 'Missing'; cls = 'is-due'; }
+        else if (v) label = v;
+        dc.appendChild(pvKv(d.label, label, cls));
+      });
+      root.appendChild(dc);
+      // Billing
+      var bill = p.billing || [];
+      root.appendChild(makeSec('Billing', bill.length ? 'Recent' : ''));
+      var bc = el('div', 'card');
+      if (!bill.length) bc.appendChild(el('div', 'me-empty', 'No billing submissions yet.'));
+      bill.forEach(function (b) {
+        var row = el('div', 'pv-case'), top = el('div', 'pv-case__top');
+        top.appendChild(el('span', 'pv-case__student', b.month || pvDate(b.received)));
+        if (b.status) top.appendChild(pill(b.status, /flag/i.test(b.status) ? 'pill--strong' : 'pill--person'));
+        row.appendChild(top);
+        var meta = [b.received ? 'Received ' + pvDate(b.received) : '', b.hours ? b.hours + ' hrs' : '', b.students].filter(Boolean).join(' \u00b7 ');
+        if (meta) row.appendChild(el('span', 'me-details', meta));
+        if (b.flags) row.appendChild(el('span', 'me-details', b.flags));
+        bc.appendChild(row);
+      });
+      root.appendChild(bc);
+      // Notes
+      if (p.notes) {
+        root.appendChild(makeSec('Notes'));
+        var nc = el('div', 'card'); nc.appendChild(el('div', 'pv-notes', p.notes)); root.appendChild(nc);
+      }
+    }
+    function openProvider(id) {
+      state.pvOpen = id;
+      try { history.pushState({ pv: id }, ''); state._pvPushed = true; } catch (e) { state._pvPushed = false; }
+      renderProviders(); window.scrollTo(0, 0);
+    }
+    function closeProvider() {
+      if (state._pvPushed) { state._pvPushed = false; try { history.back(); return; } catch (e) {} }
+      state.pvOpen = null; renderProviders(); window.scrollTo(0, 0);
+    }
+    window.addEventListener('popstate', function () {
+      if (state.pvOpen) { state._pvPushed = false; state.pvOpen = null; renderProviders(); window.scrollTo(0, 0); }
+    });
+    $('pvList').addEventListener('click', function (e) { var c = e.target.closest('[data-pv]'); if (c) openProvider(c.getAttribute('data-pv')); });
+    $('pvFilters').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-pvf]'); if (!b) return;
+      state.pvFilter = b.getAttribute('data-pvf'); renderProviders();
+    });
+    $('pvSearch').addEventListener('input', function () { state.pvQuery = this.value || ''; renderProviders(); });
 
     /* ---------- Load + boot hardening ---------- */
     var BOOT_LOADING = $('boot').innerHTML;
@@ -2301,7 +2639,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       state._navTouched = true;
       showScreen(b.getAttribute('data-screen'));
     });
-    $('refreshBtn').addEventListener('click', function () { loadData(true); if (portalOn()) loadPortal(true); });
+    $('refreshBtn').addEventListener('click', function () { loadData(true); if (portalOn()) { loadPortal(true); if (state._provAsked) loadProviders(true); } });
     $('addBtn').addEventListener('click', addItem);
     $('newItem').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); addItem(); } });
     $('autoUploadBtn').addEventListener('click', autoUploadList);
