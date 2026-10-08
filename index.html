@@ -1905,16 +1905,29 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
         root.appendChild(makeSec('Coming up'));
         var byDay = {};
         later.forEach(function (e) { (byDay[e.date] = byDay[e.date] || []).push(e); });
-        Object.keys(byDay).sort().forEach(function (d) {
-          var t = parseYmd(d), tm = new Date(now); tm.setDate(tm.getDate() + 1);
-          root.appendChild(makeSec(d === ymdLocal(tm) ? 'Tomorrow \u00b7 ' + dayTitle(d) : dayTitle(d), null, { sub: true }));
+        var days = Object.keys(byDay).sort(), SHOW = 2;
+        var tm = new Date(now); tm.setDate(tm.getDate() + 1);
+        function dayBlock(d, host) {
+          host.appendChild(makeSec(d === ymdLocal(tm) ? 'Tomorrow \u00b7 ' + dayTitle(d) : dayTitle(d), null, { sub: true }));
           var c = el('div', 'card');
           byDay[d].forEach(function (e) {
             c.appendChild(meRow({ time: e.allDay ? '' : e.start, title: e.title,
               meta: metaFrag([e.where, e.cal === 'Family' ? pill('Family', 'pill--person') : '']) }));
           });
-          root.appendChild(c);
-        });
+          host.appendChild(c);
+        }
+        days.slice(0, SHOW).forEach(function (d) { dayBlock(d, root); });
+        if (days.length > SHOW) {
+          var open = !!state.meWeekOpen;
+          var tg = el('button', 'more__toggle' + (open ? ' is-open' : ''));
+          tg.type = 'button'; tg.style.marginTop = 'var(--s4)';
+          tg.setAttribute('aria-expanded', open ? 'true' : 'false');
+          tg.innerHTML = (open ? 'Hide rest of week' : 'Rest of week \u00b7 ' + plural(days.length - SHOW, 'day')) +
+            ' <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+          tg.addEventListener('click', function () { state.meWeekOpen = !open; renderMeToday(); });
+          root.appendChild(tg);
+          if (open) days.slice(SHOW).forEach(function (d) { dayBlock(d, root); });
+        }
       }
       if (P.snapshotAt) root.appendChild(el('p', 'me-foot', 'Calendar as of ' + stampLabel(P.snapshotAt).replace(/^(Today|Yesterday)/, function (w) { return w.toLowerCase(); })));
     }
