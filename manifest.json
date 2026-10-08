@@ -1,7 +1,7 @@
 {
   "id": "/home-ops/",
-  "name": "Home Ops",
-  "short_name": "Home Ops",
+  "name": "Gafni House",
+  "short_name": "Gafni House",
   "description": "Grocery, dinners, closet, to-do and budget for the family.",
   "start_url": "./",
   "scope": "./",
