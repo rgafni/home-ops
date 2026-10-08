@@ -514,55 +514,58 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
 .sent__icon { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #fff; }
 .sent__title { font-size: var(--fs-item); font-weight: 800; line-height: 1.2; }
 .sent__text { font-size: var(--fs-meta); font-weight: 600; color: var(--ink); }
-/* ---------- Providers (inside My day; Roni only, server-gated) ---------- */
+/* ---------- Stay on top (My day → On top; Roni only, server-gated) ---------- */
 .me-seg .seg__btn { flex: 1 1 auto; padding: 0 10px; white-space: nowrap; }
-.pv-search { position: relative; margin-bottom: var(--s3); }
-.pv-search svg.i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); width: 22px; height: 22px; }
-.pv-search .field { width: 100%; padding-left: 46px; }
-.pv-list .pv-card + .pv-card { margin-top: var(--s2); }
-.pv-card { width: 100%; display: flex; align-items: center; gap: var(--s3); padding: var(--s3) var(--s3) var(--s3) var(--s4);
-  border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--paper); box-shadow: var(--sh-card);
-  color: var(--ink); text-align: left; }
-.pv-card:active { background: var(--wash); }
-.pv-card__body { flex: 1; min-width: 0; }
-.pv-card__top { display: flex; align-items: center; gap: var(--s2); min-width: 0; }
-.pv-card__name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-item); font-weight: 800; }
-.pv-card__cases { margin-top: 2px; font-size: var(--fs-meta); font-weight: 600; color: var(--muted); }
-.pv-card__cases b { color: var(--ink); font-weight: 800; }
-.pv-card > svg.i { color: var(--faint); }
-.pv-role { flex: none; display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: var(--r-pill);
-  font-size: var(--fs-badge); font-weight: 800; letter-spacing: .02em; background: var(--accent-soft); color: var(--accent-dark); }
-.pv-role--bcba { background: var(--accent); color: #fff; }
-.pv-role--none { background: var(--surface); color: var(--muted); }
-.pv-status { margin-top: 4px; font-size: var(--fs-label); font-weight: 700; color: var(--muted); line-height: 1.35; }
-.pv-status .dot-red { margin: 0 6px 1px 0; vertical-align: middle; }
-.pv-status b { color: var(--danger); font-weight: 800; }
-.pv-status--ok { color: var(--accent-dark); }
-.pv-status--ok svg.i { width: 16px; height: 16px; margin: 0 4px 2px 0; vertical-align: middle; color: var(--accent); }
-.pv-back { margin-bottom: var(--s4); }
-.pv-head__name { margin: 0; font-size: var(--fs-h2); font-weight: 800; letter-spacing: -.015em; line-height: 1.2; }
-.pv-head__roles { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: var(--s2); font-size: var(--fs-meta); font-weight: 600; color: var(--muted); }
-.pv-contact { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); }
-.pv-act { height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-  border-radius: var(--r-md); background: var(--accent); color: #fff; font-size: var(--fs-label); font-weight: 800; text-decoration: none; }
-.pv-act:active { background: var(--accent-dark); }
-.pv-act.is-off { background: var(--surface); color: var(--faint); pointer-events: none; }
-.pv-contact__lines { margin-top: var(--s3); font-size: var(--fs-meta); font-weight: 600; color: var(--muted); overflow-wrap: anywhere; }
-.pv-contact__lines div + div { margin-top: 2px; }
-.pv-missing { display: flex; align-items: center; gap: var(--s2); margin-top: var(--s3); font-size: var(--fs-meta); font-weight: 700; color: var(--danger); }
-.pv-case { padding: var(--s3) var(--s4); border-bottom: 1px solid var(--line); }
-.pv-case:last-child { border-bottom: 0; }
-.pv-case__top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px var(--s2); }
-.pv-case__student { font-size: var(--fs-item); font-weight: 800; margin-right: auto; }
-.pv-sched { margin: 6px 0 0; padding: 0; list-style: none; font-size: var(--fs-meta); font-weight: 600; color: var(--ink); }
-.pv-sched li { line-height: 1.45; }
-.pv-kv { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: 48px; padding: 0 var(--s4);
-  border-bottom: 1px solid var(--line); font-size: var(--fs-body); font-weight: 650; }
-.pv-kv:last-child { border-bottom: 0; }
-.pv-kv span:last-child { flex: none; font-size: var(--fs-meta); font-weight: 700; color: var(--muted); text-align: right; }
-.pv-kv .is-yes { color: var(--accent-dark); }
-.pv-kv .is-due { color: var(--danger); }
-.pv-notes { padding: var(--s4); font-size: var(--fs-body); font-weight: 500; line-height: 1.45; overflow-wrap: anywhere; }
+.ot-title { margin: 0 0 var(--s4); font-size: var(--fs-title); font-weight: 800; letter-spacing: -.02em; line-height: 1.15; }
+.ot-need { display: flex; align-items: center; gap: var(--s2); min-height: 64px; padding-right: var(--s3); border-bottom: 1px solid var(--line); }
+.ot-need:last-child { border-bottom: 0; }
+.ot-need__text { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; align-self: stretch; padding: var(--s3) 0 var(--s3) var(--s4);
+  border: 0; background: none; color: var(--ink); text-align: left; font: inherit; font-size: var(--fs-body); font-weight: 650; line-height: 1.3; }
+.ot-need__text:active { background: var(--wash); }
+.ot-need__text .dot-red, .ot-need__text .ot-dot { flex: none; }
+.ot-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.ot-done { flex: none; height: 44px; min-width: 72px; padding: 0 14px; border: 1.5px solid var(--line-strong); border-radius: var(--r-pill);
+  background: var(--paper); color: var(--accent-dark); font: inherit; font-size: var(--fs-chip); font-weight: 800; }
+.ot-done:active { background: var(--accent-soft); }
+.ot-clear { display: flex; align-items: center; gap: var(--s3); padding: var(--s4); font-size: var(--fs-item); font-weight: 700; color: var(--accent-dark); }
+.ot-clear svg.i { color: var(--accent); }
+.ot-sess { display: flex; align-items: center; gap: var(--s2); min-height: 60px; padding-right: var(--s3); border-bottom: 1px solid var(--line); }
+.ot-sess:last-child { border-bottom: 0; }
+.ot-sess__time { flex: none; width: 128px; padding: var(--s2) 0 var(--s2) var(--s4); font-size: var(--fs-meta); font-weight: 800; line-height: 1.3; }
+.ot-sess__time span { display: block; white-space: nowrap; }
+.ot-sess__time small { display: block; font-size: var(--fs-badge); font-weight: 800; color: var(--accent); letter-spacing: .03em; text-transform: uppercase; }
+.ot-sess__who { flex: 1; min-width: 0; padding: var(--s2) 0; font-size: var(--fs-body); font-weight: 650; line-height: 1.3; overflow-wrap: anywhere;
+  border: 0; background: none; color: var(--ink); text-align: left; font-family: inherit; align-self: stretch; }
+.ot-sess__who span { color: var(--muted); font-weight: 600; }
+.ot-sess.is-past .ot-sess__time, .ot-sess.is-past .ot-sess__who { color: var(--muted); font-weight: 500; }
+.ot-ico { flex: none; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; border: 1.5px solid var(--line-strong);
+  color: var(--accent); background: var(--paper); text-decoration: none; }
+.ot-ico:active { background: var(--accent-soft); }
+.ot-ico svg.i { width: 20px; height: 20px; }
+.ot-earlier { width: 100%; min-height: 48px; border: 0; border-top: 1px solid var(--line); background: none; color: var(--muted);
+  font: inherit; font-size: var(--fs-meta); font-weight: 700; }
+.ot-all { display: block; margin: var(--s8) auto 0; min-height: var(--tap); padding: 0 var(--s4); border: 0; background: none;
+  color: var(--accent); font: inherit; font-size: var(--fs-meta); font-weight: 700; }
+.ot-name { margin: 0; font-size: var(--fs-title); font-weight: 800; letter-spacing: -.02em; line-height: 1.15; }
+.ot-contact { display: flex; gap: var(--s2); margin-top: var(--s4); }
+.ot-act { flex: 1; height: 60px; display: flex; align-items: center; justify-content: center; gap: var(--s2); border-radius: var(--r-md);
+  background: var(--accent); color: #fff; font-size: var(--fs-body); font-weight: 800; text-decoration: none; }
+.ot-act:active { background: var(--accent-dark); }
+.ot-missing { display: flex; align-items: center; gap: var(--s2); margin-top: var(--s3); font-size: var(--fs-body); font-weight: 700; color: var(--danger); }
+.ot-stu { padding: var(--s3) var(--s4); border-bottom: 1px solid var(--line); }
+.ot-stu:last-child { border-bottom: 0; }
+.ot-stu b { display: block; font-size: var(--fs-item); font-weight: 800; }
+.ot-stu div { margin-top: 2px; font-size: var(--fs-body); font-weight: 600; color: var(--muted); line-height: 1.4; }
+.ot-log { margin-top: var(--s6); }
+.ot-last { margin: var(--s3) 0 0; text-align: center; font-size: var(--fs-meta); font-weight: 600; color: var(--muted); }
+.ot-row { width: 100%; display: flex; align-items: center; gap: var(--s3); min-height: 60px; padding: var(--s2) var(--s3) var(--s2) var(--s4);
+  border: 0; border-bottom: 1px solid var(--line); background: none; color: var(--ink); text-align: left; font: inherit; }
+.ot-row:last-child { border-bottom: 0; }
+.ot-row:active { background: var(--wash); }
+.ot-row__body { flex: 1; min-width: 0; }
+.ot-row__name { display: block; font-size: var(--fs-item); font-weight: 700; }
+.ot-row__sub { display: block; margin-top: 2px; font-size: var(--fs-meta); font-weight: 600; color: var(--muted); }
+.ot-row > svg.i { color: var(--faint); }
 
   </style>
 </head>
@@ -652,7 +655,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       <div class="seg me-seg" id="meSeg" role="tablist" aria-label="My day">
         <button type="button" class="seg__btn is-active" data-me="today" role="tab" aria-selected="true">Today</button>
         <button type="button" class="seg__btn" data-me="work" role="tab" aria-selected="false">Work <span class="chip__count" id="meWorkCount" hidden></span></button>
-        <button type="button" class="seg__btn" data-me="prov" role="tab" aria-selected="false" id="meProvTab">Providers</button>
+        <button type="button" class="seg__btn" data-me="prov" role="tab" aria-selected="false" id="meProvTab">On top</button>
         <button type="button" class="seg__btn" data-me="note" role="tab" aria-selected="false">Note</button>
       </div>
       <div id="mePane-today"><div id="meToday"></div></div>
@@ -663,15 +666,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
         </div>
         <div id="meWork"></div>
       </div>
-      <div id="mePane-prov" hidden>
-        <div id="pvListView">
-          <div class="pv-search"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-            <input class="field" id="pvSearch" type="search" placeholder="Search name or student" aria-label="Search providers" autocomplete="off" enterkeyhint="search"></div>
-          <div class="chips" id="pvFilters" role="tablist" aria-label="Filter providers"></div>
-          <div id="pvList" class="pv-list"></div>
-        </div>
-        <div id="pvDetail" hidden></div>
-      </div>
+      <div id="mePane-prov" hidden><div id="otRoot"></div></div>
       <div id="mePane-note" hidden>
         <div class="sec"><h2 class="sec__title">Send a note</h2><span class="sec__meta">to your assistant</span></div>
         <div class="card note-card">
@@ -2134,18 +2129,22 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
     });
     try { var draft = localStorage.getItem('homeops.data.portal.draft.' + (window.__homeopsKeyId || 'app')); if (draft) $('noteText').value = draft; } catch (e) {}
 
-    /* ---------- Providers (My day → Providers; Roni only) ----------
-       Data comes from getProviders, which the server refuses (403) for every link but Roni's.
-       Phone copy: stale-while-revalidate under homeops.data.portal.providers.<id> (cleared with the portal cache). */
-    var PROV_CACHE_KEY = 'homeops.data.portal.providers.' + (window.__homeopsKeyId || 'app');
-    var PV_FILTERS = [['all', 'All'], ['due', 'Check-in due'], ['missing', 'Missing contact'], ['bcba', 'BCBA'], ['aba', 'ABA']];
-    state.pvFilter = 'all'; state.pvQuery = ''; state.pvOpen = null;
+    /* ---------- Stay on top (My day → On top; Roni only) ----------
+       One screen: "Needs you" (≤5 plain lines, Done hides one), "Today" (sessions from the case schedules),
+       tap a name = person view (call / text / email, students, Log check-in). "All providers" = plain list.
+       Data comes from getProviders, which the server refuses (403) for every link but Roni's; the Needs-you list
+       is built on the server. Phone copy: homeops.data.portal.ontop.<id> (cleared with the portal cache). */
+    var PROV_CACHE_KEY = 'homeops.data.portal.ontop.' + (window.__homeopsKeyId || 'app');
+    state.ot = { view: 'main' };
     function ensureProviders() {
       if (!portalOn()) return;
       if (!state.prov) {
-        try { var c = JSON.parse(localStorage.getItem(PROV_CACHE_KEY) || 'null'); if (c && c.data) state.prov = c.data; } catch (e) {}
+        try { var c = JSON.parse(localStorage.getItem(PROV_CACHE_KEY) || 'null'); if (c && c.data && c.data.needs) state.prov = c.data; } catch (e) {}
       }
       if (!state._provAsked) { state._provAsked = true; loadProviders(false); }
+    }
+    function saveProvCache() {
+      try { if (state.prov && portalOn()) localStorage.setItem(PROV_CACHE_KEY, JSON.stringify({ at: Date.now(), data: state.prov })); } catch (e) {}
     }
     function loadProviders(fresh) {
       if (!portalOn()) return;
@@ -2153,258 +2152,253 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       run('getProviders', fresh ? [{ fresh: true }] : [],
         function (d) {
           if (seq !== state._provSeq || !d || !portalOn()) return;
-          state.prov = d; state._provErr = false;
-          try { localStorage.setItem(PROV_CACHE_KEY, JSON.stringify({ at: Date.now(), data: d })); } catch (e) {}
+          state.prov = d; state._provErr = false; saveProvCache();
           if (state.mePane === 'prov') renderProviders();
         },
         function () { state._provErr = true; if (!state.prov && state.mePane === 'prov') renderProviders(); });
     }
-    function pvToday() { return ymdLocal(new Date()); }
-    function pvRoles(p) { return (p.roles || []).map(function (r) { return String(r).toUpperCase(); }); }
-    function pvHas(p, role) { return pvRoles(p).indexOf(role) >= 0; }
-    function pvMissing(p) { return !p.phone && !p.email; }
-    function pvDue(p) { return !p.next || p.next <= pvToday(); }
-    function pvDocsUnknown(p) { return !p.docs || /unknown/i.test(p.docs.status || 'unknown'); }
-    function pvFlags(p) {
-      var f = [];
-      if (pvMissing(p)) f.push({ t: 'Missing contact', urgent: true });
-      if (pvDue(p)) f.push({ t: 'Check-in due', urgent: true });
-      if (pvDocsUnknown(p)) f.push({ t: 'Docs unknown' });
-      else if (!/complete/i.test(p.docs.status)) f.push({ t: 'Docs ' + String(p.docs.status).replace(/^partial\s*/i, '').replace('/', ' of ') });
-      return f;
+    function otPerson(id) { return ((state.prov && state.prov.providers) || []).filter(function (p) { return p.id === id; })[0]; }
+    /* minutes -> '3', '3:30' (+ 'am'/'pm' when asked) */
+    function otT(min, mer) {
+      var h = Math.floor(min / 60) % 24, m = min % 60, s = ((h % 12) || 12) + (m ? ':' + ('0' + m).slice(-2) : '');
+      return mer ? s + (h < 12 ? 'am' : 'pm') : s;
     }
-    function pvMatch(p, key) {
-      if (key === 'due') return pvDue(p);
-      if (key === 'missing') return pvMissing(p);
-      if (key === 'bcba') return pvHas(p, 'BCBA');
-      if (key === 'aba') return pvHas(p, 'ABA');
-      return true;
+    function otRange(r) {
+      var same = (r[0] < 720) === (r[1] < 720);
+      return otT(r[0], !same) + '\u2013' + otT(r[1], true);
     }
-    function pvSearchHit(p, q) {
-      if (!q) return true;
-      var hay = [p.name, p.settings, p.discipline, (p.roles || []).join(' ')].concat((p.cases || []).map(function (c) { return c.student + ' ' + c.setting; })).join(' ').toLowerCase();
-      return q.split(/\s+/).every(function (w) { return hay.indexOf(w) >= 0; });
+    var OT_ORDER = [1, 2, 3, 4, 5, 6, 0];       // Mon … Sun
+    function otDays(days) {
+      var idx = days.map(function (d) { return OT_ORDER.indexOf(d); }).sort(function (a, b) { return a - b; }), runs = [];
+      idx.forEach(function (i) { var last = runs[runs.length - 1]; if (last && last[1] === i - 1) last[1] = i; else runs.push([i, i]); });
+      return runs.map(function (r) {
+        var a = DAY_KEYS[OT_ORDER[r[0]]], b = DAY_KEYS[OT_ORDER[r[1]]];
+        return r[0] === r[1] ? a : (r[1] === r[0] + 1 ? a + ', ' + b : a + '\u2013' + b);
+      }).join(', ');
     }
-    function pvPhoneLabel(ph) {
-      var d = String(ph || '').replace(/\D/g, '');
-      if (d.length === 11 && d.charAt(0) === '1') d = d.slice(1);
-      return d.length === 10 ? '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6) : String(ph || '');
-    }
-    function pvDate(ymd) {
-      var d = parseYmd(ymd); if (!d) return String(ymd || '');
-      return MONTHS[d.getMonth()] + ' ' + d.getDate() + (d.getFullYear() !== new Date().getFullYear() ? ', ' + d.getFullYear() : '');
-    }
-    /* 'Mon 3:00-7:00 PM; Tue 3:00-7:00 PM; …' -> ['Mon–Fri 3–7 PM'] (consecutive days with the same hours are joined) */
-    function pvSchedule(s) {
-      var parts = String(s || '').split(/\s*;\s*/).filter(Boolean), out = [];
-      parts.forEach(function (x) {
-        var m = x.match(/^(Sun|Mon|Tue|Wed|Thu|Fri|Sat)\s+(.+)$/);
-        var t = (m ? m[2] : x).replace(/:00/g, '').replace(/(\d|AM|PM)\s*-\s*(\d)/g, '$1\u2013$2');
-        var last = out[out.length - 1];
-        if (m && last && last.d1 != null && last.t === t && (last.d1 + 1) % 7 === DAY_KEYS.indexOf(m[1])) { last.d1 = DAY_KEYS.indexOf(m[1]); return; }
-        out.push(m ? { d0: DAY_KEYS.indexOf(m[1]), d1: DAY_KEYS.indexOf(m[1]), t: t } : { t: t.replace(/^(Sun|Mon|Tue|Wed|Thu|Fri|Sat)-(Sun|Mon|Tue|Wed|Thu|Fri|Sat)/, '$1\u2013$2') });
+    /* case -> ['Tue–Thu 3–7pm', 'Sun 2–6pm'] (days with the same hours are joined) */
+    function otSchedLines(c) {
+      var groups = [], byKey = {};
+      (c.sched || []).forEach(function (s) {
+        var t = s.r && s.r.length ? s.r.map(function (r) { return otRange(r) + (r[2] ? ' (' + r[2] + ')' : ''); }).join(', ') : (s.note || 'time not set');
+        if (!byKey[t]) { byKey[t] = { t: t, d: [] }; groups.push(byKey[t]); }
+        s.d.forEach(function (d) { if (byKey[t].d.indexOf(d) < 0) byKey[t].d.push(d); });
       });
-      return out.map(function (o) {
-        if (o.d0 == null) return o.t;
-        return DAY_KEYS[o.d0] + (o.d1 !== o.d0 ? (o.d1 === (o.d0 + 1) % 7 ? ', ' : '\u2013') + DAY_KEYS[o.d1] : '') + ' ' + o.t;
-      });
+      groups.sort(function (a, b) { return Math.min.apply(null, a.d.map(function (d) { return OT_ORDER.indexOf(d); })) - Math.min.apply(null, b.d.map(function (d) { return OT_ORDER.indexOf(d); })); });
+      var out = groups.map(function (g) { return otDays(g.d) + ' ' + g.t; });
+      if (c.text) out.push(c.text);
+      return out;
     }
-    function pvRoleBadges(p, host) {
-      var roles = pvRoles(p);
-      if (!roles.length) host.appendChild(el('span', 'pv-role pv-role--none', 'Role ?'));
-      roles.forEach(function (r) { host.appendChild(el('span', 'pv-role' + (r === 'BCBA' ? ' pv-role--bcba' : ''), r)); });
+    function otStudents(p) {
+      var seen = {}, out = [];
+      (p.cases || []).forEach(function (c) { var k = c.student.toLowerCase(); if (!seen[k]) { seen[k] = 1; out.push(c.student); } });
+      return out;
     }
-    function pvStatusLine(p) {
-      var f = pvFlags(p), line = el('div', 'pv-status');
-      if (!f.length) {
-        line.className = 'pv-status pv-status--ok'; line.innerHTML = svg('check');
-        line.appendChild(document.createTextNode('All set')); return line;
-      }
-      if (f[0].urgent) line.appendChild(el('span', 'dot-red'));
-      f.forEach(function (x, i) {
-        if (i) line.appendChild(document.createTextNode(' \u00b7 '));
-        line.appendChild(i === 0 && x.urgent ? el('b', '', x.t) : document.createTextNode(x.t));
-      });
-      return line;
+    function otGo(v) {
+      state.ot = v;
+      try { history.pushState({ ot: v.view }, ''); state._otPushed = (state._otPushed || 0) + 1; } catch (e) {}
+      renderProviders(); window.scrollTo(0, 0);
+    }
+    function otBack() {
+      if (state._otPushed) { try { history.back(); return; } catch (e) {} }
+      state.ot = { view: 'main' }; renderProviders(); window.scrollTo(0, 0);
+    }
+    window.addEventListener('popstate', function () {
+      if (state.ot.view === 'main') return;
+      state._otPushed = Math.max(0, (state._otPushed || 0) - 1);
+      state.ot = state.ot.prev || { view: 'main' }; renderProviders(); window.scrollTo(0, 0);
+    });
+    function otBackBtn() {
+      var b = el('button', 'back pv-back'); b.type = 'button'; b.id = 'otBack';
+      b.innerHTML = svg('back'); b.appendChild(document.createTextNode('Back'));
+      b.addEventListener('click', otBack);
+      return b;
+    }
+    function otIcon(href, icon, label) {
+      var a = el('a', 'ot-ico'); a.href = href; a.innerHTML = svg(icon); a.setAttribute('aria-label', label); return a;
     }
     function renderProviders() {
       if (!portalOn()) return;
+      var root = $('otRoot'); root.innerHTML = '';
       var D = state.prov;
-      if (state.pvOpen && D) {
-        var hit = (D.providers || []).filter(function (p) { return p.id === state.pvOpen; })[0];
-        if (hit) { $('pvListView').hidden = true; $('pvDetail').hidden = false; renderPvDetail(hit); return; }
-        state.pvOpen = null;
-      }
-      $('pvListView').hidden = false; $('pvDetail').hidden = true;
-      var list = $('pvList'), chips = $('pvFilters'), keepX = chips.scrollLeft;
-      list.innerHTML = ''; chips.innerHTML = '';
       if (!D) {
-        list.appendChild(makeEmpty('person', state._provErr ? 'Couldn\u2019t load' : 'Loading providers\u2026', state._provErr ? 'Check your connection, then tap refresh.' : ''));
+        root.appendChild(el('h2', 'ot-title', 'Stay on top'));
+        root.appendChild(makeEmpty('person', state._provErr ? 'Couldn\u2019t load' : 'Loading\u2026', state._provErr ? 'Check your connection, then tap refresh.' : ''));
         return;
       }
-      var all = D.providers || [];
-      PV_FILTERS.forEach(function (f) {
-        var n = all.filter(function (p) { return pvMatch(p, f[0]); }).length;
-        var b = el('button', 'chip' + (state.pvFilter === f[0] ? ' is-active' : ''));
-        b.type = 'button'; b.setAttribute('data-pvf', f[0]); b.setAttribute('role', 'tab');
-        b.setAttribute('aria-selected', state.pvFilter === f[0] ? 'true' : 'false');
-        b.appendChild(document.createTextNode(f[1]));
-        b.appendChild(el('span', 'chip__count', String(n)));
-        chips.appendChild(b);
-      });
-      chips.scrollLeft = keepX;
-      var act = chips.querySelector('.chip.is-active');
-      if (act && (act.offsetLeft < chips.scrollLeft || act.offsetLeft + act.offsetWidth > chips.scrollLeft + chips.clientWidth)) {
-        chips.scrollLeft = Math.max(0, act.offsetLeft - 16);
-      }
-      var q = state.pvQuery.trim().toLowerCase();
-      var shown = all.filter(function (p) { return pvMatch(p, state.pvFilter) && pvSearchHit(p, q); });
-      if (!shown.length) {
-        list.appendChild(makeEmpty('person', 'No providers match', q ? 'Try another name or clear the search.' : 'Nobody in this filter right now.'));
-      }
-      shown.forEach(function (p) {
-        var c = el('button', 'pv-card'); c.type = 'button'; c.setAttribute('data-pv', p.id);
-        var body = el('div', 'pv-card__body');
-        var top = el('div', 'pv-card__top');
-        top.appendChild(el('span', 'pv-card__name', p.name));
-        pvRoleBadges(p, top);
-        body.appendChild(top);
-        var cases = el('div', 'pv-card__cases');
-        cases.appendChild(el('b', '', String(p.activeCases || 0)));
-        cases.appendChild(document.createTextNode(' active case' + (p.activeCases === 1 ? '' : 's')));
-        body.appendChild(cases);
-        body.appendChild(pvStatusLine(p));
-        c.appendChild(body);
-        c.insertAdjacentHTML('beforeend', svg('chev'));
-        list.appendChild(c);
-      });
-      if (D.snapshotAt) list.appendChild(el('p', 'me-foot', 'Provider list as of ' + stampLabel(D.snapshotAt).replace(/^(Today|Yesterday)/, function (w) { return w.toLowerCase(); })));
+      var v = state.ot || { view: 'main' };
+      if (v.view === 'person') { var p = otPerson(v.pid); if (p) return renderOtPerson(root, p); }
+      if (v.view === 'list') return renderOtList(root, v);
+      renderOtMain(root, D);
     }
-    function pvKv(label, value, cls) {
-      var r = el('div', 'pv-kv'); r.appendChild(el('span', '', label));
-      r.appendChild(el('span', cls || '', value)); return r;
+    function renderOtMain(root, D) {
+      root.appendChild(el('h2', 'ot-title', 'Stay on top'));
+      var now = new Date();
+      if (now.getDay() === 6) {
+        root.appendChild(makeEmpty('moon', 'Shabbat Shalom', 'Nothing to do today.'));
+        return;
+      }
+      // Needs you
+      var needs = D.needs || [];
+      root.appendChild(makeSec('Needs you', needs.length ? String(needs.length) : ''));
+      var nc = el('div', 'card');
+      if (!needs.length) {
+        var ok = el('div', 'ot-clear'); ok.innerHTML = svg('check');
+        ok.appendChild(document.createTextNode('You\u2019re on top of everything.')); nc.appendChild(ok);
+      }
+      needs.forEach(function (it) {
+        var row = el('div', 'ot-need');
+        var t = el('button', 'ot-need__text'); t.type = 'button';
+        t.appendChild(el('span', it.urgent ? 'dot-red' : 'ot-dot'));
+        t.appendChild(el('span', '', it.text));
+        t.addEventListener('click', function () {
+          if (it.pid) otGo({ view: 'person', pid: it.pid, prev: { view: 'main' } });
+          else if (it.ids) otGo({ view: 'list', title: it.title || it.text, ids: it.ids, kind: it.list, student: it.student, prev: { view: 'main' } });
+        });
+        row.appendChild(t);
+        var d = el('button', 'ot-done', 'Done'); d.type = 'button'; d.setAttribute('aria-label', 'Done: ' + it.text);
+        d.addEventListener('click', function () { otDismiss(it); });
+        row.appendChild(d);
+        nc.appendChild(row);
+      });
+      root.appendChild(nc);
+      // Today
+      root.appendChild(makeSec('Today', DAY_KEYS[now.getDay()] + ', ' + MONTHS[now.getMonth()] + ' ' + now.getDate()));
+      var dow = now.getDay(), nowMin = now.getHours() * 60 + now.getMinutes(), byStu = {}, stus = [];
+      (D.providers || []).forEach(function (p) {
+        (p.cases || []).forEach(function (c) {
+          var ranges = [], note = '';
+          (c.sched || []).forEach(function (s) {
+            if (s.d.indexOf(dow) < 0) return;
+            if (s.r && s.r.length) ranges = ranges.concat(s.r); else note = s.note || 'time not set';
+          });
+          if (!ranges.length && !note) return;
+          ranges.sort(function (a, b) { return a[0] - b[0]; });
+          var k = c.student.toLowerCase();
+          if (!byStu[k]) { byStu[k] = { student: c.student, rows: [] }; stus.push(byStu[k]); }
+          byStu[k].rows.push({ p: p, ranges: ranges, note: note, start: ranges.length ? ranges[0][0] : 9999,
+            end: ranges.length ? ranges[ranges.length - 1][1] : 9999 });
+        });
+      });
+      stus.forEach(function (s) { s.rows.sort(function (a, b) { return a.start - b.start; }); s.start = s.rows[0].start; });
+      stus.sort(function (a, b) { return (a.start - b.start) || a.student.localeCompare(b.student); });
+      var sc = el('div', 'card'), rows = [];
+      stus.forEach(function (s) { s.rows.forEach(function (r) { r.student = s.student; rows.push(r); }); });
+      var past = rows.filter(function (r) { return r.end <= nowMin; }), cur = rows.filter(function (r) { return r.end > nowMin; });
+      if (!rows.length) sc.appendChild(el('div', 'me-empty', 'No sessions on the schedule today.'));
+      else if (!cur.length && !state.otEarlier) sc.appendChild(el('div', 'me-empty', 'All of today\u2019s sessions are done.'));
+      function sessRow(r, isPast) {
+        var row = el('div', 'ot-sess' + (isPast ? ' is-past' : ''));
+        var tm = el('div', 'ot-sess__time');
+        (r.ranges.length ? r.ranges.map(otRange) : ['Time TBD']).forEach(function (x) { tm.appendChild(el('span', '', x)); });
+        if (!isPast && r.ranges.some(function (x) { return x[0] <= nowMin && nowMin < x[1]; })) tm.appendChild(el('small', '', 'Now'));
+        row.appendChild(tm);
+        var who = el('button', 'ot-sess__who'); who.type = 'button';
+        who.appendChild(document.createTextNode(r.p.short + ' '));
+        who.appendChild(el('span', '', '\u00b7 ' + r.student));
+        who.addEventListener('click', function () { otGo({ view: 'person', pid: r.p.id, prev: { view: 'main' } }); });
+        row.appendChild(who);
+        if (r.p.phone) {
+          row.appendChild(otIcon('tel:' + r.p.phone, 'phone', 'Call ' + r.p.name));
+          row.appendChild(otIcon('sms:' + r.p.phone, 'msg', 'Text ' + r.p.name));
+        }
+        return row;
+      }
+      cur.forEach(function (r) { sc.appendChild(sessRow(r, false)); });
+      if (past.length) {
+        if (state.otEarlier) past.forEach(function (r) { sc.appendChild(sessRow(r, true)); });
+        var tg = el('button', 'ot-earlier', state.otEarlier ? 'Hide earlier' : 'Earlier today \u00b7 ' + past.length); tg.type = 'button';
+        tg.addEventListener('click', function () { state.otEarlier = !state.otEarlier; renderProviders(); });
+        sc.appendChild(tg);
+      }
+      root.appendChild(sc);
+      var all = el('button', 'ot-all', 'All providers'); all.type = 'button'; all.id = 'otAll';
+      all.addEventListener('click', function () { otGo({ view: 'list', title: 'All providers', all: true, prev: { view: 'main' } }); });
+      root.appendChild(all);
+      if (D.snapshotAt) root.appendChild(el('p', 'me-foot', 'List as of ' + stampLabel(D.snapshotAt).replace(/^(Today|Yesterday)/, function (w) { return w.toLowerCase(); })));
     }
-    function renderPvDetail(p) {
-      var root = $('pvDetail'); root.innerHTML = '';
-      var back = el('button', 'back pv-back'); back.type = 'button'; back.id = 'pvBack';
-      back.innerHTML = svg('back'); back.appendChild(document.createTextNode('Providers'));
-      back.addEventListener('click', closeProvider);
-      root.appendChild(back);
-      root.appendChild(el('h2', 'pv-head__name', p.name));
-      var roles = el('div', 'pv-head__roles'); pvRoleBadges(p, roles);
-      var sub = [plural(p.activeCases || 0, 'active case')];
-      if (p.discipline) sub.push(p.discipline);
-      roles.appendChild(el('span', '', sub.join(' \u00b7 ')));
-      root.appendChild(roles);
-      root.appendChild(pvStatusLine(p));
-      // Contact
-      root.appendChild(makeSec('Contact'));
-      var cc = el('div', 'card card--pad'), grid = el('div', 'pv-contact');
+    function renderOtList(root, v) {
+      root.appendChild(otBackBtn());
+      root.appendChild(el('h2', 'ot-title', v.title));
+      var ps = v.all ? (state.prov.providers || []).slice() : (v.ids || []).map(otPerson).filter(Boolean);
+      if (v.all) ps.sort(function (a, b) { return a.name.localeCompare(b.name); });
+      var c = el('div', 'card');
+      ps.forEach(function (p) {
+        var b = el('button', 'ot-row'); b.type = 'button';
+        var body = el('span', 'ot-row__body');
+        body.appendChild(el('span', 'ot-row__name', p.name));
+        var sub = '';
+        if (v.kind === 'sched' && v.student) {
+          var cs = (p.cases || []).filter(function (x) { return x.student === v.student; });
+          sub = cs.map(function (x) { return otSchedLines(x).join('; '); }).join('; ');
+        } else sub = otStudents(p).join(', ');
+        if (sub) body.appendChild(el('span', 'ot-row__sub', sub));
+        b.appendChild(body);
+        b.insertAdjacentHTML('beforeend', svg('chev'));
+        b.addEventListener('click', function () { otGo({ view: 'person', pid: p.id, prev: v }); });
+        c.appendChild(b);
+      });
+      if (!ps.length) c.appendChild(el('div', 'me-empty', 'Nobody here.'));
+      root.appendChild(c);
+    }
+    function renderOtPerson(root, p) {
+      root.appendChild(otBackBtn());
+      root.appendChild(el('h2', 'ot-name', p.name));
+      var acts = el('div', 'ot-contact');
       function act(label, icon, href) {
-        var a = el('a', 'pv-act' + (href ? '' : ' is-off')); a.innerHTML = svg(icon);
-        a.appendChild(document.createTextNode(label));
-        if (href) a.href = href; else a.setAttribute('aria-disabled', 'true');
-        a.setAttribute('aria-label', label + ' ' + p.name);
-        grid.appendChild(a);
+        var a = el('a', 'ot-act'); a.href = href; a.innerHTML = svg(icon);
+        a.appendChild(document.createTextNode(label)); a.setAttribute('aria-label', label + ' ' + p.name); acts.appendChild(a);
       }
-      act('Call', 'phone', p.phone ? 'tel:' + p.phone : '');
-      act('Text', 'msg', p.phone ? 'sms:' + p.phone : '');
-      act('Email', 'mail', p.email ? 'mailto:' + p.email : '');
-      cc.appendChild(grid);
-      var lines = el('div', 'pv-contact__lines');
-      if (p.phone) lines.appendChild(el('div', '', pvPhoneLabel(p.phone)));
-      if (p.email) lines.appendChild(el('div', '', p.email));
-      if (lines.childNodes.length) cc.appendChild(lines);
-      if (pvMissing(p) || !p.phone || !p.email) {
-        var miss = el('div', 'pv-missing'); miss.appendChild(el('span', 'dot-red'));
-        miss.appendChild(document.createTextNode(pvMissing(p) ? 'No phone or email on file' : (!p.phone ? 'No phone on file' : 'No email on file')));
-        cc.appendChild(miss);
-      }
-      root.appendChild(cc);
-      // Cases
-      var cases = p.cases || [];
-      root.appendChild(makeSec('Cases', String(cases.length)));
-      var kc = el('div', 'card');
-      if (!cases.length) kc.appendChild(el('div', 'me-empty', 'No cases listed.'));
-      cases.forEach(function (c) {
-        var row = el('div', 'pv-case'), top = el('div', 'pv-case__top');
-        top.appendChild(el('span', 'pv-case__student', c.student));
-        if (c.role) top.appendChild(pill(c.role, 'pill--person'));
-        if (c.setting) top.appendChild(pill(c.setting));
-        row.appendChild(top);
-        var sch = pvSchedule(c.schedule);
-        if (sch.length) {
-          var ul = el('ul', 'pv-sched');
-          sch.forEach(function (t) { ul.appendChild(el('li', '', t)); });
-          row.appendChild(ul);
-        } else row.appendChild(el('span', 'me-details', 'No schedule on file'));
-        if (c.notes) row.appendChild(el('span', 'me-details', c.notes));
-        kc.appendChild(row);
+      if (p.phone) { act('Call', 'phone', 'tel:' + p.phone); act('Text', 'msg', 'sms:' + p.phone); }
+      if (p.email) act('Email', 'mail', 'mailto:' + p.email);
+      if (acts.childNodes.length) root.appendChild(acts);
+      else { var miss = el('div', 'ot-missing'); miss.appendChild(el('span', 'dot-red')); miss.appendChild(document.createTextNode('No phone or email on file')); root.appendChild(miss); }
+      root.appendChild(makeSec('Students', ''));
+      var c = el('div', 'card'), seen = {};
+      (p.cases || []).forEach(function (cs) {
+        var k = cs.student.toLowerCase(), lines = otSchedLines(cs);
+        var row = seen[k];
+        if (!row) { row = seen[k] = el('div', 'ot-stu'); row.appendChild(el('b', '', cs.student)); c.appendChild(row); }
+        if (!lines.length) lines = [cs.sup ? 'Supervising \u00b7 no set times' : 'No set times'];
+        lines.forEach(function (l) { row.appendChild(el('div', '', l)); });
       });
-      root.appendChild(kc);
-      // Check-ins
-      root.appendChild(makeSec('Check-ins'));
-      var oc = el('div', 'card');
-      oc.appendChild(pvKv('How often', p.cadence || 'Not set'));
-      oc.appendChild(pvKv('Last', p.last ? pvDate(p.last) : 'Never'));
-      oc.appendChild(pvKv('Next due', !p.next ? 'Due now' : (p.next <= pvToday() ? (p.next === pvToday() ? 'Today' : 'Overdue \u00b7 ' + pvDate(p.next)) : pvDate(p.next)), pvDue(p) ? 'is-due' : ''));
-      if (p.nextStep) oc.appendChild(pvKv('Next step', p.nextStep));
-      if (p.lastSummary) { var ls = el('div', 'pv-notes'); ls.appendChild(el('span', 'me-details', p.lastSummary)); oc.appendChild(ls); }
-      root.appendChild(oc);
-      // Docs
-      var docs = (p.docs && p.docs.items) || [];
-      var dmeta = pvDocsUnknown(p) ? 'Unknown' : (/complete/i.test(p.docs.status) ? 'Complete' : String(p.docs.status).replace(/^partial\s*/i, '').replace('/', ' of '));
-      root.appendChild(makeSec('Docs', dmeta));
-      var dc = el('div', 'card');
-      docs.forEach(function (d) {
-        var v = d.value || '', label = 'Unknown', cls = '';
-        if (/^\d{4}-\d{2}-\d{2}$/.test(v)) { label = (/expiry/i.test(d.label) ? 'Expires ' : '\u2713 ') + pvDate(v); cls = 'is-yes'; }
-        else if (/^(yes|on file)$/i.test(v)) { label = '\u2713 On file'; cls = 'is-yes'; }
-        else if (/^no$/i.test(v)) { label = 'Missing'; cls = 'is-due'; }
-        else if (v) label = v;
-        dc.appendChild(pvKv(d.label, label, cls));
-      });
-      root.appendChild(dc);
-      // Billing
-      var bill = p.billing || [];
-      root.appendChild(makeSec('Billing', bill.length ? 'Recent' : ''));
-      var bc = el('div', 'card');
-      if (!bill.length) bc.appendChild(el('div', 'me-empty', 'No billing submissions yet.'));
-      bill.forEach(function (b) {
-        var row = el('div', 'pv-case'), top = el('div', 'pv-case__top');
-        top.appendChild(el('span', 'pv-case__student', b.month || pvDate(b.received)));
-        if (b.status) top.appendChild(pill(b.status, /flag/i.test(b.status) ? 'pill--strong' : 'pill--person'));
-        row.appendChild(top);
-        var meta = [b.received ? 'Received ' + pvDate(b.received) : '', b.hours ? b.hours + ' hrs' : '', b.students].filter(Boolean).join(' \u00b7 ');
-        if (meta) row.appendChild(el('span', 'me-details', meta));
-        if (b.flags) row.appendChild(el('span', 'me-details', b.flags));
-        bc.appendChild(row);
-      });
-      root.appendChild(bc);
-      // Notes
-      if (p.notes) {
-        root.appendChild(makeSec('Notes'));
-        var nc = el('div', 'card'); nc.appendChild(el('div', 'pv-notes', p.notes)); root.appendChild(nc);
-      }
+      if (!(p.cases || []).length) c.appendChild(el('div', 'me-empty', 'No students listed.'));
+      root.appendChild(c);
+      var today = ymdLocal(new Date()), done = !!p.checkinToday || p.last === today;
+      var b = el('button', 'btn btn--block ot-log'); b.type = 'button'; b.id = 'otLog';
+      b.innerHTML = svg('check'); b.appendChild(document.createTextNode(done ? 'Checked in today' : 'Log check-in'));
+      if (done) b.disabled = true;
+      b.addEventListener('click', function () { otCheckin(p); });
+      root.appendChild(b);
+      root.appendChild(el('p', 'ot-last', 'Last check-in: ' + (p.last ? (p.last === today ? 'today' : (function (d) { return MONTHS[d.getMonth()] + ' ' + d.getDate(); })(parseYmd(p.last))) : 'never')));
     }
-    function openProvider(id) {
-      state.pvOpen = id;
-      try { history.pushState({ pv: id }, ''); state._pvPushed = true; } catch (e) { state._pvPushed = false; }
-      renderProviders(); window.scrollTo(0, 0);
+    function otDismiss(it) {
+      var D = state.prov; if (!D) return;
+      D.needs = (D.needs || []).filter(function (x) { return x.key !== it.key; });
+      saveProvCache(); renderProviders();
+      var my = showUndo('Done \u2014 hidden');
+      my.restore = function () {
+        run('provUndismiss', [{ key: it.key }], function () { loadProviders(true); toast('Back on the list'); },
+          function () { toast('Couldn\u2019t undo'); loadProviders(true); });
+      };
+      run('provDismiss', [{ key: it.key, sig: it.sig, text: it.text }],
+        function () { my.pending = false; if (my.wantUndo) my.restore(); else loadProviders(true); },
+        function () { my.pending = false; hideUndo(); toast('Couldn\u2019t save \u2014 try again'); loadProviders(true); });
     }
-    function closeProvider() {
-      if (state._pvPushed) { state._pvPushed = false; try { history.back(); return; } catch (e) {} }
-      state.pvOpen = null; renderProviders(); window.scrollTo(0, 0);
+    function otCheckin(p) {
+      var today = ymdLocal(new Date()), prevLast = p.last, btn = $('otLog');
+      if (btn) btn.disabled = true;
+      p.last = today; p.checkinToday = 'pending'; saveProvCache(); renderProviders();
+      var my = showUndo('Check-in logged for ' + p.short);
+      my.restore = function () {
+        if (!my.id) { toast('Couldn\u2019t undo'); return; }
+        run('provUncheckin', [{ id: my.id }], function () { p.last = prevLast; delete p.checkinToday; renderProviders(); loadProviders(true); toast('Check-in removed'); },
+          function () { toast('Couldn\u2019t undo'); });
+      };
+      run('provCheckin', [{ id: p.id }],
+        function (res) { my.pending = false; my.id = res && res.id; p.checkinToday = my.id || 'yes'; if (my.wantUndo) my.restore(); else loadProviders(true); },
+        function () { my.pending = false; hideUndo(); p.last = prevLast; delete p.checkinToday; renderProviders(); toast('Couldn\u2019t save \u2014 try again'); });
     }
-    window.addEventListener('popstate', function () {
-      if (state.pvOpen) { state._pvPushed = false; state.pvOpen = null; renderProviders(); window.scrollTo(0, 0); }
-    });
-    $('pvList').addEventListener('click', function (e) { var c = e.target.closest('[data-pv]'); if (c) openProvider(c.getAttribute('data-pv')); });
-    $('pvFilters').addEventListener('click', function (e) {
-      var b = e.target.closest('[data-pvf]'); if (!b) return;
-      state.pvFilter = b.getAttribute('data-pvf'); renderProviders();
-    });
-    $('pvSearch').addEventListener('input', function () { state.pvQuery = this.value || ''; renderProviders(); });
 
     /* ---------- Load + boot hardening ---------- */
     var BOOT_LOADING = $('boot').innerHTML;
