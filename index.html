@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Home Ops">
+<meta name="apple-mobile-web-app-title" content="Gafni House">
 <script src="config.js"></script>
 <script src="auth.js"></script>
 <style>
@@ -37,7 +37,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#FFFFFF">
   <meta name="color-scheme" content="only light">
-  <title>Home Ops</title>
+  <title>Gafni House</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -514,7 +514,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
 .sent__icon { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #fff; }
 .sent__title { font-size: var(--fs-item); font-weight: 800; line-height: 1.2; }
 .sent__text { font-size: var(--fs-meta); font-weight: 600; color: var(--ink); }
-/* ---------- Stay on top (My day → On top; Roni only, server-gated) ---------- */
+/* ---------- Today (My day → Today, formerly "Stay on top"; Roni only, server-gated) ---------- */
 .me-seg .seg__btn { flex: 1 1 auto; padding: 0 10px; white-space: nowrap; }
 .ot-title { margin: 0 0 var(--s4); font-size: var(--fs-title); font-weight: 800; letter-spacing: -.02em; line-height: 1.15; }
 .ot-need { display: flex; align-items: center; gap: var(--s2); min-height: 64px; padding-right: var(--s3); border-bottom: 1px solid var(--line); }
@@ -572,7 +572,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
 <body>
 <div id="gate" hidden>
   <img src="icons/icon-192.png" alt="">
-  <h1>Home Ops</h1>
+  <h1>Gafni House</h1>
   <p>Open the link Roni sent you.</p>
   <div id="gateMsg" hidden></div>
 </div>
@@ -653,9 +653,9 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
     <!-- MY DAY (personal; the server only sends it for the right link) -->
     <section class="screen" id="screen-me" hidden>
       <div class="seg me-seg" id="meSeg" role="tablist" aria-label="My day">
-        <button type="button" class="seg__btn is-active" data-me="today" role="tab" aria-selected="true">Today</button>
+        <button type="button" class="seg__btn is-active" data-me="today" role="tab" aria-selected="true">Schedule</button>
         <button type="button" class="seg__btn" data-me="work" role="tab" aria-selected="false">Work <span class="chip__count" id="meWorkCount" hidden></span></button>
-        <button type="button" class="seg__btn" data-me="prov" role="tab" aria-selected="false" id="meProvTab">On top</button>
+        <button type="button" class="seg__btn" data-me="prov" role="tab" aria-selected="false" id="meProvTab">Today</button>
         <button type="button" class="seg__btn" data-me="note" role="tab" aria-selected="false">Note</button>
       </div>
       <div id="mePane-today"><div id="meToday"></div></div>
@@ -2129,8 +2129,8 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
     });
     try { var draft = localStorage.getItem('homeops.data.portal.draft.' + (window.__homeopsKeyId || 'app')); if (draft) $('noteText').value = draft; } catch (e) {}
 
-    /* ---------- Stay on top (My day → On top; Roni only) ----------
-       One screen: "Needs you" (≤5 plain lines, Done hides one), "Today" (sessions from the case schedules),
+    /* ---------- Today (My day → Today, formerly "Stay on top"; Roni only) ----------
+       One screen: "Needs you" (≤5 plain lines, Done hides one), "Sessions" (sessions from the case schedules),
        tap a name = person view (call / text / email, students, Log check-in). "All providers" = plain list.
        Data comes from getProviders, which the server refuses (403) for every link but Roni's; the Needs-you list
        is built on the server. Phone copy: homeops.data.portal.ontop.<id> (cleared with the portal cache). */
@@ -2222,7 +2222,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       var root = $('otRoot'); root.innerHTML = '';
       var D = state.prov;
       if (!D) {
-        root.appendChild(el('h2', 'ot-title', 'Stay on top'));
+        root.appendChild(el('h2', 'ot-title', 'Today'));
         root.appendChild(makeEmpty('person', state._provErr ? 'Couldn\u2019t load' : 'Loading\u2026', state._provErr ? 'Check your connection, then tap refresh.' : ''));
         return;
       }
@@ -2232,7 +2232,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       renderOtMain(root, D);
     }
     function renderOtMain(root, D) {
-      root.appendChild(el('h2', 'ot-title', 'Stay on top'));
+      root.appendChild(el('h2', 'ot-title', 'Today'));
       var now = new Date();
       if (now.getDay() === 6) {
         root.appendChild(makeEmpty('moon', 'Shabbat Shalom', 'Nothing to do today.'));
@@ -2263,7 +2263,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       });
       root.appendChild(nc);
       // Today
-      root.appendChild(makeSec('Today', DAY_KEYS[now.getDay()] + ', ' + MONTHS[now.getMonth()] + ' ' + now.getDate()));
+      root.appendChild(makeSec('Sessions', DAY_KEYS[now.getDay()] + ', ' + MONTHS[now.getMonth()] + ' ' + now.getDate()));
       var dow = now.getDay(), nowMin = now.getHours() * 60 + now.getMinutes(), byStu = {}, stus = [];
       (D.providers || []).forEach(function (p) {
         (p.cases || []).forEach(function (c) {
@@ -2530,7 +2530,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
         lines.push('\u2022 ' + s.item + (q ? ' (' + q + ')' : ''));
       });
       lines.push('');
-      lines.push('\u2014 Home Ops');
+      lines.push('\u2014 Gafni House');
       var text = lines.join('\n');
       function ok() { toast('Copied'); }
       function fallback() {

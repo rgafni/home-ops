@@ -95,7 +95,7 @@
     bar.className = 'inst inst--' + mode;
     if (mode === 'prompt') {
       bar.innerHTML = '<span class="inst__icon" aria-hidden="true"><img src="icons/icon-192.png" alt=""></span>' +
-        '<span class="inst__text">Get Home Ops on your home screen</span>' +
+        '<span class="inst__text">Get Gafni House on your home screen</span>' +
         '<button type="button" class="inst__btn" id="installBtn">Install app</button>' +
         '<button type="button" class="inst__x" id="installX" aria-label="Dismiss">\u2715</button>';
     } else {
