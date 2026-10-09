@@ -70,7 +70,11 @@
   }
   window.__homeopsForget = function () { try { localStorage.removeItem(KEY); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp'); } catch (e) {} clearDataCache(); location.reload(); };
 
-  function call(action, args, ok, fail) {
+  // Read-only calls are retried (twice, with a short pause) when Google's redirect hiccups and hands back the
+  // plain "Home Ops API" page instead of JSON. Writes are never retried, so nothing is saved twice.
+  var READ_ONLY = /^(get[A-Z]|ping$)/;
+  function call(action, args, ok, fail, attempt) {
+    attempt = attempt || 0;
     if (!token) { showGate(); return; }               // nothing is sent without a link
     if (!C.API_URL || C.API_URL.indexOf('__') === 0) { fail(new Error('Setup isn\u2019t finished (API URL missing)')); return; }
     fetch(C.API_URL, {
@@ -80,8 +84,16 @@
       redirect: 'follow'
     }).then(function (r) {
       if (!r.ok) throw new Error('Server error ' + r.status);
-      return r.json();
-    }).then(function (res) {
+      return r.text();
+    }).then(function (txt) {
+      var res;
+      try { res = JSON.parse(txt); } catch (e) {
+        if (READ_ONLY.test(action) && attempt < 2) {
+          setTimeout(function () { call(action, args, ok, fail, attempt + 1); }, 1500 * (attempt + 1));
+          return;
+        }
+        throw new Error('The server answered oddly. Try again.');
+      }
       if (res && res.ok) { window.__homeopsUser = res.user; return ok(res.result); }
       if (res && res.status === 428) {        // Google sign-in needed (Roni's link only)
         try { localStorage.removeItem(SKEY); localStorage.setItem('homeops.si', '1'); } catch (e) {}
