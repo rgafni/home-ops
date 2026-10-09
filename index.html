@@ -285,6 +285,7 @@ svg.i.i--sm { width: 16px; height: 16px; stroke-width: 2.25; }
 .td-add__field { flex: 1; min-width: 0; height: 52px; border: 0; padding: 0; background: transparent; outline: none;
   font-size: var(--fs-item); font-weight: 600; color: var(--ink); -webkit-appearance: none; appearance: none; }
 .td-add__field::placeholder { color: var(--faint); font-weight: 500; }
+.td-add__field:focus, .td-add__field:focus-visible { outline: none; box-shadow: none; border: 0; }   /* the rounded outer field shows focus */
 .td-add__btn { flex: none; width: 48px; height: 48px; border: 0; border-radius: 50%; padding: 0; display: grid; place-items: center;
   background: var(--accent); color: var(--on-accent); }
 .td-add__btn:active { background: var(--accent-dark); }
