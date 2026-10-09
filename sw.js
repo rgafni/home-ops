@@ -1,8 +1,8 @@
 /* Gafni House service worker: caches the app SHELL only (same-origin files listed below).
    Never cached: API calls and data (script.google.com, cross-origin), Google sign-in, and any URL with a
    query string or hash (a personal link ?k=… is never written to the cache; navigations are stored as './'). */
-var CACHE = 'homeops-20261009013529';
-var SHELL = ['./', 'index.html', 'config.js', 'auth.js', 'manifest.json',
+var CACHE = 'homeops-20261009135813';
+var SHELL = ['./', 'index.html', 'config.js', 'auth.js', 'install.js', 'install.css', 'manifest.json',
   'fonts/manrope-latin.woff2', 'fonts/manrope-latin-ext.woff2',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png', 'icons/apple-touch-icon.png', 'icons/favicon.png'];
 var SCOPE = self.registration.scope;
