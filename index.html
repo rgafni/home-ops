@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-Ce7G4r9UQP5eTuSQ7apmwzc9e5qy+xMR4j0kgyW7/fY=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-OJW0UxBN4TFHvdfFKqkQooR0SjRkN8jvwT6Ysv9H3b8=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -836,6 +836,183 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
 .bl-card { border-radius: var(--r-lg); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 
+
+/* ===================== UX v2 (Oct 2026): desktop column, upload, offline, spending history ===================== */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+/* Name badge is a label, not a button: no button-like outline */
+.viewer { border-color: transparent; background: transparent; padding-right: 4px; }
+/* Upload button: same spot on every screen, tinted so it reads as an action, not a setting */
+.icon-btn--upl { background: var(--accent-soft); border-color: transparent; color: var(--accent); }
+.icon-btn--upl:active { background: #DCE6FD; }
+.icon-btn[hidden] { display: none; }
+.hdr { position: sticky; }
+.upl-coach { position: absolute; top: calc(100% - 4px); right: var(--pad); z-index: 25; max-width: 270px; display: grid; gap: 2px; text-align: left;
+  padding: 12px 16px; border: 0; border-radius: 16px; background: var(--ink); color: #fff; font: inherit; font-size: var(--fs-meta); font-weight: 600;
+  line-height: 1.35; box-shadow: var(--sh-raise); animation: scrIn .3s var(--ease) both; }
+.upl-coach b { font-size: var(--fs-body); font-weight: 800; }
+.upl-coach::before { content: ""; position: absolute; top: -6px; right: 132px; width: 12px; height: 12px; background: var(--ink); transform: rotate(45deg); border-radius: 2px; }
+/* Offline pill (header eyebrow) */
+.net-pill { display: inline-flex; align-items: center; height: 22px; margin-left: 8px; padding: 0 9px; border-radius: 999px; vertical-align: middle;
+  background: #FCE8EE; color: #B41E44; font-size: .8125rem; font-weight: 800; }
+.net-pill[hidden] { display: none; }
+/* Upload sheet */
+.upl { max-height: 92dvh; overflow-y: auto; overscroll-behavior: contain; }
+.upl__head { display: flex; align-items: center; gap: var(--s2); }
+.upl__head .sheet__title { flex: 1; margin: 0; }
+.upl__close { width: 48px; height: 48px; flex: none; display: grid; place-items: center; margin-right: -10px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); }
+.upl__close:active { background: var(--wash); }
+.upl__hint { margin: var(--s1) 0 var(--s4); color: var(--muted); font-size: var(--fs-body); line-height: 1.45; }
+.upl__hint[hidden] { display: none; }
+.upl__for { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); margin-bottom: var(--s4); }
+.upl__for[hidden] { display: none; }
+.upl__forlbl { font-size: var(--fs-label); font-weight: 800; color: var(--muted); margin-right: 4px; }
+.upl__pick { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: var(--s3); }
+.upl__pick[hidden] { display: none; }
+.upl__big { min-height: 96px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: var(--s3);
+  border: 1.5px dashed #B9C9EE; border-radius: var(--r-lg); background: #F6F9FF; color: var(--accent-dark); font: inherit; font-weight: 800; font-size: var(--fs-body); }
+.upl__big svg.i { width: 30px; height: 30px; color: var(--accent); }
+.upl__big:active { background: var(--accent-soft); transform: var(--press); }
+.upl__big[hidden] { display: none; }
+.upl__files { display: grid; gap: var(--s2); margin-top: var(--s3); }
+.upl__files[hidden] { display: none; }
+.upl-file { display: flex; align-items: center; gap: var(--s3); min-height: 64px; padding: 8px 4px 8px 8px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper); }
+.upl-file.is-err { border-color: #F2C3CF; background: #FFF7F9; }
+.upl-file.is-done .upl-file__m { color: var(--accent-dark); font-weight: 700; }
+.upl-file__th { width: 48px; height: 48px; flex: none; border-radius: 10px; overflow: hidden; display: grid; place-items: center; background: var(--surface);
+  color: var(--muted); font-size: .8125rem; font-weight: 800; }
+.upl-file__th img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.upl-file__body { flex: 1; min-width: 0; }
+.upl-file__t { font-weight: 700; }
+.upl-file__m { font-size: var(--fs-meta); color: var(--muted); }
+.upl-file.is-err .upl-file__m { color: #B41E44; font-weight: 700; }
+.upl-file__x { width: 48px; height: 48px; flex: none; display: grid; place-items: center; border: 0; background: transparent; color: var(--faint); border-radius: 50%; }
+.upl-file__x:active { color: var(--danger); background: var(--danger-soft); }
+.upl__note { width: 100%; margin-top: var(--s3); padding: 12px 14px; min-height: 56px; border: 1.5px solid var(--line-strong); border-radius: var(--r-md);
+  font: inherit; font-size: var(--fs-body); resize: vertical; background: var(--paper); }
+.upl__note:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus); }
+.upl__note[hidden] { display: none; }
+.upl__prog { margin-top: var(--s4); }
+.upl__prog[hidden] { display: none; }
+.upl__bar { height: 8px; border-radius: 999px; background: var(--surface); overflow: hidden; }
+.upl__fill { height: 100%; width: 0; border-radius: 999px; background: var(--accent); transition: width .25s linear; }
+.upl__progtxt { margin-top: 8px; font-size: var(--fs-meta); font-weight: 700; color: var(--muted); }
+.upl__done { display: grid; justify-items: center; gap: 6px; padding: var(--s6) 0 var(--s4); text-align: center; }
+.upl__done[hidden] { display: none; }
+.upl__doneic { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #fff; animation: popIn .35s var(--ease) both; }
+.upl__doneic svg.i { width: 32px; height: 32px; stroke-width: 2.6; }
+@keyframes popIn { from { transform: scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
+.upl__donett { font-size: var(--fs-h3); font-weight: 800; }
+.upl__donesub { color: var(--muted); font-size: var(--fs-meta); }
+.upl__err { margin: var(--s3) 0 0; color: #B41E44; font-weight: 700; font-size: var(--fs-meta); }
+.upl__err[hidden] { display: none; }
+.upl__acts { display: grid; gap: 10px; margin-top: var(--s4); }
+.upl__acts .btn[hidden] { display: none; }
+.upl__acts .btn { height: var(--tap-lg); }
+.upl__fine { margin: var(--s3) 0 0; text-align: center; font-size: .8125rem; font-weight: 600; color: var(--muted); }
+/* Recent uploads strip (bottom of each section) */
+.upl-recent:empty { display: none; }
+.upl-recent { margin-top: var(--s2); }
+.upl-row { display: flex; align-items: center; gap: var(--s3); min-height: 60px; padding: 8px var(--s4); }
+.upl-row + .upl-row { border-top: 1px solid var(--line); }
+.upl-row__ic { width: 36px; height: 36px; flex: none; border-radius: 10px; display: grid; place-items: center; background: var(--surface); color: var(--muted); }
+.upl-row__ic svg.i { width: 20px; height: 20px; }
+.upl-row__body { flex: 1; min-width: 0; }
+.upl-row__t { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.upl-row__m { font-size: var(--fs-meta); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.upl-st { flex: none; height: 28px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: 999px; font-size: .8125rem; font-weight: 800; }
+.upl-st.is-ok { background: var(--accent-soft); color: var(--accent-dark); }
+.upl-st.is-wait { background: var(--surface); color: var(--muted); }
+.upl-st.is-look { background: #FCE8EE; color: #B41E44; }
+/* Closet people: all names visible at phone width (wrap instead of a hidden sideways scroll) */
+#personChips { flex-wrap: wrap; overflow: visible; margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; }
+#personChips .chip { padding: 0 16px; }
+.chip--sm { height: 44px; padding: 0 14px; font-size: var(--fs-meta); }
+.chips--wrap { flex-wrap: wrap; overflow: visible; margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; }
+.chip.is-active { background: var(--accent); border-color: var(--accent); color: #fff; }
+/* Budget */
+.bud-seg { margin-bottom: var(--s5); }
+.pill--over { background: #FCE8EE; color: #B41E44; }
+.bud-other { display: flex; justify-content: space-between; align-items: center; min-height: 52px; margin-top: var(--s3); padding: 0 var(--s4);
+  border-radius: var(--r-md); background: var(--surface); font-weight: 700; color: var(--muted); }
+.bud-other b { color: var(--ink); font-size: var(--fs-item); }
+.bud-log { display: grid; gap: var(--s3); }
+.bud-log__row { display: flex; gap: var(--s2); }
+.bud-log__amt { flex: 1.1; }
+.bud-log__amt .field { font-size: var(--fs-item); font-weight: 800; }
+.bud-log__date { flex: 1; min-width: 0; }
+.bud-cats { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.bud-log .btn { height: var(--tap-lg); }
+.pur { display: flex; align-items: center; gap: var(--s3); min-height: 68px; padding: 8px 4px 8px var(--s4); }
+.pur + .pur { border-top: 1px solid var(--line); }
+.pur__ic { width: 40px; height: 40px; flex: none; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+.pur__ic svg.i { width: 20px; height: 20px; }
+.pur__body { flex: 1; min-width: 0; }
+.pur__t { font-weight: 800; font-size: var(--fs-item); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pur__m { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: var(--fs-meta); color: var(--muted); }
+.pur__m .pill { height: 22px; font-size: .8125rem; padding: 0 8px; }
+.pur__amt { flex: none; font-weight: 800; font-size: var(--fs-item); }
+.wk { width: 100%; display: flex; align-items: center; gap: var(--s3); min-height: 76px; padding: 10px 8px 10px var(--s4); border: 0; background: transparent; text-align: left; font: inherit; color: inherit; }
+.wk + .wk { border-top: 1px solid var(--line); }
+.wk:active { background: var(--wash); }
+.wk__body { flex: 1; min-width: 0; display: grid; gap: 5px; }
+.wk__t { font-weight: 800; }
+.wk__m { font-size: var(--fs-meta); color: var(--muted); }
+.wk__bar { height: 6px; border-radius: 999px; background: var(--surface); overflow: hidden; }
+.wk__fill { display: block; height: 100%; border-radius: 999px; background: var(--accent); }
+.wk__amt { flex: none; font-weight: 800; font-size: var(--fs-item); }
+.wk__ch { flex: none; color: var(--faint); display: grid; }
+.bud-split { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); margin-bottom: var(--s3); }
+.bud-split__i { display: grid; gap: 2px; padding: 12px; border-radius: var(--r-md); background: var(--surface); }
+.bud-split__i span { font-size: var(--fs-label); font-weight: 700; color: var(--muted); }
+.bud-split__i b { font-size: var(--fs-h3); }
+.bud-range { margin-bottom: var(--s4); }
+.bud-custom { display: flex; align-items: center; gap: var(--s2); margin: calc(-1 * var(--s2)) 0 var(--s4); }
+.bud-custom .field { flex: 1; min-width: 0; height: 48px; padding: 0 10px; font-size: var(--fs-meta); }
+.bud-custom .btn { flex: none; height: 48px; padding: 0 16px; }
+.bud-custom__to { color: var(--muted); font-weight: 700; }
+.bud-cmp { padding: var(--s4) var(--s5); }
+.bud-cmp__lbl { font-size: var(--fs-label); font-weight: 800; color: var(--muted); text-transform: none; }
+.bud-cmp__big { font-size: var(--fs-num); font-weight: 800; letter-spacing: -.02em; line-height: 1.15; }
+.bud-cmp__line { margin-top: 4px; font-size: var(--fs-meta); color: var(--muted); }
+.bud-cmp__line b.is-up { color: #B41E44; }
+.bud-cmp__line b.is-down { color: var(--accent-dark); }
+.kpis { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3); margin-top: var(--s3); }
+.kpi { padding: 14px var(--s4); border: 1px solid #E9ECF2; border-radius: var(--r-lg); background: var(--paper); box-shadow: var(--sh-card); }
+.kpi__lbl { font-size: var(--fs-label); font-weight: 800; color: var(--muted); }
+.kpi__v { font-size: 1.5rem; font-weight: 800; letter-spacing: -.01em; }
+.kpi__s { font-size: .8125rem; font-weight: 600; color: var(--muted); }
+.chart-card { padding: var(--s4) var(--s3) var(--s2); }
+.chart { display: block; width: 100%; height: auto; overflow: visible; }
+.chart__bar { fill: #A9C0F2; }
+.chart__bar.is-hi { fill: var(--accent); }
+.chart__base { stroke: var(--line); stroke-width: 1; }
+.chart__avg { stroke: #B41E44; stroke-width: 1.5; stroke-dasharray: 5 4; }
+.chart__lbl { fill: var(--muted); font-size: 12px; font-weight: 700; font-family: var(--font); }
+.cats-bars { display: grid; gap: var(--s3); }
+.cbar__top { display: flex; justify-content: space-between; gap: var(--s2); font-weight: 700; }
+.cbar__top b { font-weight: 800; }
+.cbar__tr { height: 10px; margin-top: 6px; border-radius: 999px; background: var(--surface); overflow: hidden; }
+.cbar__fill { height: 100%; border-radius: 999px; background: var(--accent); }
+.tot__r { display: flex; justify-content: space-between; align-items: center; min-height: 48px; padding: 0 var(--s4); }
+.tot__r + .tot__r { border-top: 1px solid var(--line); }
+.tot__r b { font-weight: 800; }
+.tot__r--y { background: var(--surface); }
+.bud-all { display: flex; justify-content: space-between; align-items: center; gap: var(--s3); margin-top: var(--s4); padding: var(--s4) var(--s5);
+  border-radius: var(--r-lg); background: var(--accent); color: #fff; font-weight: 700; }
+.bud-all b { font-size: var(--fs-h2); font-weight: 800; }
+/* Desktop / tablet: one calm centered column instead of 1400px-wide rows */
+@media (min-width: 760px) {
+  .hdr { padding-left: max(var(--pad), calc(50% - 312px)); padding-right: max(var(--pad), calc(50% - 312px)); }
+  #app { max-width: 656px; margin: 0 auto; background: var(--bg); min-height: calc(100dvh - var(--header-h)); border-left: 1px solid #EEF0F4; border-right: 1px solid #EEF0F4; }
+  .nav { padding-left: max(var(--s1), calc(50% - 328px)); padding-right: max(var(--s1), calc(50% - 328px)); }
+  .toast, .undo { left: 50%; right: auto; width: 560px; transform: translateX(-50%); }
+  .toast { transform: translate(-50%, 8px); }
+  .toast.is-show { transform: translate(-50%, 0); }
+  .sheet-bg { justify-content: center; }
+  .sheet { max-width: 560px; }
+  .upl-coach { right: calc(50% - 312px); }
+  #installBar { max-width: 624px; }
+}
   </style>
 </head>
 <body>
@@ -913,7 +1090,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
   </script>
 
   <header class="hdr" id="topBar" hidden>
-    <div class="hdr__text"><div class="hdr__eyebrow"><span id="eyebrow"></span><span class="upd" id="updDot" hidden role="status" aria-label="Updating"></span></div><h1 class="hdr__title" id="title">Grocery</h1></div>
+    <div class="hdr__text"><div class="hdr__eyebrow"><span id="eyebrow"></span><span class="upd" id="updDot" hidden role="status" aria-label="Updating"></span><span class="net-pill" id="netPill" role="status" hidden>Offline</span></div><h1 class="hdr__title" id="title">Grocery</h1></div>
+    <button type="button" class="icon-btn icon-btn--upl" id="uplBtn" aria-label="Upload a photo or PDF" title="Upload a photo or PDF" hidden><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
     <button type="button" class="icon-btn" id="refreshBtn" aria-label="Refresh"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36L21 8"/><path d="M21 3v5h-5"/></svg></button>
     <div class="viewer" id="viewerBadge"><span class="viewer__avatar" id="viewerAvatar" aria-hidden="true">R</span><span id="viewerName">Roni</span></div>
   </header>
@@ -928,7 +1106,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         <button type="button" class="seg__btn" data-me="life" role="tab" aria-selected="false">Life</button>
         <button type="button" class="seg__btn" data-me="note" role="tab" aria-selected="false">Note</button>
       </div>
-      <div id="mePane-today"><div id="meToday"></div></div>
+      <div id="mePane-today"><div id="meToday"></div><div class="upl-recent" data-upl="schedule"></div></div>
       <div id="mePane-work" hidden>
         <div id="meWorkMain">
         <div id="meBillCard"></div>
@@ -938,11 +1116,13 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           <button type="button" class="btn" id="addWorkBtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Add</button>
         </div>
         <div id="meWork"></div>
+        <div class="upl-recent" data-upl="work"></div>
         </div>
         <div id="meBilling" hidden></div>
+        <div class="upl-recent" data-upl="billing" id="uplHostBilling" hidden></div>
       </div>
-      <div id="mePane-prov" hidden><div id="otRoot"></div></div>
-      <div id="mePane-life" hidden><div id="meLife"></div></div>
+      <div id="mePane-prov" hidden><div id="otRoot"></div><div class="upl-recent" data-upl="work" data-upl-alt="1"></div></div>
+      <div id="mePane-life" hidden><div id="meLife"></div><div class="upl-recent" data-upl="life"></div></div>
       <div id="mePane-note" hidden>
         <div class="sec"><h2 class="sec__title">Send a note</h2><span class="sec__meta">to your assistant</span></div>
         <div class="card note-card">
@@ -958,6 +1138,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           <div><div class="sent__title">Note sent</div><div class="sent__text" id="noteSentText"></div></div>
         </div>
         <div id="meNotes"></div>
+        <div class="upl-recent" data-upl="note"></div>
       </div>
     </section>
 
@@ -978,10 +1159,11 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           <textarea id="bulkPaste" rows="4" placeholder="milk&#10;eggs&#10;challah" autocomplete="off" aria-label="Paste a list"></textarea>
           <button type="button" class="btn btn--block" id="bulkAddBtn">Add all</button>
           <div class="more__sep"></div>
-          <button type="button" class="btn btn--quiet btn--block" id="autoUploadBtn">Auto upload</button>
+          <button type="button" class="btn btn--quiet btn--block" id="autoUploadBtn">Copy list to share</button>
           <button type="button" class="btn btn--outline-danger btn--block" id="clearStoreBtn">Clear Lidl list</button>
         </div>
       </div>
+      <div class="upl-recent" data-upl="shopping"></div>
     </section>
 
     <!-- DINNERS -->
@@ -1002,12 +1184,14 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           <button type="button" class="btn btn--outline-danger btn--block" id="clearWeekBtn">Clear this week</button>
         </div>
       </div>
+      <div class="upl-recent" data-upl="dinners"></div>
     </section>
 
     <!-- CLOSET -->
     <section class="screen" id="screen-closet" hidden>
       <div class="chips" role="tablist" aria-label="People" id="personChips"></div>
       <div id="closetBody"></div>
+      <div class="upl-recent" data-upl="closet"></div>
     </section>
 
     <!-- TO-DO (v2: one input, one row per to-do) -->
@@ -1018,23 +1202,35 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       </form>
       <div class="td-hint" id="todoHint" hidden></div>
       <div id="todoList"></div>
+      <div class="upl-recent" data-upl="todo"></div>
     </section>
 
-    <!-- BUDGET (parents only) -->
+    <!-- BUDGET (grown-ups only; the server refuses budget calls for anyone else) -->
     <section class="screen" id="screen-budget" hidden>
-      <div class="sec"><h2 class="sec__title">This week</h2><span class="sec__meta" id="budgetWeek"></span></div>
-      <div id="budgetBody"></div>
-      <div class="sec"><h2 class="sec__title">Log spend</h2></div>
-      <div class="card card--pad log">
-        <div class="seg" id="spendKindSeg">
-          <button type="button" class="seg__btn is-active" data-kind="food">Food</button>
-          <button type="button" class="seg__btn" data-kind="amazon">Amazon</button>
-        </div>
-        <div class="add">
-          <div class="money"><input class="field" id="newSpend" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00" aria-label="Amount"></div>
-          <button type="button" class="btn" id="addSpendBtn">Log</button>
-        </div>
+      <div class="seg bud-seg" id="budSeg" role="tablist" aria-label="Budget">
+        <button type="button" class="seg__btn is-active" data-bud="week" role="tab" aria-selected="true">This week</button>
+        <button type="button" class="seg__btn" data-bud="history" role="tab" aria-selected="false">History</button>
+        <button type="button" class="seg__btn" data-bud="trends" role="tab" aria-selected="false">Trends</button>
       </div>
+      <div id="budPane-week">
+        <div class="sec"><h2 class="sec__title">This week</h2><span class="sec__meta" id="budgetWeek"></span></div>
+        <div id="budgetBody"></div>
+        <div class="sec"><h2 class="sec__title">Log a purchase</h2></div>
+        <form class="card card--pad bud-log" id="budLogForm" autocomplete="off" novalidate>
+          <div class="bud-log__row">
+            <label class="money bud-log__amt"><span class="sr-only">Amount</span><input class="field" id="newSpend" type="text" inputmode="decimal" placeholder="0.00" aria-label="Amount" enterkeyhint="next" maxlength="10"></label>
+            <input class="field bud-log__date" id="spendDate" type="date" aria-label="Date">
+          </div>
+          <input class="field" id="spendStore" type="text" placeholder="Store (optional)" aria-label="Store" list="storeOptions" maxlength="60" autocomplete="off" enterkeyhint="done">
+          <datalist id="storeOptions"></datalist>
+          <div class="bud-cats" id="spendCats" role="radiogroup" aria-label="Category"></div>
+          <button type="submit" class="btn btn--block" id="addSpendBtn">Log purchase</button>
+        </form>
+        <div id="budWeekList"></div>
+      </div>
+      <div id="budPane-history" hidden><div id="budHistory"></div></div>
+      <div id="budPane-trends" hidden><div id="budTrends"></div></div>
+      <div class="upl-recent" data-upl="budget"></div>
     </section>
   </main>
 
@@ -1055,6 +1251,37 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       <div class="sheet__handle"></div>
       <h3 class="sheet__title" id="storeSheetTitle">Choose store</h3>
       <div class="opt-list" id="storeSheetList" role="listbox" aria-labelledby="storeSheetTitle"></div>
+    </div>
+  </div>
+  <div class="sheet-bg" id="uplSheetBg" aria-hidden="true">
+    <div class="sheet upl" role="dialog" aria-modal="true" aria-labelledby="uplTitle">
+      <div class="sheet__handle"></div>
+      <div class="upl__head">
+        <h3 class="sheet__title" id="uplTitle">Upload</h3>
+        <button type="button" class="upl__close" id="uplClose" aria-label="Close"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+      </div>
+      <p class="upl__hint" id="uplHint"></p>
+      <div class="upl__for" id="uplFor" hidden></div>
+      <div class="upl__pick" id="uplPick">
+        <button type="button" class="upl__big" id="uplCamBtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3.5"/></svg><span>Take photo</span></button>
+        <button type="button" class="upl__big" id="uplFileBtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="m9 15 3-3 3 3"/></svg><span id="uplFileLbl">Choose files</span></button>
+      </div>
+      <div class="upl__files" id="uplFiles"></div>
+      <textarea class="upl__note" id="uplNote" rows="2" maxlength="300" placeholder="Add a note (optional)" aria-label="Note (optional)" hidden></textarea>
+      <div class="upl__prog" id="uplProg" hidden><div class="upl__bar"><div class="upl__fill" id="uplFill"></div></div><div class="upl__progtxt" id="uplProgTxt" role="status" aria-live="polite"></div></div>
+      <div class="upl__done" id="uplDone" role="status" hidden>
+        <span class="upl__doneic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+        <div class="upl__donett">Got it, adding this soon</div>
+        <div class="upl__donesub" id="uplDoneSub"></div>
+      </div>
+      <p class="upl__err" id="uplErr" role="alert" hidden></p>
+      <div class="upl__acts">
+        <button type="button" class="btn btn--block" id="uplSend" hidden>Upload</button>
+        <button type="button" class="btn btn--quiet btn--block" id="uplMore" hidden>Upload more</button>
+      </div>
+      <p class="upl__fine">Photos and PDFs, up to 6 at a time. Kept private in the family’s own files, never shared.</p>
+      <input type="file" id="uplCamIn" accept="image/*" capture="environment" hidden>
+      <input type="file" id="uplFileIn" accept="image/*,application/pdf" multiple hidden>
     </div>
   </div>
   <div class="sheet-bg" id="sheetBackdrop" aria-hidden="true">
@@ -1361,6 +1588,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       });
       $('title').textContent = TITLES[name];
       window.scrollTo(0, 0);
+      if (name === 'budget' && state.data && isParent(state.viewer) && !state.bud.led && !state.bud._loading) loadLedger();
+      syncUpload();
     }
     function updateHeader() {
       $('eyebrow').textContent = todayLabel();
@@ -2194,47 +2423,13 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       serverDelete('clearDoneTodos', [], my);
     }
 
-    /* ---------- Budget ---------- */
-    function renderBudget() {
-      if (!isParent(state.viewer)) return;
-      var b = state.data.budget || {};
-      $('budgetWeek').textContent = weekRange(state.data.weekStart);
-      var root = $('budgetBody');
-      root.innerHTML = '';
-      function card(label, spent, list, cap) {
-        var total = spent + list, over = total > cap;
-        var pct = cap ? Math.round(total / cap * 100) : 0;
-        var c = el('div', 'card budget');
-        var head = el('div', 'budget__head');
-        head.appendChild(el('span', 'budget__label', label));
-        head.appendChild(pill(pct + '%'));
-        c.appendChild(head);
-        var amt = el('div', 'budget__amt', money(total));
-        amt.appendChild(el('span', 'budget__of', 'of ' + money(cap)));
-        c.appendChild(amt);
-        var bar = el('div', 'bar' + (over ? ' is-over' : ''));
-        var fill = el('div', 'bar__fill');
-        fill.style.width = Math.min(100, pct) + '%';
-        bar.appendChild(fill);
-        c.appendChild(bar);
-        var meta = el('div', 'budget__meta');
-        meta.appendChild(el('span', '', 'Spent ' + money(spent) + ' \u00b7 on list ' + money(list)));
-        var right = el('span');
-        if (over) { right.appendChild(el('b', '', 'Over by ' + money(total - cap))); }
-        else { right.appendChild(el('b', '', money(cap - total))); right.appendChild(document.createTextNode(' left')); }
-        meta.appendChild(right);
-        c.appendChild(meta);
-        return c;
-      }
-      root.appendChild(card('Food', Number(b.foodSpent) || 0, Number(b.foodList) || 0, Number(b.foodCap) || 500));
-      root.appendChild(card('Amazon', Number(b.amazonSpent) || 0, Number(b.amazonList) || 0, Number(b.amazonCap) || 250));
-    }
-
+    /* Budget lives in the "Spending history" block below (renderBudget). */
     function renderAll() {
       fillViewerSelect();
       applyRoleNav();
       renderGrocery(); renderDinners(); renderCloset(); renderTodo(); renderBudget();
       afterDataPortal();
+      syncUpload();
     }
 
 
@@ -2374,6 +2569,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       }
       var open = !!(state.billOpen && b);
       main.hidden = open; page.hidden = !open;
+      setTimeout(syncUpload, 0);
       if (!open) { page.innerHTML = ''; return; }
       page.innerHTML = '';
       var back = el('button', 'bl-back'); back.type = 'button';
@@ -2562,6 +2758,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         var on = b.getAttribute('data-me') === name;
         b.classList.toggle('is-active', on); b.setAttribute('aria-selected', on ? 'true' : 'false');
       });
+      syncUpload();
     }
     function renderMe() {
       if (!portalOn()) return;
@@ -3420,28 +3617,556 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         function () { btn.disabled = false; toast('Saved'); loadData(false); },
         function () { btn.disabled = false; toast('Couldn\u2019t save dinner'); });
     }
-    function addSpend() {
-      if (!isParent(state.viewer)) { toast('Budget isn\u2019t available'); return; }
-      var input = $('newSpend');
-      var amount = Number(input.value);
-      if (!(amount > 0)) { input.focus(); return; }
-      var btn = $('addSpendBtn');
+    /* ====================== Upload (UX v2, Oct 2026) ======================
+       One camera button in the header, same spot on every screen. It uploads to the section you're in
+       (the server re-checks the section against your link; the button only shows where you may upload).
+       Photos are shrunk on the phone to ~1600px JPEG; PDFs go as they are (max 6 MB). One call per file. */
+    var UPL = {
+      shopping: { title: 'Upload to Shopping', hint: 'A receipt, a shopping list, or a photo of what\u2019s running low. It gets added to the list.' },
+      dinners:  { title: 'Upload to Dinners', hint: 'A menu, a recipe or a meal plan. It gets added to this week\u2019s dinners.' },
+      closet:   { title: 'Upload to Closet', hint: 'A photo of clothes, a size tag or a wish list. It gets added to the closet.' },
+      todo:     { title: 'Upload to To-do', hint: 'A screenshot of to-dos, a school form or a bill. It becomes a to-do (with the due date).' },
+      budget:   { title: 'Upload a receipt', hint: 'Receipts and bills. Each purchase gets logged in the spending history.' },
+      schedule: { title: 'Upload to Schedule', hint: 'An invitation, a flyer or a schedule. It gets added to your calendar list.' },
+      work:     { title: 'Upload to Work', hint: 'A screenshot, a form or a note for work. It becomes a work item.' },
+      life:     { title: 'Upload to Life', hint: 'A letter, a bill or a screenshot. It lands in your Life list.' },
+      billing:  { title: 'Upload billing', hint: 'An invoice or a session log. It gets added to Billing review.' },
+      note:     { title: 'Upload with a note', hint: 'Anything for your assistant. Add a note to say what to do with it.' }
+    };
+    var UPL_MAX_FILES = 6, UPL_MAX_BYTES = 6 * 1024 * 1024, UPL_MAX_RAW = 40 * 1024 * 1024, UPL_EDGE = 1600;
+    var upl = { section: '', files: [], busy: false, forWho: '' };
+    state.uploads = {};
+    function uplAllowedHere(sec) { var a = state.data && state.data.uploadSections; return !!(sec && a && a.indexOf(sec) >= 0); }
+    function uplCurrentSection() {
+      var m = { grocery: 'shopping', dinners: 'dinners', closet: 'closet', todo: 'todo', budget: 'budget' };
+      if (state.screen !== 'me') return m[state.screen] || '';
+      if (state.billOpen && state.mePane === 'work') return 'billing';
+      return { today: 'schedule', work: 'work', prov: 'work', life: 'life', note: 'note' }[state.mePane || 'today'] || '';
+    }
+    function isPhoneLike() { return /android|iphone|ipad|mobile/i.test(navigator.userAgent || '') || (navigator.maxTouchPoints > 1 && matchMedia('(pointer: coarse)').matches); }
+    function syncUpload() {
+      var sec = uplCurrentSection(), ok = uplAllowedHere(sec), b = $('uplBtn');
+      if (b) {
+        b.hidden = !ok;
+        if (ok) { var lbl = (UPL[sec] || {}).title || 'Upload'; b.setAttribute('aria-label', lbl + ' (photo or PDF)'); b.title = lbl; }
+      }
+      var bh = $('uplHostBilling'); if (bh) bh.hidden = !(state.billOpen && state.mePane === 'work');
+      if (ok && !state.uploads[sec] && !state['_uplAsk_' + sec]) loadUploads(sec);
+      renderUploadStrips();
+      uplCoach(ok);
+    }
+    function loadUploads(sec) {
+      state['_uplAsk_' + sec] = true;
+      run('getUploads', [{ section: sec }], function (r) { state.uploads[sec] = (r && r.items) || []; renderUploadStrips(); },
+        function () { state['_uplAsk_' + sec] = false; });
+    }
+    function uplWhen(t) {   // "2026-10-09 14:32" -> "2:32 PM" today, else "Oct 8"
+      var m = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/.exec(String(t || ''));
+      if (!m) return '';
+      var d = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]), now = new Date();
+      if (d.toDateString() === now.toDateString()) { var h = d.getHours() % 12 || 12; return h + ':' + m[5] + (d.getHours() < 12 ? ' AM' : ' PM'); }
+      return MONTHS[d.getMonth()] + ' ' + d.getDate();
+    }
+    function renderUploadStrips() {
+      document.querySelectorAll('.upl-recent[data-upl]').forEach(function (host) {
+        var sec = host.getAttribute('data-upl'), items = uplAllowedHere(sec) ? (state.uploads[sec] || []) : [];
+        host.innerHTML = '';
+        if (!items.length || host.getAttribute('data-upl-alt')) return;
+        host.appendChild(makeSec('Recent uploads', null, { sub: true }));
+        var c = el('div', 'card upl-list');
+        items.forEach(function (it) {
+          var r = el('div', 'upl-row'), ic = el('span', 'upl-row__ic');
+          ic.innerHTML = it.kind === 'PDF' ? '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>'
+            : '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>';
+          r.appendChild(ic);
+          var body = el('div', 'upl-row__body');
+          body.appendChild(el('div', 'upl-row__t', it.note || (it.kind + (sec === 'closet' && it.forWho && it.forWho !== state.viewer ? ' for ' + it.forWho : ''))));
+          body.appendChild(el('div', 'upl-row__m', uplWhen(it.time) + (it.result ? ' \u00b7 ' + it.result : '')));
+          r.appendChild(body);
+          var st = it.status === 'processed' ? ['Added', 'is-ok'] : it.status === 'needs-review' ? ['Checking', 'is-look'] : ['Waiting', 'is-wait'];
+          r.appendChild(el('span', 'upl-st ' + st[1], st[0]));
+          c.appendChild(r);
+        });
+        host.appendChild(c);
+      });
+    }
+    function uplCoach(show) {   // one-time hint under the new camera button
+      var k = 'homeops.uplcoach', tip = $('uplCoach');
+      var seen = false; try { seen = localStorage.getItem(k) === '1'; } catch (e) {}
+      if (!show || seen) { if (tip) tip.remove(); return; }
+      if (tip) return;
+      tip = el('button', 'upl-coach'); tip.type = 'button'; tip.id = 'uplCoach';
+      tip.appendChild(el('b', '', 'New: Upload'));
+      tip.appendChild(el('span', '', 'Snap a receipt, list or form. We\u2019ll add it for you.'));
+      function gone() { try { localStorage.setItem(k, '1'); } catch (e) {} tip.remove(); document.removeEventListener('pointerdown', gone, true); }
+      tip.addEventListener('click', gone);
+      setTimeout(function () { document.addEventListener('pointerdown', gone, true); }, 0);   // any tap anywhere dismisses it for good
+      $('topBar').appendChild(tip);
+    }
+    function openUpload() {
+      var sec = uplCurrentSection();
+      if (!uplAllowedHere(sec)) return;
+      try { localStorage.setItem('homeops.uplcoach', '1'); } catch (e) {} var tip = $('uplCoach'); if (tip) tip.remove();
+      upl = { section: sec, files: [], busy: false, forWho: sec === 'closet' ? state.person : state.viewer };
+      $('uplTitle').textContent = UPL[sec].title;
+      $('uplHint').textContent = UPL[sec].hint;
+      $('uplNote').value = '';
+      $('uplCamBtn').hidden = !isPhoneLike();
+      $('uplFileLbl').textContent = isPhoneLike() ? 'Choose files' : 'Choose photos or PDFs';
+      var f = $('uplFor'); f.innerHTML = ''; f.hidden = true;
+      if (sec === 'closet' && isParent(state.viewer)) {   // grown-ups can upload for anyone; everyone else only for themselves
+        f.hidden = false; f.appendChild(el('span', 'upl__forlbl', 'For'));
+        peopleList().forEach(function (p) {
+          var b = el('button', 'chip' + (p === upl.forWho ? ' is-active' : ''), p); b.type = 'button';
+          b.setAttribute('aria-pressed', p === upl.forWho ? 'true' : 'false');
+          b.addEventListener('click', function () { upl.forWho = p; f.querySelectorAll('.chip').forEach(function (x) { var on = x === b; x.classList.toggle('is-active', on); x.setAttribute('aria-pressed', on ? 'true' : 'false'); }); });
+          f.appendChild(b);
+        });
+      }
+      uplView('pick');
+      $('uplSheetBg').classList.add('is-open'); $('uplSheetBg').setAttribute('aria-hidden', 'false');
+      setTimeout(function () { try { ($('uplCamBtn').hidden ? $('uplFileBtn') : $('uplCamBtn')).focus({ preventScroll: true }); } catch (e) {} }, 200);
+    }
+    function closeUpload() {
+      if (upl.busy) return;
+      $('uplSheetBg').classList.remove('is-open'); $('uplSheetBg').setAttribute('aria-hidden', 'true');
+      try { $('uplBtn').focus({ preventScroll: true }); } catch (e) {}
+    }
+    function uplView(v, msg) {   // pick | ready | sending | done
+      $('uplPick').hidden = v === 'sending' || v === 'done' || upl.files.length >= UPL_MAX_FILES;
+      $('uplFor').hidden = !($('uplFor').childNodes.length && (v === 'pick' || v === 'ready'));
+      $('uplFiles').hidden = v === 'done' || !upl.files.length;
+      $('uplNote').hidden = !(v === 'ready');
+      $('uplProg').hidden = v !== 'sending';
+      $('uplDone').hidden = v !== 'done';
+      $('uplSend').hidden = v !== 'ready';
+      $('uplMore').hidden = v !== 'done';
+      $('uplHint').hidden = v === 'done';
+      var e = $('uplErr'); e.hidden = !msg; e.textContent = msg || '';
+      if (v === 'ready') $('uplSend').textContent = upl.files.length === 1 ? 'Upload' : 'Upload ' + upl.files.length + ' files';
+      renderUplFiles();
+    }
+    function fmtBytes(n) { return n >= 1048576 ? (Math.round(n / 104857.6) / 10) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB'; }
+    function renderUplFiles() {
+      var box = $('uplFiles'); box.innerHTML = '';
+      upl.files.forEach(function (f, i) {
+        var r = el('div', 'upl-file' + (f.state === 'error' ? ' is-err' : '') + (f.state === 'done' ? ' is-done' : ''));
+        var th = el('span', 'upl-file__th');
+        if (f.thumb) { var im = el('img'); im.src = f.thumb; im.alt = ''; th.appendChild(im); } else th.textContent = f.isPdf ? 'PDF' : '\u2026';
+        r.appendChild(th);
+        var b = el('div', 'upl-file__body');
+        b.appendChild(el('div', 'upl-file__t', f.isPdf ? 'PDF' : 'Photo ' + (i + 1)));
+        b.appendChild(el('div', 'upl-file__m', f.state === 'error' ? f.err : f.state === 'done' ? 'Uploaded' : f.state === 'sending' ? 'Uploading\u2026' : f.state === 'prep' ? 'Getting it ready\u2026' : fmtBytes(f.size || 0)));
+        r.appendChild(b);
+        if (!upl.busy && f.state !== 'done') {
+          var x = el('button', 'upl-file__x'); x.type = 'button'; x.setAttribute('aria-label', 'Remove'); x.innerHTML = svg('x');
+          x.addEventListener('click', function () { upl.files.splice(i, 1); uplView(upl.files.length ? 'ready' : 'pick'); });
+          r.appendChild(x);
+        }
+        box.appendChild(r);
+      });
+    }
+    function readAsDataURL(blob) {
+      return new Promise(function (res, rej) { var fr = new FileReader(); fr.onload = function () { res(fr.result); }; fr.onerror = function () { rej(fr.error); }; fr.readAsDataURL(blob); });
+    }
+    function decodeImage(file) {
+      if (window.createImageBitmap) {
+        return createImageBitmap(file, { imageOrientation: 'from-image' }).catch(function () { return createImageBitmap(file); }).catch(function () { return viaImg(); });
+      }
+      return viaImg();
+      function viaImg() {
+        return readAsDataURL(file).then(function (url) {
+          return new Promise(function (res, rej) { var im = new Image(); im.onload = function () { res(im); }; im.onerror = function () { rej(new Error('decode')); }; im.src = url; });
+        });
+      }
+    }
+    /* Photo -> JPEG, longest side <= 1600px; returns { data (base64), size, thumb (small data URL) }. */
+    function shrinkImage(file) {
+      return decodeImage(file).then(function (img) {
+        var w = img.width, h = img.height, k = Math.min(1, UPL_EDGE / Math.max(w, h));
+        var cv = document.createElement('canvas'); cv.width = Math.max(1, Math.round(w * k)); cv.height = Math.max(1, Math.round(h * k));
+        var cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(img, 0, 0, cv.width, cv.height);
+        var t = document.createElement('canvas'), tk = 112 / Math.max(cv.width, cv.height); t.width = Math.round(cv.width * tk); t.height = Math.round(cv.height * tk);
+        t.getContext('2d').drawImage(cv, 0, 0, t.width, t.height);
+        var thumb = t.toDataURL('image/jpeg', 0.7);
+        if (img.close) try { img.close(); } catch (e) {}
+        var q = 0.82, url = cv.toDataURL('image/jpeg', q);
+        while (url.length * 0.75 > 2.5 * 1048576 && q > 0.45) { q -= 0.12; url = cv.toDataURL('image/jpeg', q); }
+        return { data: url.slice(url.indexOf(',') + 1), size: Math.round((url.length - url.indexOf(',') - 1) * 0.75), thumb: thumb };
+      });
+    }
+    function addUplFiles(list) {
+      var errs = [];
+      Array.prototype.slice.call(list || []).forEach(function (file) {
+        if (upl.files.length >= UPL_MAX_FILES) { errs.push('Up to ' + UPL_MAX_FILES + ' files at a time.'); return; }
+        var isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name || '');
+        var isImg = /^image\//.test(file.type || '') || /\.(jpe?g|png|webp|heic|heif)$/i.test(file.name || '');
+        if (!isPdf && !isImg) { errs.push('Only photos and PDFs can be uploaded.'); return; }
+        if (isPdf && file.size > UPL_MAX_BYTES) { errs.push('That PDF is too big (max 6 MB). A photo of the page works too.'); return; }
+        if (!isPdf && file.size > UPL_MAX_RAW) { errs.push('That photo is too big to send.'); return; }
+        var f = { file: file, isPdf: isPdf, size: file.size, state: 'prep', thumb: '' };
+        upl.files.push(f);
+        f.ready = (isPdf ? readAsDataURL(file).then(function (u) { return { data: u.slice(u.indexOf(',') + 1), size: file.size, thumb: '' }; })
+          : shrinkImage(file).catch(function () {      // e.g. a HEIC photo this browser can't open: send it as is if small enough
+            if (file.size > UPL_MAX_BYTES) throw new Error('That photo is too big (max 6 MB).');
+            return readAsDataURL(file).then(function (u) { return { data: u.slice(u.indexOf(',') + 1), size: file.size, thumb: '' }; });
+          })).then(function (r) { f.data = r.data; f.size = r.size; f.thumb = r.thumb; f.state = 'ready'; renderUplFiles(); return f; },
+            function (e) { f.state = 'error'; f.err = (e && e.message && e.message.length < 80) ? e.message : 'Couldn\u2019t read this file.'; renderUplFiles(); return f; });
+      });
+      uplView(upl.files.length ? 'ready' : 'pick', errs[0] || '');
+    }
+    function uplCid() { var a = new Uint8Array(9); crypto.getRandomValues(a); return Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join(''); }
+    function sendUploads() {
+      if (upl.busy || !upl.files.length) return;
+      if (navigator.onLine === false) { uplView('ready', 'You\u2019re offline. Connect, then tap Upload again.'); return; }
+      upl.busy = true; uplView('sending');
+      var note = ($('uplNote').value || '').trim(), sec = upl.section, total = upl.files.length, done = 0, failed = 0;
+      var fill = $('uplFill'), txt = $('uplProgTxt'), creep = null;
+      function prog(i, f) {
+        var base = done / total, slice = 1 / total, p = 0.08;
+        clearInterval(creep);
+        fill.style.width = Math.round((base + slice * p) * 100) + '%';
+        txt.textContent = total === 1 ? 'Uploading\u2026' : 'Uploading ' + (i + 1) + ' of ' + total + '\u2026';
+        creep = setInterval(function () { p = Math.min(0.9, p + (0.9 - p) * 0.12); fill.style.width = Math.round((base + slice * p) * 100) + '%'; }, 250);
+      }
+      var chain = Promise.resolve();
+      upl.files.forEach(function (f, i) {
+        chain = chain.then(function () { return f.ready; }).then(function () {
+          if (f.state === 'error' || f.state === 'done') { if (f.state === 'error') failed++; else done++; return; }
+          f.state = 'sending'; renderUplFiles(); prog(i, f);
+          f.cid = f.cid || uplCid();
+          return new Promise(function (res) {
+            run('uploadFile', [{ section: sec, 'for': upl.forWho, note: note, data: f.data, n: i + 1, cid: f.cid }],
+              function () { f.state = 'done'; f.data = null; done++; renderUplFiles(); res(); },
+              function (e) {
+                f.state = 'error'; failed++;
+                var m = String((e && e.message) || '');
+                f.err = /offline|failed to fetch|network/i.test(m) ? 'No connection. Try again.' : (m && m.length < 90 ? m : 'Couldn\u2019t upload. Try again.');
+                renderUplFiles(); res();
+              });
+          });
+        });
+      });
+      chain.then(function () {
+        clearInterval(creep); fill.style.width = '100%'; upl.busy = false;
+        state['_uplAsk_' + sec] = false; loadUploads(sec);
+        if (done && !failed) {
+          $('uplDoneSub').textContent = done === 1 ? 'You\u2019ll see it under Recent uploads.' : done + ' files uploaded. You\u2019ll see them under Recent uploads.';
+          uplView('done');
+          try { $('uplMore').focus({ preventScroll: true }); } catch (e) {}
+        } else {
+          upl.files = upl.files.filter(function (f) { return f.state !== 'done'; });
+          upl.files.forEach(function (f) { if (f.state === 'error' && f.data) f.state = 'ready'; });
+          uplView(upl.files.length ? 'ready' : 'pick', done ? done + ' uploaded. ' + failed + ' didn\u2019t go through \u2014 tap Upload to try again.' : (upl.files[0] && upl.files[0].err) || 'Couldn\u2019t upload. Try again.');
+        }
+      });
+    }
+    $('uplBtn').addEventListener('click', openUpload);
+    $('uplClose').addEventListener('click', closeUpload);
+    $('uplSheetBg').addEventListener('click', function (e) { if (e.target === $('uplSheetBg')) closeUpload(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && $('uplSheetBg').classList.contains('is-open')) closeUpload(); });
+    $('uplCamBtn').addEventListener('click', function () { $('uplCamIn').value = ''; $('uplCamIn').click(); });
+    $('uplFileBtn').addEventListener('click', function () { $('uplFileIn').value = ''; $('uplFileIn').click(); });
+    $('uplCamIn').addEventListener('change', function () { addUplFiles(this.files); });
+    $('uplFileIn').addEventListener('change', function () { addUplFiles(this.files); });
+    $('uplSend').addEventListener('click', sendUploads);
+    $('uplMore').addEventListener('click', function () { upl.files = []; $('uplNote').value = ''; uplView('pick'); });
+
+    /* ====================== Offline / slow network ====================== */
+    function netSync() {
+      var off = navigator.onLine === false, p = $('netPill');
+      if (p) p.hidden = !off;
+      document.body.classList.toggle('is-offline', off);
+    }
+    window.addEventListener('offline', function () { netSync(); toast('You\u2019re offline \u2014 showing saved data'); });
+    window.addEventListener('online', function () { netSync(); toast('Back online'); loadData(false); });
+    netSync();
+
+    /* ====================== Spending history (Budget, grown-ups only) ======================
+       Every purchase is one permanent row on the server (tab Purchases). Weeks start Sunday. The phone keeps the
+       ledger in memory only (never in localStorage). The server answers 403 to anyone who isn't a grown-up. */
+    var CAT_ICON = { Groceries: 'cart', Household: 'layers', Amazon: 'tag', Clothing: 'shirt', 'Eating out': 'utensils', School: 'cal', Health: 'check', Gifts: 'tag', Other: 'tag' };
+    state.bud = { pane: 'week', range: '3m', cat: 'Groceries', led: null, rangeLed: null, weekLed: null, from: '', to: '' };
+    function money2(n) { n = Number(n) || 0; return '$' + (Math.round(n * 100) % 100 ? n.toFixed(2) : String(Math.round(n))).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+    function money0(n) { return '$' + String(Math.round(Number(n) || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+    function ymdLocalStr(d) { return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+    function shortDay(ymd) { var d = parseYmd(ymd); return d ? DAY_KEYS[d.getDay()] + ', ' + MONTHS[d.getMonth()] + ' ' + d.getDate() : ''; }
+    function monthName(ym) { var p = String(ym).split('-'); return MONTHS[+p[1] - 1] + (p[0] !== String(new Date().getFullYear()) ? ' ' + p[0].slice(2) : ''); }
+    var ledQ = Promise.resolve();
+    function ledRun(fn, args) {   // ledger calls run one after another (an Undo never overtakes its delete)
+      ledQ = ledQ.then(function () { return new Promise(function (res, rej) { run(fn, args, res, rej); }); });
+      var p = ledQ; ledQ = ledQ.catch(function () {}); return p;
+    }
+    function rangeDates(key) {
+      var t = new Date(), to = ymdLocalStr(t), from = '';
+      if (key === 'month') from = ymdLocalStr(new Date(t.getFullYear(), t.getMonth(), 1));
+      else if (key === '3m') from = ymdLocalStr(new Date(t.getFullYear(), t.getMonth() - 2, 1));
+      else if (key === 'year') from = ymdLocalStr(new Date(t.getFullYear(), 0, 1));
+      else if (key === 'custom') { from = state.bud.from || ymdLocalStr(new Date(t.getFullYear(), t.getMonth(), 1)); to = state.bud.to || to; }
+      return { from: from, to: to };
+    }
+    function loadLedger(what) {
+      if (!isParent(state.viewer)) return;
+      var b = state.bud, r = rangeDates(b.range);
+      if (what !== 'range' && what !== 'week') {
+        b._loading = true;
+        ledRun('getLedger', [{ from: r.from, to: r.to }]).then(function (L) { b._loading = false; b._err = false; b.led = L; b.rangeLed = L; renderBudget(); },
+          function () { b._loading = false; b._err = true; renderBudget(); });
+      } else if (what === 'range') {
+        b._rloading = true; renderBudget();
+        ledRun('getLedger', [{ from: r.from, to: r.to }]).then(function (L) { b._rloading = false; b.rangeLed = L; b.led = b.led || L; renderBudget(); },
+          function () { b._rloading = false; toast('Couldn\u2019t load \u2014 try again'); renderBudget(); });
+      } else {
+        b._wloading = true; renderBudget();
+        ledRun('getLedger', [{ week: b.openWeek }]).then(function (L) { b._wloading = false; b.weekLed = L; renderBudget(); },
+          function () { b._wloading = false; b.openWeek = ''; toast('Couldn\u2019t load that week'); renderBudget(); });
+      }
+    }
+    function setBudPane(p) {
+      state.bud.pane = p;
+      ['week', 'history', 'trends'].forEach(function (k) { $('budPane-' + k).hidden = k !== p; });
+      $('budSeg').querySelectorAll('.seg__btn').forEach(function (x) { var on = x.getAttribute('data-bud') === p; x.classList.toggle('is-active', on); x.setAttribute('aria-selected', on ? 'true' : 'false'); });
+      if (p !== 'history') state.bud.openWeek = '';
+      renderBudget();
+    }
+    $('budSeg').addEventListener('click', function (e) { var b = e.target.closest('.seg__btn[data-bud]'); if (b) { setBudPane(b.getAttribute('data-bud')); window.scrollTo(0, 0); } });
+    function budgetCard(label, spent, list, cap) {
+      var total = spent + list, over = total > cap, pct = cap ? Math.round(total / cap * 100) : 0;
+      var c = el('div', 'card budget');
+      var head = el('div', 'budget__head');
+      head.appendChild(el('span', 'budget__label', label));
+      head.appendChild(pill(pct + '%', over ? 'pill--over' : ''));
+      c.appendChild(head);
+      var amt = el('div', 'budget__amt', money0(total)); amt.appendChild(el('span', 'budget__of', 'of ' + money0(cap))); c.appendChild(amt);
+      var bar = el('div', 'bar' + (over ? ' is-over' : '')), fill = el('div', 'bar__fill'); fill.style.width = Math.min(100, pct) + '%'; bar.appendChild(fill); c.appendChild(bar);
+      var meta = el('div', 'budget__meta');
+      meta.appendChild(el('span', '', 'Spent ' + money0(spent) + (list ? ' \u00b7 on list ' + money0(list) : '')));
+      var right = el('span');
+      if (over) right.appendChild(el('b', '', 'Over by ' + money0(total - cap)));
+      else { right.appendChild(el('b', '', money0(cap - total))); right.appendChild(document.createTextNode(' left')); }
+      meta.appendChild(right); c.appendChild(meta);
+      return c;
+    }
+    function purchaseRow(p, onDelete) {
+      var row = el('div', 'pur');
+      var ic = el('span', 'pur__ic'); ic.innerHTML = svg(CAT_ICON[p.category] || 'tag'); row.appendChild(ic);
+      var body = el('div', 'pur__body');
+      body.appendChild(el('div', 'pur__t', p.store || p.category));
+      var m = el('div', 'pur__m');
+      var bits = [shortDay(p.date)]; if (p.store) bits.push(p.category); if (p.who && p.who !== state.viewer) bits.push(p.who);
+      m.appendChild(document.createTextNode(bits.join(' \u00b7 ')));
+      if (p.source === 'receipt') m.appendChild(pill('Receipt', 'pill--person'));
+      if (p.source === 'migrated') m.appendChild(pill('Earlier total', ''));
+      body.appendChild(m); row.appendChild(body);
+      row.appendChild(el('span', 'pur__amt', money2(p.amount)));
+      if (onDelete) {
+        var x = el('button', 'row__x'); x.type = 'button'; x.setAttribute('aria-label', 'Remove ' + money2(p.amount) + ' ' + (p.store || p.category)); x.innerHTML = svg('x');
+        x.addEventListener('click', function () { onDelete(p); }); row.appendChild(x);
+      }
+      return row;
+    }
+    function deletePurchase(p) {
+      var L = state.bud.led;
+      [state.bud.led, state.bud.weekLed].forEach(function (X) { if (X && X.purchases) X.purchases = X.purchases.filter(function (q) { return q.id !== p.id; }); });
+      if (L && L.weekTotals && L.week === p.week) { L.weekTotals.total -= p.amount; L.weekTotals[p.bucket] = (L.weekTotals[p.bucket] || 0) - p.amount; }
+      renderBudget();
+      var my = showUndo('Removed ' + money2(p.amount) + ' ' + (p.store || p.category)); my.pending = false;
+      var del = ledRun('deletePurchase', [p.id]);
+      del.then(function () { if (!my.wantUndo) loadLedger(); }, function () { toast('Couldn\u2019t remove \u2014 try again'); loadLedger(); });
+      my.restore = function () { ledRun('restorePurchase', [p.id]).then(function () { toast('Restored'); loadLedger(); if (state.bud.openWeek) loadLedger('week'); }, function () { toast('Couldn\u2019t undo'); loadLedger(); }); };
+    }
+    function renderBudget() {
+      if (!isParent(state.viewer) || !state.data) return;
+      var b = state.bud, L = b.led, base = state.data.budget || {};
+      if (!L && !b._loading && !b._err && state.screen === 'budget') loadLedger();
+      // ---- This week
+      $('budgetWeek').textContent = weekRange(L ? L.thisWeek : state.data.weekStart);
+      var root = $('budgetBody'); root.innerHTML = '';
+      var wt = L ? L.weekTotals : { food: Number(base.foodSpent) || 0, amazon: Number(base.amazonSpent) || 0, other: 0 };
+      var caps = L && L.caps ? L.caps : { food: Number(base.foodCap) || 500, amazon: Number(base.amazonCap) || 250 };
+      root.appendChild(budgetCard('Food', wt.food || 0, Number(base.foodList) || 0, caps.food));
+      root.appendChild(budgetCard('Amazon', wt.amazon || 0, Number(base.amazonList) || 0, caps.amazon));
+      if (wt.other) { var o = el('div', 'bud-other'); o.appendChild(el('span', '', 'Everything else this week')); o.appendChild(el('b', '', money2(wt.other))); root.appendChild(o); }
+      var cats = $('spendCats');
+      if (!cats.childNodes.length) {
+        ((L && L.categories) || ['Groceries', 'Household', 'Amazon', 'Clothing', 'Eating out', 'School', 'Health', 'Gifts', 'Other']).forEach(function (c) {
+          var bt = el('button', 'chip chip--sm', c); bt.type = 'button'; bt.setAttribute('role', 'radio'); bt.setAttribute('data-cat', c);
+          bt.addEventListener('click', function () { b.cat = c; syncCats(); }); cats.appendChild(bt);
+        });
+        var dl = $('storeOptions'); STORE_ORDER.forEach(function (st) { var op = el('option'); op.value = st; dl.appendChild(op); });
+      }
+      syncCats();
+      if (!$('spendDate').value) $('spendDate').value = ymdLocalStr(new Date());
+      $('spendDate').max = ymdLocalStr(new Date());
+      var wl = $('budWeekList'); wl.innerHTML = '';
+      if (!L) { if (b._err) wl.appendChild(makeEmpty('tag', 'Couldn\u2019t load purchases', 'Check your connection, then tap refresh.')); else wl.appendChild(skel(3, true)); }
+      else {
+        wl.appendChild(makeSec('Purchases this week', L.purchases.length ? money2(L.weekTotals.total) : ''));
+        if (!L.purchases.length) { var ec = el('div', 'card'); ec.appendChild(okLine('Nothing logged yet this week.')); wl.appendChild(ec); }
+        else { var pc = el('div', 'card'); L.purchases.forEach(function (p) { pc.appendChild(purchaseRow(p, deletePurchase)); }); wl.appendChild(pc); }
+      }
+      renderBudHistory(); renderBudTrends();
+    }
+    function syncCats() {
+      $('spendCats').querySelectorAll('.chip').forEach(function (x) { var on = x.getAttribute('data-cat') === state.bud.cat; x.classList.toggle('is-active', on); x.setAttribute('aria-checked', on ? 'true' : 'false'); });
+    }
+    function logPurchase() {
+      if (!isParent(state.viewer)) return;
+      var input = $('newSpend'), amount = Number(String(input.value || '').replace(/[$,\s]/g, ''));
+      if (!(amount > 0)) { input.focus(); toast('Enter an amount'); return; }
+      var date = $('spendDate').value || ymdLocalStr(new Date());
+      if (date > ymdLocalStr(new Date())) { toast('That date is in the future'); return; }
+      var store = ($('spendStore').value || '').trim(), cat = state.bud.cat, btn = $('addSpendBtn');
       btn.disabled = true;
-      var kind = state.spendKind;
-      run('addSpend', [{ kind: kind, amount: amount }],
-        function () {
-          input.value = '';
-          btn.disabled = false;
-          loadData(false);
-          var my = showUndo('Logged ' + money(amount) + ' ' + (kind === 'food' ? 'Food' : 'Amazon'));
-          my.pending = false;
-          my.restore = function () {
-            run('addSpend', [{ kind: kind, amount: amount, undo: true }],
-              function () { toast('Undone'); loadData(false); },
-              function () { toast('Couldn\u2019t undo'); });
-          };
-        },
-        function () { btn.disabled = false; toast('Couldn\u2019t log spend'); });
+      ledRun('addPurchase', [{ amount: amount, date: date, store: store, category: cat }]).then(function (res) {
+        btn.disabled = false; input.value = ''; $('spendStore').value = ''; $('spendDate').value = ymdLocalStr(new Date());
+        var my = showUndo('Logged ' + money2(amount) + (store ? ' at ' + store : ' \u00b7 ' + cat)); my.pending = false;
+        my.restore = function () { ledRun('deletePurchase', [res.id]).then(function () { toast('Undone'); loadLedger(); }, function () { toast('Couldn\u2019t undo'); }); };
+        loadLedger(); loadData(false);
+      }, function (e) { btn.disabled = false; toast((e && e.message && e.message.length < 60) ? e.message : 'Couldn\u2019t log it \u2014 try again'); });
+    }
+    $('budLogForm').addEventListener('submit', function (e) { e.preventDefault(); logPurchase(); });
+    function renderBudHistory() {
+      var root = $('budHistory'); if (!root) return; root.innerHTML = '';
+      var b = state.bud, L = b.led;
+      if (!L) { root.appendChild(skel(4, true)); return; }
+      if (b.openWeek) {
+        var back = el('button', 'back'); back.type = 'button'; back.innerHTML = svg('back') + 'All weeks';
+        back.addEventListener('click', function () { b.openWeek = ''; renderBudget(); window.scrollTo(0, 0); });
+        var bar = el('div', 'sec sec--bar'); bar.appendChild(back); root.appendChild(bar);
+        var W = b.weekLed && b.weekLed.week === b.openWeek ? b.weekLed : null;
+        root.appendChild(makeSec(weekRange(b.openWeek), W ? money2(W.weekTotals.total) : ''));
+        if (!W) { root.appendChild(skel(3)); return; }
+        var split = el('div', 'bud-split');
+        [['Food', W.weekTotals.food], ['Amazon', W.weekTotals.amazon], ['Other', W.weekTotals.other]].forEach(function (x) {
+          var t = el('div', 'bud-split__i'); t.appendChild(el('span', '', x[0])); t.appendChild(el('b', '', money0(x[1]))); split.appendChild(t);
+        });
+        root.appendChild(split);
+        if (!W.purchases.length) { var e0 = el('div', 'card'); e0.appendChild(okLine('No purchases that week.')); root.appendChild(e0); return; }
+        var c = el('div', 'card'); W.purchases.forEach(function (p) { c.appendChild(purchaseRow(p, deletePurchase)); }); root.appendChild(c);
+        return;
+      }
+      var weeks = L.history || [];
+      var any = weeks.some(function (w) { return w.n; });
+      root.appendChild(makeSec('Every week', any ? plural(weeks.filter(function (w) { return w.n; }).length, 'week') : ''));
+      if (!any) { root.appendChild(makeEmpty('cal', 'Your history starts here', 'Every purchase you log is kept, week by week. Nothing is ever reset.')); return; }
+      var max = Math.max.apply(null, weeks.map(function (w) { return w.total; }).concat([1]));
+      var c2 = el('div', 'card');
+      weeks.forEach(function (w) {
+        var r = el('button', 'wk'); r.type = 'button';
+        var body = el('span', 'wk__body');
+        body.appendChild(el('span', 'wk__t', (w.week === L.thisWeek ? 'This week \u00b7 ' : '') + weekRange(w.week)));
+        var mb = el('span', 'wk__bar'), mf = el('span', 'wk__fill'); mf.style.width = Math.round(w.total / max * 100) + '%'; mb.appendChild(mf); body.appendChild(mb);
+        body.appendChild(el('span', 'wk__m', w.n ? plural(w.n, 'purchase') : 'Nothing logged'));
+        r.appendChild(body);
+        r.appendChild(el('span', 'wk__amt', money0(w.total)));
+        var ch = el('span', 'wk__ch'); ch.innerHTML = svg('chev'); r.appendChild(ch);
+        r.setAttribute('aria-label', weekRange(w.week) + ', ' + money0(w.total) + ', ' + plural(w.n, 'purchase'));
+        r.addEventListener('click', function () { b.openWeek = w.week; b.weekLed = null; loadLedger('week'); window.scrollTo(0, 0); });
+        c2.appendChild(r);
+      });
+      root.appendChild(c2);
+    }
+    /* Plain SVG bar chart: data [{label, value}], optional dashed average line. No libraries. */
+    function barChart(data, opts) {
+      opts = opts || {};
+      var W = 340, H = 150, padB = 22, padT = 14, n = Math.max(1, data.length);
+      var max = Math.max.apply(null, data.map(function (d) { return d.value; }).concat([opts.avg || 0, 1]));
+      var gap = n > 20 ? 2 : 6, bw = Math.max(3, (W - gap * (n - 1)) / n);
+      var NS = 'http://www.w3.org/2000/svg', s = document.createElementNS(NS, 'svg');
+      s.setAttribute('viewBox', '0 0 ' + W + ' ' + H); s.setAttribute('class', 'chart'); s.setAttribute('role', 'img');
+      s.setAttribute('aria-label', opts.label || 'Chart');
+      function node(tag, attrs, text) { var e = document.createElementNS(NS, tag); Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); }); if (text != null) e.textContent = text; s.appendChild(e); return e; }
+      node('line', { x1: 0, x2: W, y1: H - padB + .5, y2: H - padB + .5, 'class': 'chart__base' });
+      var every = Math.ceil(n / 7);
+      data.forEach(function (d, i) {
+        var h = Math.round((H - padB - padT) * d.value / max), x = i * (bw + gap);
+        var r = node('rect', { x: x.toFixed(1), y: H - padB - Math.max(h, d.value ? 2 : 0), width: bw.toFixed(1), height: Math.max(h, d.value ? 2 : 0), rx: Math.min(4, bw / 3), 'class': 'chart__bar' + (d.hi ? ' is-hi' : '') });
+        var t = document.createElementNS(NS, 'title'); t.textContent = d.label + ': ' + money0(d.value); r.appendChild(t);
+        if (i % every === 0 || i === n - 1) node('text', { x: (x + bw / 2).toFixed(1), y: H - 6, 'class': 'chart__lbl', 'text-anchor': 'middle' }, d.short || d.label);
+      });
+      if (opts.avg) { var y = H - padB - Math.round((H - padB - padT) * opts.avg / max); node('line', { x1: 0, x2: W, y1: y, y2: y, 'class': 'chart__avg' }); }
+      return s;
+    }
+    function renderBudTrends() {
+      var root = $('budTrends'); if (!root) return;
+      var b = state.bud, L = b.rangeLed;
+      if (root.contains(document.activeElement) && document.activeElement.type === 'date') return;   // don't wipe a date being picked
+      root.innerHTML = '';
+      var chips = el('div', 'chips chips--wrap bud-range'); chips.setAttribute('role', 'radiogroup'); chips.setAttribute('aria-label', 'Date range');
+      [['month', 'This month'], ['3m', '3 months'], ['year', 'This year'], ['all', 'All time'], ['custom', 'Custom']].forEach(function (x) {
+        var c = el('button', 'chip chip--sm' + (b.range === x[0] ? ' is-active' : ''), x[1]); c.type = 'button'; c.setAttribute('role', 'radio'); c.setAttribute('aria-checked', b.range === x[0] ? 'true' : 'false');
+        c.addEventListener('click', function () { b.range = x[0]; if (x[0] !== 'custom') loadLedger('range'); else renderBudget(); });
+        chips.appendChild(c);
+      });
+      root.appendChild(chips);
+      if (b.range === 'custom') {
+        var rd = rangeDates('custom'), f = el('form', 'bud-custom'); f.setAttribute('novalidate', '');
+        var i1 = el('input', 'field'); i1.type = 'date'; i1.value = rd.from; i1.max = ymdLocalStr(new Date()); i1.setAttribute('aria-label', 'From');
+        var i2 = el('input', 'field'); i2.type = 'date'; i2.value = rd.to; i2.max = ymdLocalStr(new Date()); i2.setAttribute('aria-label', 'To');
+        var go = el('button', 'btn', 'Show'); go.type = 'submit';
+        f.appendChild(i1); f.appendChild(el('span', 'bud-custom__to', 'to')); f.appendChild(i2); f.appendChild(go);
+        f.addEventListener('submit', function (e) { e.preventDefault(); if (!i1.value || !i2.value) return; b.from = i1.value; b.to = i2.value; loadLedger('range'); });
+        root.appendChild(f);
+      }
+      if (!L || b._rloading) { root.appendChild(skel(4, true)); return; }
+      var R = L.range;
+      // This week vs usual
+      var cmp = el('div', 'card bud-cmp'), C = L.compare;
+      cmp.appendChild(el('div', 'bud-cmp__lbl', 'This week so far'));
+      var big = el('div', 'bud-cmp__big', money0(C.thisWeek)); cmp.appendChild(big);
+      var line = el('div', 'bud-cmp__line');
+      if (C.pct === null) line.textContent = 'Log a few weeks to compare with your usual week.';
+      else {
+        var diff = C.thisWeek - C.avgWeek;
+        var tag = el('b', diff > 0 ? 'is-up' : 'is-down', (diff > 0 ? money0(diff) + ' more' : money0(-diff) + ' less'));
+        line.appendChild(tag); line.appendChild(document.createTextNode(' than your usual week (' + money0(C.avgWeek) + ')'));
+      }
+      cmp.appendChild(line); root.appendChild(cmp);
+      if (!R.n) { root.appendChild(makeEmpty('tag', 'No purchases in this range', 'Pick a longer range, or log a purchase on This week.')); appendAllTime(root, L); return; }
+      // KPI tiles
+      var grid = el('div', 'kpis');
+      [['Total', money0(R.total), plural(R.n, 'purchase')], ['Per week', money0(R.perWeek), 'average'], ['Per month', money0(R.perMonth), 'average'], ['Per year', money0(R.perYear), R.days < 365 ? 'so far' : 'average']].forEach(function (k) {
+        var t = el('div', 'kpi'); t.appendChild(el('div', 'kpi__lbl', k[0])); t.appendChild(el('div', 'kpi__v', k[1])); t.appendChild(el('div', 'kpi__s', k[2])); grid.appendChild(t);
+      });
+      root.appendChild(grid);
+      // Weekly trend (last 26 weeks of the range)
+      var wk = R.weeks.slice(-26);
+      root.appendChild(makeSec('Week by week', wk.length > 1 ? 'dashed = average' : ''));
+      var c1 = el('div', 'card card--pad chart-card');
+      c1.appendChild(barChart(wk.map(function (w) { var d = parseYmd(w.week); return { label: weekRange(w.week), short: MONTHS[d.getMonth()] + ' ' + d.getDate(), value: w.total, hi: w.week === L.thisWeek }; }),
+        { avg: wk.length > 1 ? R.perWeek : 0, label: 'Weekly totals' }));
+      root.appendChild(c1);
+      if (R.months.length > 1) {
+        root.appendChild(makeSec('Month by month'));
+        var c2 = el('div', 'card card--pad chart-card');
+        c2.appendChild(barChart(R.months.slice(-24).map(function (m) { return { label: monthName(m.month), short: monthName(m.month), value: m.total }; }), { label: 'Monthly totals' }));
+        root.appendChild(c2);
+      }
+      // Categories
+      root.appendChild(makeSec('Where it went'));
+      var cc = el('div', 'card card--pad cats-bars'), cmax = R.categories.length ? R.categories[0].total : 1;
+      R.categories.forEach(function (c) {
+        var r = el('div', 'cbar');
+        var top = el('div', 'cbar__top'); top.appendChild(el('span', '', c.category));
+        top.appendChild(el('b', '', money0(c.total) + ' \u00b7 ' + Math.round(c.total / Math.max(1, R.total) * 100) + '%')); r.appendChild(top);
+        var tr = el('div', 'cbar__tr'), fl = el('div', 'cbar__fill'); fl.style.width = Math.max(2, Math.round(c.total / cmax * 100)) + '%'; tr.appendChild(fl); r.appendChild(tr);
+        cc.appendChild(r);
+      });
+      root.appendChild(cc);
+      // Months / years table
+      root.appendChild(makeSec('Totals'));
+      var tc = el('div', 'card tot');
+      R.months.slice().reverse().slice(0, 12).forEach(function (m) { var r = el('div', 'tot__r'); r.appendChild(el('span', '', monthName(m.month))); r.appendChild(el('b', '', money0(m.total))); tc.appendChild(r); });
+      R.years.slice().reverse().forEach(function (y) { var r = el('div', 'tot__r tot__r--y'); r.appendChild(el('span', '', y.year)); r.appendChild(el('b', '', money0(y.total))); tc.appendChild(r); });
+      root.appendChild(tc);
+      appendAllTime(root, L);
+    }
+    function appendAllTime(root, L) {
+      var a = el('div', 'bud-all');
+      a.appendChild(el('span', '', 'All time' + (L.allTime.since ? ' \u00b7 since ' + (function (d) { return d ? MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() : ''; })(parseYmd(L.allTime.since)) : '')));
+      a.appendChild(el('b', '', money0(L.allTime.total)));
+      root.appendChild(a);
     }
 
     /* ---------- Wiring ---------- */
@@ -3452,7 +4177,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       state._navTouched = true;
       showScreen(b.getAttribute('data-screen'));
     });
-    $('refreshBtn').addEventListener('click', function () { loadData(true); if (portalOn()) { loadPortal(true); loadInbox(); if (state._provAsked) loadProviders(true); if (state.billing || state._billErr) loadBilling(state.billMonth); } });
+    $('refreshBtn').addEventListener('click', function () { loadData(true); if (state.screen === 'budget') { loadLedger(); if (state.bud.range && state.bud.pane === 'trends') loadLedger('range'); } state.uploads = {}; Object.keys(state).forEach(function (k) { if (k.indexOf('_uplAsk_') === 0) state[k] = false; }); syncUpload(); if (portalOn()) { loadPortal(true); loadInbox(); if (state._provAsked) loadProviders(true); if (state.billing || state._billErr) loadBilling(state.billMonth); } });
     $('addBtn').addEventListener('click', addItem);
     $('newItem').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); addItem(); } });
     $('autoUploadBtn').addEventListener('click', autoUploadList);
@@ -3462,18 +4187,6 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     $('saveDinnerBtn').addEventListener('click', saveDinner);
     $('todoAddForm').addEventListener('submit', function (e) { e.preventDefault(); addTodo(); });
     $('newTodo').addEventListener('input', todoHint);
-    $('spendKindSeg').addEventListener('click', function (e) {
-      var b = e.target.closest('.seg__btn[data-kind]');
-      if (!b) return;
-      state.spendKind = b.getAttribute('data-kind');
-      $('spendKindSeg').querySelectorAll('.seg__btn').forEach(function (x) {
-        var on = x === b;
-        x.classList.toggle('is-active', on);
-        x.setAttribute('aria-pressed', on ? 'true' : 'false');
-      });
-    });
-    $('addSpendBtn').addEventListener('click', addSpend);
-    $('newSpend').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); addSpend(); } });
 
     (function () {   // header lifts with a soft shadow once the page scrolls
       var hdr = $('topBar'), on = false;
