@@ -34,13 +34,27 @@
     var app = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone ? ' app' : '';
     return os + ' \u00b7 ' + br + app;
   }
-  // Short id for the per-link data cache (the full token never leaves localStorage/HTTPS).
-  window.__homeopsKeyId = token ? token.slice(0, 6) : '';
-  function clearDataCache() {
+  // Short id for the per-link data cache: a one-way hash, so no part of the token shows up in key names.
+  function fnv(str) { var h = 0x811c9dc5; for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(36); }
+  window.__homeopsKeyId = token ? fnv('homeops:' + token) : '';
+  function clearDataCache(keepId) {
     try {
-      Object.keys(localStorage).forEach(function (k) { if (k.indexOf('homeops.data.') === 0) localStorage.removeItem(k); });
+      Object.keys(localStorage).forEach(function (k) {
+        if (k.indexOf('homeops.data.') !== 0) return;
+        if (keepId && k.slice(-(keepId.length + 1)) === '.' + keepId) return;
+        localStorage.removeItem(k);
+      });
     } catch (e) {}
   }
+  // Phone cache hygiene: drop data cached for any other (old/rotated) link; if this link needs Google
+  // sign-in and there's no live session, drop the cache too so nothing private is painted before the server says no.
+  try {
+    var SEXP = 'homeops.sexp', SIN = 'homeops.si';
+    var today = new Date().toISOString().slice(0, 10);
+    if (session && (localStorage.getItem(SEXP) || '9999') < today) { localStorage.removeItem(SKEY); session = null; }
+    if (localStorage.getItem(SIN) === '1' && !session) clearDataCache();
+    else clearDataCache(window.__homeopsKeyId || '-none-');
+  } catch (e) {}
 
   function $(id) { return document.getElementById(id); }
   function showGate(msg) {
@@ -50,7 +64,7 @@
     var m = $('gateMsg');
     if (m) { m.textContent = msg || ''; m.hidden = !msg; }
   }
-  window.__homeopsForget = function () { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); };
+  window.__homeopsForget = function () { try { localStorage.removeItem(KEY); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp'); } catch (e) {} clearDataCache(); location.reload(); };
 
   function call(action, args, ok, fail) {
     if (!token) { showGate(); return; }               // nothing is sent without a link
@@ -66,14 +80,14 @@
     }).then(function (res) {
       if (res && res.ok) { window.__homeopsUser = res.user; return ok(res.result); }
       if (res && res.status === 428) {        // Google sign-in needed (Roni's link only)
-        try { localStorage.removeItem(SKEY); } catch (e) {}
+        try { localStorage.removeItem(SKEY); localStorage.setItem('homeops.si', '1'); } catch (e) {}
         session = null;
         clearDataCache();
         showSignin(res.signin || {}, res.error);
         return;
       }
       if (res && res.status === 401) {
-        try { localStorage.removeItem(KEY); localStorage.removeItem(SKEY); } catch (e) {}
+        try { localStorage.removeItem(KEY); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp'); } catch (e) {}
         clearDataCache();
         token = null;
         showGate(res.error);
@@ -92,7 +106,7 @@
   }
   function signedIn(res, msgEl) {
     if (res && res.ok && res.result && res.result.session) {
-      try { localStorage.setItem(SKEY, res.result.session); } catch (e) {}
+      try { localStorage.setItem(SKEY, res.result.session); localStorage.setItem('homeops.sexp', res.result.exp || ''); } catch (e) {}
       location.reload();
       return;
     }
