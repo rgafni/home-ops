@@ -566,6 +566,40 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
 .ot-row__name { display: block; font-size: var(--fs-item); font-weight: 700; }
 .ot-row__sub { display: block; margin-top: 2px; font-size: var(--fs-meta); font-weight: 600; color: var(--muted); }
 .ot-row > svg.i { color: var(--faint); }
+/* work v2: to-sort-out lines, ready-to-send text, student view, check-in note */
+.ot-todo { display: flex; align-items: baseline; gap: 10px; padding: var(--s3) var(--s4); border-bottom: 1px solid var(--line);
+  font-size: var(--fs-body); font-weight: 650; line-height: 1.35; }
+.ot-todo:last-child { border-bottom: 0; }
+.ot-todo .dot-red, .ot-todo .ot-dot { flex: none; transform: translateY(-1px); }
+.ot-draft { padding: var(--s4); }
+.ot-draft__text { margin: 0 0 var(--s3); font-size: var(--fs-body); font-weight: 600; color: var(--muted); line-height: 1.4; white-space: pre-wrap; }
+.ot-btns { display: flex; gap: var(--s2); }
+.ot-btn2 { flex: 1; min-width: 0; height: 48px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 0 var(--s2);
+  border: 1.5px solid var(--line-strong); border-radius: var(--r-pill); background: var(--paper); color: var(--accent-dark);
+  font: inherit; font-size: var(--fs-chip); font-weight: 800; text-decoration: none; white-space: nowrap; }
+.ot-btn2:active { background: var(--accent-soft); }
+.ot-btn2 svg.i { width: 18px; height: 18px; }
+.ot-todo-foot { padding: var(--s3) var(--s4) var(--s4); border-top: 1px solid var(--line); }
+.ot-sess__who { display: flex; flex-direction: column; justify-content: center; }
+.ot-sess__p, .ot-sess__s { display: block; width: 100%; min-height: 28px; padding: 2px 0; border: 0; background: none; text-align: left;
+  font: inherit; font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.25; overflow-wrap: anywhere; }
+.ot-sess__s { font-weight: 600; color: var(--muted); }
+.ot-sess.is-past .ot-sess__p, .ot-sess.is-past .ot-sess__s { color: var(--muted); font-weight: 500; }
+button.ot-stu { width: 100%; display: flex; align-items: center; gap: var(--s3); border: 0; border-bottom: 1px solid var(--line);
+  background: none; color: var(--ink); text-align: left; font: inherit; }
+button.ot-stu:last-child { border-bottom: 0; }
+button.ot-stu:active { background: var(--wash); }
+button.ot-stu > span { flex: 1; min-width: 0; }
+button.ot-stu > svg.i { flex: none; color: var(--faint); }
+.ot-pv { display: flex; align-items: center; gap: var(--s2); padding-right: var(--s3); border-bottom: 1px solid var(--line); }
+.ot-pv:last-child { border-bottom: 0; }
+.ot-pv .ot-row { border-bottom: 0; padding-right: 0; }
+.ot-note { display: flex; gap: var(--s2); margin-top: var(--s3); }
+.ot-note input { flex: 1; min-width: 0; height: 48px; padding: 0 var(--s4); border: 1.5px solid var(--line-strong); border-radius: var(--r-md);
+  background: var(--paper); color: var(--ink); font: inherit; font-size: var(--fs-body); }
+.ot-note button { flex: none; height: 48px; padding: 0 var(--s4); border: 0; border-radius: var(--r-md); background: var(--accent); color: #fff;
+  font: inherit; font-size: var(--fs-chip); font-weight: 800; }
+.ot-lastnote { margin: var(--s1) 0 0; text-align: center; font-size: var(--fs-meta); font-weight: 600; color: var(--muted); font-style: italic; }
 
   </style>
 </head>
@@ -2217,7 +2251,13 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
     function otIcon(href, icon, label) {
       var a = el('a', 'ot-ico'); a.href = href; a.innerHTML = svg(icon); a.setAttribute('aria-label', label); return a;
     }
-    function renderProviders() {
+    function renderProviders() {      // keeps a half-typed check-in note across background refreshes
+      var ni = $('otNoteIn'), nv = ni ? ni.value : null, nf = !!ni && document.activeElement === ni;
+      renderProvidersNow();
+      var n2 = $('otNoteIn');
+      if (n2 && nv !== null) { n2.value = nv; if (nf) n2.focus(); }
+    }
+    function renderProvidersNow() {
       if (!portalOn()) return;
       var root = $('otRoot'); root.innerHTML = '';
       var D = state.prov;
@@ -2229,6 +2269,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       var v = state.ot || { view: 'main' };
       if (v.view === 'person') { var p = otPerson(v.pid); if (p) return renderOtPerson(root, p); }
       if (v.view === 'list') return renderOtList(root, v);
+      if (v.view === 'student') return renderOtStudent(root, D, v.student);
       renderOtMain(root, D);
     }
     function renderOtMain(root, D) {
@@ -2253,9 +2294,12 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
         t.appendChild(el('span', '', it.text));
         t.addEventListener('click', function () {
           if (it.pid) otGo({ view: 'person', pid: it.pid, prev: { view: 'main' } });
-          else if (it.ids) otGo({ view: 'list', title: it.title || it.text, ids: it.ids, kind: it.list, student: it.student, prev: { view: 'main' } });
+          else if (it.student) otGo({ view: 'student', student: it.student, prev: { view: 'main' } });
+          else if (it.ids) otGo({ view: 'list', title: it.title || it.text, ids: it.ids, kind: it.list, student: it.student, subs: it.subs, draft: it.draft, prev: { view: 'main' } });
         });
         row.appendChild(t);
+        var np = it.pid ? otPerson(it.pid) : null, nh = np && np.draft ? otDraftHref(np, np.draft) : '';
+        if (nh) row.appendChild(otIcon(nh, 'msg', 'Ready text for ' + np.name));
         var d = el('button', 'ot-done', 'Done'); d.type = 'button'; d.setAttribute('aria-label', 'Done: ' + it.text);
         d.addEventListener('click', function () { otDismiss(it); });
         row.appendChild(d);
@@ -2293,10 +2337,12 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
         (r.ranges.length ? r.ranges.map(otRange) : ['Time TBD']).forEach(function (x) { tm.appendChild(el('span', '', x)); });
         if (!isPast && r.ranges.some(function (x) { return x[0] <= nowMin && nowMin < x[1]; })) tm.appendChild(el('small', '', 'Now'));
         row.appendChild(tm);
-        var who = el('button', 'ot-sess__who'); who.type = 'button';
-        who.appendChild(document.createTextNode(r.p.short + ' '));
-        who.appendChild(el('span', '', '\u00b7 ' + r.student));
-        who.addEventListener('click', function () { otGo({ view: 'person', pid: r.p.id, prev: { view: 'main' } }); });
+        var who = el('div', 'ot-sess__who');
+        var wp = el('button', 'ot-sess__p', r.p.short); wp.type = 'button';
+        wp.addEventListener('click', function () { otGo({ view: 'person', pid: r.p.id, prev: { view: 'main' } }); });
+        var ws = el('button', 'ot-sess__s', r.student); ws.type = 'button';
+        ws.addEventListener('click', function () { otGo({ view: 'student', student: r.student, prev: { view: 'main' } }); });
+        who.appendChild(wp); who.appendChild(ws);
         row.appendChild(who);
         if (r.p.phone) {
           row.appendChild(otIcon('tel:' + r.p.phone, 'phone', 'Call ' + r.p.name));
@@ -2320,6 +2366,17 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
     function renderOtList(root, v) {
       root.appendChild(otBackBtn());
       root.appendChild(el('h2', 'ot-title', v.title));
+      if (v.draft) {
+        var dc = el('div', 'card ot-draft');
+        dc.appendChild(el('p', 'ot-draft__text', v.draft));
+        var bx = el('div', 'ot-btns');
+        bx.appendChild(otBtn('Text', 'msg', 'sms:?body=' + encodeURIComponent(v.draft)));
+        bx.appendChild(otBtn('Copy', 'checksq', null, function () { otCopy(v.draft); }));
+        dc.appendChild(bx);
+        root.appendChild(makeSec('Ready to send', ''));
+        root.appendChild(dc);
+        root.appendChild(makeSec('People', ''));
+      }
       var ps = v.all ? (state.prov.providers || []).slice() : (v.ids || []).map(otPerson).filter(Boolean);
       if (v.all) ps.sort(function (a, b) { return a.name.localeCompare(b.name); });
       var c = el('div', 'card');
@@ -2328,7 +2385,8 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
         var body = el('span', 'ot-row__body');
         body.appendChild(el('span', 'ot-row__name', p.name));
         var sub = '';
-        if (v.kind === 'sched' && v.student) {
+        if (v.subs && v.subs[p.id]) sub = v.subs[p.id];
+        else if (v.kind === 'sched' && v.student) {
           var cs = (p.cases || []).filter(function (x) { return x.student === v.student; });
           sub = cs.map(function (x) { return otSchedLines(x).join('; '); }).join('; ');
         } else sub = otStudents(p).join(', ');
@@ -2341,6 +2399,34 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       if (!ps.length) c.appendChild(el('div', 'me-empty', 'Nobody here.'));
       root.appendChild(c);
     }
+    function otDraftHref(p, body) {
+      if (p.phone) return 'sms:' + p.phone + '?body=' + encodeURIComponent(body);
+      if (p.email) return 'mailto:' + p.email + '?subject=' + encodeURIComponent('Quick check from Roni') + '&body=' + encodeURIComponent(body);
+      return '';
+    }
+    function otBtn(label, icon, href, onClick) {
+      var b = el(href ? 'a' : 'button', 'ot-btn2');
+      if (href) b.href = href; else { b.type = 'button'; b.addEventListener('click', onClick); }
+      b.innerHTML = svg(icon); b.appendChild(document.createTextNode(label));
+      return b;
+    }
+    function otCopy(text) {
+      function ok() { toast('Copied'); }
+      function fallback() {
+        var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); ok(); } catch (e) { toast('Copy failed'); }
+        document.body.removeChild(ta);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok).catch(fallback); else fallback();
+    }
+    function otTodoCard(items) {
+      var c = el('div', 'card');
+      items.forEach(function (x) {
+        var r = el('div', 'ot-todo'); r.appendChild(el('span', x.red ? 'dot-red' : 'ot-dot')); r.appendChild(el('span', '', x.t)); c.appendChild(r);
+      });
+      return c;
+    }
+    function otDayLabel(ymd) { var d = parseYmd(ymd); return MONTHS[d.getMonth()] + ' ' + d.getDate(); }
     function renderOtPerson(root, p) {
       root.appendChild(otBackBtn());
       root.appendChild(el('h2', 'ot-name', p.name));
@@ -2353,14 +2439,44 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       if (p.email) act('Email', 'mail', 'mailto:' + p.email);
       if (acts.childNodes.length) root.appendChild(acts);
       else { var miss = el('div', 'ot-missing'); miss.appendChild(el('span', 'dot-red')); miss.appendChild(document.createTextNode('No phone or email on file')); root.appendChild(miss); }
+      // To sort out (server-built, plain English) + billing text for Michal
+      var todo = (p.todo || []).filter(function (x) { return !/^No phone or email/.test(x.t) || acts.childNodes.length; });
+      if (todo.length) {
+        root.appendChild(makeSec('To sort out', ''));
+        var tc = otTodoCard(todo);
+        if (p.copy) {
+          var f = el('div', 'ot-todo-foot'), fb = el('div', 'ot-btns');
+          fb.appendChild(otBtn('Copy for Michal', 'checksq', null, function () { otCopy(p.copy); }));
+          f.appendChild(fb); tc.appendChild(f);
+        }
+        root.appendChild(tc);
+      }
+      // Ready-to-send text in Roni's voice: opens his own Messages / mail app, nothing is sent from here.
+      if (p.draft) {
+        root.appendChild(makeSec('Ready to send', ''));
+        var dc = el('div', 'card ot-draft'); dc.id = 'otDraft';
+        dc.appendChild(el('p', 'ot-draft__text', p.draft));
+        var bx = el('div', 'ot-btns');
+        if (p.phone) bx.appendChild(otBtn('Text', 'msg', 'sms:' + p.phone + '?body=' + encodeURIComponent(p.draft)));
+        if (p.email) bx.appendChild(otBtn('Email', 'mail', 'mailto:' + p.email + '?subject=' + encodeURIComponent('Quick check from Roni') + '&body=' + encodeURIComponent(p.draft)));
+        bx.appendChild(otBtn('Copy', 'checksq', null, function () { otCopy(p.draft); }));
+        dc.appendChild(bx);
+        root.appendChild(dc);
+      }
       root.appendChild(makeSec('Students', ''));
       var c = el('div', 'card'), seen = {};
       (p.cases || []).forEach(function (cs) {
         var k = cs.student.toLowerCase(), lines = otSchedLines(cs);
         var row = seen[k];
-        if (!row) { row = seen[k] = el('div', 'ot-stu'); row.appendChild(el('b', '', cs.student)); c.appendChild(row); }
+        if (!row) {
+          row = el('button', 'ot-stu'); row.type = 'button';
+          var body = el('span'); body.appendChild(el('b', '', cs.student)); row.appendChild(body);
+          row.insertAdjacentHTML('beforeend', svg('chev'));
+          row.addEventListener('click', function () { otGo({ view: 'student', student: cs.student, prev: state.ot }); });
+          seen[k] = row; row._body = body; c.appendChild(row);
+        }
         if (!lines.length) lines = [cs.sup ? 'Supervising \u00b7 no set times' : 'No set times'];
-        lines.forEach(function (l) { row.appendChild(el('div', '', l)); });
+        lines.forEach(function (l) { row._body.appendChild(el('div', '', l)); });
       });
       if (!(p.cases || []).length) c.appendChild(el('div', 'me-empty', 'No students listed.'));
       root.appendChild(c);
@@ -2370,7 +2486,56 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
       if (done) b.disabled = true;
       b.addEventListener('click', function () { otCheckin(p); });
       root.appendChild(b);
-      root.appendChild(el('p', 'ot-last', 'Last check-in: ' + (p.last ? (p.last === today ? 'today' : (function (d) { return MONTHS[d.getMonth()] + ' ' + d.getDate(); })(parseYmd(p.last))) : 'never')));
+      var nt = state.otNote;
+      if (nt && nt.pid === p.id) {
+        var nw = el('div', 'ot-note'), inp = el('input'); inp.type = 'text'; inp.id = 'otNoteIn'; inp.maxLength = 300;
+        inp.placeholder = 'Quick note (optional)'; inp.setAttribute('aria-label', 'Quick note about this check-in');
+        var sv = el('button', '', 'Save'); sv.type = 'button'; sv.id = 'otNoteSave';
+        sv.addEventListener('click', function () { otSaveNote(p, inp.value); });
+        inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); otSaveNote(p, inp.value); } });
+        nw.appendChild(inp); nw.appendChild(sv); root.appendChild(nw);
+      }
+      var lastTxt = p.last ? 'Last check-in: ' + (p.last === today ? 'today' : otDayLabel(p.last)) : 'No check-ins yet';
+      if (p.next && p.last) lastTxt += ' \u00b7 next ' + (p.next <= today && p.last !== today ? 'now' : otDayLabel(p.next));
+      root.appendChild(el('p', 'ot-last', lastTxt));
+      if (p.note) root.appendChild(el('p', 'ot-lastnote', '\u201c' + p.note + '\u201d'));
+    }
+    function renderOtStudent(root, D, student) {
+      root.appendChild(otBackBtn());
+      root.appendChild(el('h2', 'ot-name', student));
+      var k = String(student).toLowerCase(), iss = (D.students && D.students[k]) || [];
+      if (iss.length) { root.appendChild(makeSec('To sort out', '')); root.appendChild(otTodoCard(iss)); }
+      root.appendChild(makeSec('Providers', ''));
+      var c = el('div', 'card'), n = 0;
+      (D.providers || []).forEach(function (p) {
+        var cs = (p.cases || []).filter(function (x) { return x.student.toLowerCase() === k; });
+        if (!cs.length) return;
+        n++;
+        var row = el('div', 'ot-pv'), b = el('button', 'ot-row'); b.type = 'button';
+        var body = el('span', 'ot-row__body');
+        body.appendChild(el('span', 'ot-row__name', p.name + (cs.some(function (x) { return x.sup; }) ? ' \u00b7 BCBA' : '')));
+        var lines = [];
+        cs.forEach(function (x) { lines = lines.concat(otSchedLines(x)); });
+        body.appendChild(el('span', 'ot-row__sub', lines.length ? lines.join('; ') : 'No set times'));
+        b.appendChild(body);
+        b.addEventListener('click', function () { otGo({ view: 'person', pid: p.id, prev: state.ot }); });
+        row.appendChild(b);
+        if (p.phone) { row.appendChild(otIcon('tel:' + p.phone, 'phone', 'Call ' + p.name)); row.appendChild(otIcon('sms:' + p.phone, 'msg', 'Text ' + p.name)); }
+        c.appendChild(row);
+      });
+      if (!n) c.appendChild(el('div', 'me-empty', 'Nobody on this case.'));
+      root.appendChild(c);
+    }
+    function otSaveNote(p, text) {
+      var nt = state.otNote; text = String(text || '').trim();
+      if (!nt || !text) { state.otNote = null; renderProviders(); return; }
+      var btn = $('otNoteSave'); if (btn) btn.disabled = true;
+      var send = function (id) {
+        run('provCheckinNote', [{ id: id, note: text }],
+          function () { p.note = text; state.otNote = null; saveProvCache(); renderProviders(); toast('Note saved'); loadProviders(true); },
+          function () { if (btn) btn.disabled = false; toast('Couldn\u2019t save \u2014 try again'); });
+      };
+      if (nt.id) send(nt.id); else nt.after = send;
     }
     function otDismiss(it) {
       var D = state.prov; if (!D) return;
@@ -2388,16 +2553,20 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
     function otCheckin(p) {
       var today = ymdLocal(new Date()), prevLast = p.last, btn = $('otLog');
       if (btn) btn.disabled = true;
-      p.last = today; p.checkinToday = 'pending'; saveProvCache(); renderProviders();
+      p.last = today; p.checkinToday = 'pending'; state.otNote = { pid: p.id, id: null }; saveProvCache(); renderProviders();
       var my = showUndo('Check-in logged for ' + p.short);
       my.restore = function () {
         if (!my.id) { toast('Couldn\u2019t undo'); return; }
-        run('provUncheckin', [{ id: my.id }], function () { p.last = prevLast; delete p.checkinToday; renderProviders(); loadProviders(true); toast('Check-in removed'); },
+        run('provUncheckin', [{ id: my.id }], function () { p.last = prevLast; delete p.checkinToday; state.otNote = null; renderProviders(); loadProviders(true); toast('Check-in removed'); },
           function () { toast('Couldn\u2019t undo'); });
       };
       run('provCheckin', [{ id: p.id }],
-        function (res) { my.pending = false; my.id = res && res.id; p.checkinToday = my.id || 'yes'; if (my.wantUndo) my.restore(); else loadProviders(true); },
-        function () { my.pending = false; hideUndo(); p.last = prevLast; delete p.checkinToday; renderProviders(); toast('Couldn\u2019t save \u2014 try again'); });
+        function (res) {
+          my.pending = false; my.id = res && res.id; p.checkinToday = my.id || 'yes';
+          if (state.otNote && state.otNote.pid === p.id) { state.otNote.id = my.id; if (state.otNote.after && my.id) state.otNote.after(my.id); }
+          if (my.wantUndo) my.restore(); else loadProviders(true);
+        },
+        function () { my.pending = false; hideUndo(); p.last = prevLast; delete p.checkinToday; state.otNote = null; renderProviders(); toast('Couldn\u2019t save \u2014 try again'); });
     }
 
     /* ---------- Load + boot hardening ---------- */
