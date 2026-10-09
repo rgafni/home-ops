@@ -544,6 +544,9 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
 .ot-ico svg.i { width: 20px; height: 20px; }
 .ot-earlier { width: 100%; min-height: 48px; border: 0; border-top: 1px solid var(--line); background: none; color: var(--muted);
   font: inherit; font-size: var(--fs-meta); font-weight: 700; }
+.ot-wk-sub { margin: calc(-1 * var(--s3)) 0 var(--s4); font-size: var(--fs-label); font-weight: 600; color: var(--muted); }
+.ot-wk-go { margin-top: var(--s8); }
+.ot-wk-line { padding: var(--s4); font-size: var(--fs-item); font-weight: 600; color: var(--muted); }
 .ot-all { display: block; margin: var(--s8) auto 0; min-height: var(--tap); padding: 0 var(--s4); border: 0; background: none;
   color: var(--accent); font: inherit; font-size: var(--fs-meta); font-weight: 700; }
 .ot-name { margin: 0; font-size: var(--fs-title); font-weight: 800; letter-spacing: -.02em; line-height: 1.15; }
@@ -2262,7 +2265,6 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var root = $('otRoot'); root.innerHTML = '';
       var D = state.prov;
       if (!D) {
-        root.appendChild(el('h2', 'ot-title', 'Today'));
         root.appendChild(makeEmpty('person', state._provErr ? 'Couldn\u2019t load' : 'Loading\u2026', state._provErr ? 'Check your connection, then tap refresh.' : ''));
         return;
       }
@@ -2270,15 +2272,61 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (v.view === 'person') { var p = otPerson(v.pid); if (p) return renderOtPerson(root, p); }
       if (v.view === 'list') return renderOtList(root, v);
       if (v.view === 'student') return renderOtStudent(root, D, v.student);
+      if (v.view === 'week' && D.week) return renderOtWeek(root, D, false);
       renderOtMain(root, D);
     }
+    function otYmd(d) { return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+    function otWeekNow(D) {         // the Sunday summary is for today (a Sunday) and came from the server for today
+      var now = new Date();
+      return now.getDay() === 0 && D.week && D.week.to === otYmd(now) ? D.week : null;
+    }
+    function otOpenItem(it, prev) {
+      if (it.pid) otGo({ view: 'person', pid: it.pid, prev: prev });
+      else if (it.student) otGo({ view: 'student', student: it.student, prev: prev });
+      else if (it.ids) otGo({ view: 'list', title: it.title || it.text, ids: it.ids, kind: it.list, student: it.student, subs: it.subs, draft: it.draft, prev: prev });
+    }
+    /* "Your week" (Sundays only): shown first once per Sunday, then reachable from a small link under Today. */
+    function renderOtWeek(root, D, first) {
+      var W = D.week;
+      if (!first) root.appendChild(otBackBtn());
+      root.appendChild(el('h2', 'ot-title', 'Your week'));
+      root.appendChild(el('p', 'ot-wk-sub', W.label));
+      function sec(title, items, empty) {
+        root.appendChild(makeSec(title, ''));
+        var c = el('div', 'card');
+        if (!items || !items.length) c.appendChild(el('div', 'ot-wk-line', empty));
+        (items || []).forEach(function (it) {
+          var tap = it.pid || it.student || it.ids;
+          var row = el('div', 'ot-need');
+          var t = el(tap ? 'button' : 'div', 'ot-need__text'); if (tap) t.type = 'button';
+          t.appendChild(el('span', it.urgent ? 'dot-red' : 'ot-dot'));
+          t.appendChild(el('span', '', it.text));
+          if (tap) t.addEventListener('click', function () { otOpenItem(it, first ? { view: 'main' } : { view: 'week', prev: { view: 'main' } }); });
+          row.appendChild(t); c.appendChild(row);
+        });
+        root.appendChild(c);
+      }
+      sec('What changed', W.changed, 'A quiet week.');
+      sec('Follow up', W.follow, 'Nobody is waiting on you.');
+      sec('Billing', W.billing, 'No open billing flags.');
+      if (first) {
+        var go = el('button', 'btn btn--block ot-wk-go', 'Go to today'); go.type = 'button'; go.id = 'otWeekGo';
+        go.addEventListener('click', function () {
+          try { localStorage.setItem('homeops.week.seen', W.to); } catch (e) {}
+          state.otWeekSeen = W.to; renderProviders(); window.scrollTo(0, 0);
+        });
+        root.appendChild(go);
+      }
+    }
     function renderOtMain(root, D) {
-      root.appendChild(el('h2', 'ot-title', 'Today'));
       var now = new Date();
       if (now.getDay() === 6) {
         root.appendChild(makeEmpty('moon', 'Shabbat Shalom', 'Nothing to do today.'));
         return;
       }
+      var W = otWeekNow(D), seen = state.otWeekSeen;
+      if (W && !seen) { try { seen = localStorage.getItem('homeops.week.seen'); } catch (e) {} }
+      if (W && seen !== W.to) return renderOtWeek(root, D, true);
       // Needs you
       var needs = D.needs || [];
       root.appendChild(makeSec('Needs you', needs.length ? String(needs.length) : ''));
@@ -2292,11 +2340,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         var t = el('button', 'ot-need__text'); t.type = 'button';
         t.appendChild(el('span', it.urgent ? 'dot-red' : 'ot-dot'));
         t.appendChild(el('span', '', it.text));
-        t.addEventListener('click', function () {
-          if (it.pid) otGo({ view: 'person', pid: it.pid, prev: { view: 'main' } });
-          else if (it.student) otGo({ view: 'student', student: it.student, prev: { view: 'main' } });
-          else if (it.ids) otGo({ view: 'list', title: it.title || it.text, ids: it.ids, kind: it.list, student: it.student, subs: it.subs, draft: it.draft, prev: { view: 'main' } });
-        });
+        t.addEventListener('click', function () { otOpenItem(it, { view: 'main' }); });
         row.appendChild(t);
         var np = it.pid ? otPerson(it.pid) : null, nh = np && np.draft ? otDraftHref(np, np.draft) : '';
         if (nh) row.appendChild(otIcon(nh, 'msg', 'Ready text for ' + np.name));
@@ -2361,6 +2405,12 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var all = el('button', 'ot-all', 'All providers'); all.type = 'button'; all.id = 'otAll';
       all.addEventListener('click', function () { otGo({ view: 'list', title: 'All providers', all: true, prev: { view: 'main' } }); });
       root.appendChild(all);
+      if (W) {
+        var wl = el('button', 'ot-all', 'Your week'); wl.type = 'button'; wl.id = 'otWeek';
+        wl.style.marginTop = '0';
+        wl.addEventListener('click', function () { otGo({ view: 'week', prev: { view: 'main' } }); });
+        root.appendChild(wl);
+      }
       if (D.snapshotAt) root.appendChild(el('p', 'me-foot', 'List as of ' + stampLabel(D.snapshotAt).replace(/^(Today|Yesterday)/, function (w) { return w.toLowerCase(); })));
     }
     function renderOtList(root, v) {
@@ -2370,7 +2420,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         var dc = el('div', 'card ot-draft');
         dc.appendChild(el('p', 'ot-draft__text', v.draft));
         var bx = el('div', 'ot-btns');
-        bx.appendChild(otBtn('Text', 'msg', 'sms:?body=' + encodeURIComponent(v.draft)));
+        bx.appendChild(otBtn('Text', 'msg', otSms('', v.draft)));
         bx.appendChild(otBtn('Copy', 'checksq', null, function () { otCopy(v.draft); }));
         dc.appendChild(bx);
         root.appendChild(makeSec('Ready to send', ''));
@@ -2399,8 +2449,13 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (!ps.length) c.appendChild(el('div', 'me-empty', 'Nobody here.'));
       root.appendChild(c);
     }
+    /* Prefilled text. iPhone/iPad Messages wants sms:NUMBER&body=… (sms:&body=… with no number); others use ?body=. */
+    function otIos() { return /iPhone|iPad|iPod/.test(navigator.userAgent || '') || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
+    function otSms(phone, body) {
+      return 'sms:' + (phone || '') + (body ? (otIos() ? '&' : '?') + 'body=' + encodeURIComponent(body) : '');
+    }
     function otDraftHref(p, body) {
-      if (p.phone) return 'sms:' + p.phone + '?body=' + encodeURIComponent(body);
+      if (p.phone) return otSms(p.phone, body);
       if (p.email) return 'mailto:' + p.email + '?subject=' + encodeURIComponent('Quick check from Roni') + '&body=' + encodeURIComponent(body);
       return '';
     }
@@ -2457,7 +2512,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         var dc = el('div', 'card ot-draft'); dc.id = 'otDraft';
         dc.appendChild(el('p', 'ot-draft__text', p.draft));
         var bx = el('div', 'ot-btns');
-        if (p.phone) bx.appendChild(otBtn('Text', 'msg', 'sms:' + p.phone + '?body=' + encodeURIComponent(p.draft)));
+        if (p.phone) bx.appendChild(otBtn('Text', 'msg', otSms(p.phone, p.draft)));
         if (p.email) bx.appendChild(otBtn('Email', 'mail', 'mailto:' + p.email + '?subject=' + encodeURIComponent('Quick check from Roni') + '&body=' + encodeURIComponent(p.draft)));
         bx.appendChild(otBtn('Copy', 'checksq', null, function () { otCopy(p.draft); }));
         dc.appendChild(bx);
