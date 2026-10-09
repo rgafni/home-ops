@@ -1,6 +1,6 @@
 /* Home Ops service worker: offline app shell only. API calls (script.google.com) and
    Google sign-in are cross-origin and are never cached. */
-var CACHE = 'homeops-20261009002505';
+var CACHE = 'homeops-20261009002929';
 var SHELL = ['./', 'index.html', 'config.js', 'auth.js', 'manifest.json',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png', 'icons/apple-touch-icon.png'];
 self.addEventListener('install', function (e) {
