@@ -7,14 +7,18 @@
   var DKEY = 'homeops.dev';    // random id for this phone/browser (for the private device log)
   var token = null, session = null, device = '';
 
-  // 1) Read ?k=<token> once, save it, and strip it from the address bar.
+  // 1) Read the link token once (?k=… or #k=…; a #k= link never reaches any server), save it on this phone,
+  //    and strip it from the address bar and the history entry. The page sends no Referer (meta referrer).
   try {
     var u = new URL(location.href);
     var k = u.searchParams.get('k');
-    if (k) {
+    var hk = /(?:^#|&)k=([A-Za-z0-9_-]{16,128})/.exec(u.hash || '');
+    if (!k && hk) k = hk[1];
+    if (k || hk) {
       localStorage.setItem(KEY, k);
       u.searchParams.delete('k');
-      history.replaceState(null, '', u.pathname + (u.search || '') + u.hash);
+      var h = (u.hash || '').replace(/(^#|&)k=[^&]*/, '$1').replace(/^#&/, '#').replace(/^#$/, '');
+      history.replaceState(null, '', u.pathname + (u.search || '') + h);
     }
     token = localStorage.getItem(KEY);
     session = localStorage.getItem(SKEY);
@@ -196,6 +200,28 @@
   }
   function dismissed() { try { return localStorage.getItem(DISMISS) === '1'; } catch (e) { return false; } }
   function removeBanner() { var b = $('installBar'); if (b) b.remove(); }
+  var IOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var SHARE_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="m8 7 4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>';
+  var PLUS_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg>';
+  var DOTS_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></svg>';
+  /* Step-by-step "add to Home Screen" sheet (iPhone/iPad Safari has no install prompt; some Android browsers don't either). */
+  function showHow() {
+    var old = $('installHowSheet'); if (old) old.remove();
+    var bg = document.createElement('div');
+    bg.id = 'installHowSheet'; bg.className = 'ihow-bg';
+    var steps = IOS
+      ? ['Tap the Share button ' + SHARE_SVG + ' in the Safari toolbar.', 'Scroll down and tap <b>Add to Home Screen</b> ' + PLUS_SVG + '.', 'Tap <b>Add</b>. Gafni House now opens from your Home Screen like an app.']
+      : ['Tap the menu ' + DOTS_SVG + ' at the top right of the browser.', 'Tap <b>Install app</b> or <b>Add to Home screen</b>.', 'Tap <b>Install</b>. Gafni House now opens from your home screen like an app.'];
+    bg.innerHTML = '<div class="ihow" role="dialog" aria-modal="true" aria-labelledby="ihowTitle"><div class="ihow__handle"></div>' +
+      '<h3 id="ihowTitle">Add Gafni House to your ' + (IOS ? 'Home Screen' : 'home screen') + '</h3><ol>' +
+      steps.map(function (t) { return '<li><span>' + t + '</span></li>'; }).join('') + '</ol>' +
+      '<button type="button" class="ihow__ok" id="ihowOk">Got it</button></div>';
+    document.body.appendChild(bg);
+    function close() { bg.remove(); }
+    bg.addEventListener('click', function (e) { if (e.target === bg) close(); });
+    $('ihowOk').addEventListener('click', close);
+    setTimeout(function () { try { $('ihowOk').focus(); } catch (e) {} }, 50);
+  }
   function showBanner(mode) {
     if (standalone() || dismissed()) return;
     var app = $('app');
@@ -204,19 +230,23 @@
     var bar = document.createElement('div');
     bar.id = 'installBar';
     bar.className = 'inst inst--' + mode;
+    bar.setAttribute('role', 'region'); bar.setAttribute('aria-label', 'Install app');
+    var icon = '<span class="inst__icon" aria-hidden="true"><img src="icons/icon-192.png" alt=""></span>';
     if (mode === 'prompt') {
-      bar.innerHTML = '<span class="inst__icon" aria-hidden="true"><img src="icons/icon-192.png" alt=""></span>' +
-        '<span class="inst__text">Get Gafni House on your home screen</span>' +
-        '<button type="button" class="inst__btn" id="installBtn">Install app</button>' +
+      bar.innerHTML = icon + '<span class="inst__text">Install the app<small>Opens from your home screen</small></span>' +
+        '<button type="button" class="inst__btn" id="installBtn">Install</button>' +
         '<button type="button" class="inst__x" id="installX" aria-label="Dismiss">\u2715</button>';
     } else {
-      var ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
-      bar.innerHTML = '<span class="inst__text">' + (ios ? 'Tap Share, then Add to Home Screen' : 'Tap \u22ee then Add to Home screen') + '</span>' +
+      bar.innerHTML = icon + '<span class="inst__text">Install the app' +
+        '<small>' + (IOS ? 'Share \u2192 Add to Home Screen' : 'Menu \u22ee \u2192 Add to Home screen') + '</small></span>' +
+        '<button type="button" class="inst__btn" id="installHow">How</button>' +
         '<button type="button" class="inst__x" id="installX" aria-label="Dismiss">\u2715</button>';
     }
     app.insertBefore(bar, app.firstChild);
     var x = $('installX');
     x.addEventListener('click', function () { try { localStorage.setItem(DISMISS, '1'); } catch (e) {} removeBanner(); });
+    var how = $('installHow');
+    if (how) how.addEventListener('click', showHow);
     var btn = $('installBtn');
     if (btn) btn.addEventListener('click', function () {
       if (!deferred) return;
