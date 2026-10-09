@@ -362,6 +362,70 @@ svg.i.i--sm { width: 16px; height: 16px; stroke-width: 2.25; }
   font-weight: 800; text-decoration: none; background: var(--paper); }
 .ib-open:active { background: var(--wash); }
 
+/* Billing review (My day > Work, Roni only) */
+.bl-entry { width: 100%; display: flex; align-items: center; gap: var(--s3); min-height: 72px; margin-bottom: var(--s5); padding: 12px var(--s4);
+  border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper); box-shadow: var(--sh-card); text-align: left; color: var(--ink); }
+.bl-entry:active { background: var(--wash); }
+.bl-entry__body { flex: 1; min-width: 0; }
+.bl-entry__title { font-size: var(--fs-item); font-weight: 800; }
+.bl-entry__sum { margin-top: 2px; font-size: var(--fs-meta); font-weight: 700; color: var(--muted); }
+.bl-entry__sum b { color: var(--danger); }
+.bl-entry svg.i { flex: none; width: 22px; height: 22px; color: var(--faint); }
+.bl-back { display: inline-flex; align-items: center; gap: 4px; height: var(--tap); margin: -8px 0 var(--s2) -6px; padding: 0 8px; border: 0; background: none;
+  color: var(--accent); font-size: var(--fs-chip); font-weight: 800; }
+.bl-back svg.i { width: 20px; height: 20px; }
+.bl-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin-bottom: var(--s3); }
+.bl-head h2 { margin: 0; font-size: var(--fs-h2); font-weight: 800; }
+.bl-month { height: 40px; padding: 0 10px; border: 1.5px solid var(--line-strong); border-radius: var(--r-pill); background: var(--paper);
+  color: var(--ink); font: inherit; font-size: var(--fs-label); font-weight: 700; }
+.bl-needs { padding: var(--s4); margin-bottom: var(--s5); border-radius: var(--r-md); background: var(--surface); }
+.bl-needs__big { font-size: var(--fs-h3); font-weight: 800; }
+.bl-needs__big.is-red { color: var(--danger); }
+.bl-needs__big.is-ok { color: #1E7B4A; }
+.bl-needs__sub { margin-top: 2px; font-size: var(--fs-meta); font-weight: 700; color: var(--muted); }
+.bl-card { margin-bottom: var(--s3); padding: var(--s4); border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper); box-shadow: var(--sh-card); }
+.bl-card.is-done { box-shadow: none; background: var(--bg); }
+.bl-top { display: flex; align-items: flex-start; gap: var(--s2); }
+.bl-name { flex: 1; min-width: 0; font-size: var(--fs-item); font-weight: 800; line-height: 1.25; overflow-wrap: anywhere; }
+.bl-meta { margin-top: 2px; font-size: var(--fs-label); font-weight: 600; color: var(--muted); }
+.bl-open { flex: none; height: 40px; padding: 0 14px; display: inline-flex; align-items: center; border: 1.5px solid var(--line-strong);
+  border-radius: var(--r-pill); color: var(--accent-dark); font-size: var(--fs-label); font-weight: 800; text-decoration: none; background: var(--paper); }
+.bl-verdict { margin-top: var(--s3); font-size: var(--fs-body); font-weight: 800; line-height: 1.3; }
+.bl-verdict::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 8px; border-radius: 50%; vertical-align: 1px; }
+.bl-verdict.is-ok { color: #1E7B4A; } .bl-verdict.is-ok::before { background: #1E7B4A; }
+.bl-verdict.is-red { color: var(--danger); } .bl-verdict.is-red::before { background: var(--danger); }
+.bl-verdict span { display: block; margin-top: 2px; padding-left: 18px; font-size: var(--fs-meta); font-weight: 600; color: var(--ink); }
+.bl-more { height: 40px; margin-top: 4px; padding: 0; border: 0; background: none; color: var(--accent); font-size: var(--fs-label); font-weight: 800; }
+.bl-checks { margin: 4px 0 0; padding: 0; list-style: none; }
+.bl-checks li { position: relative; padding: 4px 0 4px 18px; font-size: var(--fs-meta); line-height: 1.35; color: var(--muted); }
+.bl-checks li::before { content: ""; position: absolute; left: 3px; top: 12px; width: 6px; height: 6px; border-radius: 50%; background: var(--faint); }
+.bl-checks li.is-red { color: var(--ink); font-weight: 600; } .bl-checks li.is-red::before { background: var(--danger); }
+.bl-acts { display: flex; gap: var(--s2); margin-top: var(--s3); }
+.bl-acts .btn { flex: 1; height: var(--tap); }
+.bl-flagbtn { flex: 1; height: var(--tap); border: 1.5px solid var(--danger); border-radius: var(--r-sm); background: var(--paper); color: var(--danger);
+  font-size: var(--fs-chip); font-weight: 800; }
+.bl-flagbtn:active { background: var(--danger-soft); }
+.bl-note { width: 100%; margin-top: var(--s3); padding: 10px 12px; border: 1.5px solid var(--line-strong); border-radius: var(--r-sm);
+  font: inherit; font-size: var(--fs-body); color: var(--ink); resize: vertical; }
+.bl-note:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus); }
+.bl-status { display: flex; align-items: center; gap: var(--s2); margin-top: var(--s3); min-height: var(--tap); padding: 0 12px; border-radius: var(--r-sm);
+  font-size: var(--fs-meta); font-weight: 800; }
+.bl-status.is-approved { background: #E7F5EC; color: #1E7B4A; }
+.bl-status.is-flagged { background: var(--danger-soft); color: var(--danger-dark); }
+.bl-status__text { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.bl-status__text span { font-weight: 600; color: var(--ink); }
+.bl-undo { flex: none; height: 40px; padding: 0 6px; border: 0; background: none; color: var(--accent); font-size: var(--fs-label); font-weight: 800; }
+.bl-miss { display: flex; align-items: center; gap: var(--s2); min-height: 52px; padding: 8px var(--s4); border-bottom: 1px solid var(--line); }
+.bl-miss:last-child { border-bottom: 0; }
+.bl-miss__name { flex: 1; min-width: 0; font-size: var(--fs-body); font-weight: 700; }
+.bl-miss__sub { font-size: var(--fs-label); font-weight: 600; color: var(--muted); }
+.bl-tag { flex: none; height: 26px; padding: 0 10px; border-radius: var(--r-pill); display: inline-flex; align-items: center;
+  background: var(--surface); color: var(--muted); font-size: var(--fs-badge); font-weight: 800; }
+.bl-send { margin-top: var(--s6); }
+.bl-send .btn { width: 100%; height: var(--tap-lg); display: flex; align-items: center; justify-content: center; text-decoration: none; }
+.bl-send__hint { margin-top: var(--s2); text-align: center; font-size: var(--fs-label); font-weight: 600; color: var(--muted); }
+.bl-copy { display: block; margin: 4px auto 0; height: 40px; border: 0; background: none; color: var(--accent); font-size: var(--fs-label); font-weight: 800; }
+
 /* ---------- Empty state ---------- */
 .empty { padding: var(--s10) var(--s6); text-align: center; }
 .empty__icon { width: 64px; height: 64px; margin: 0 auto var(--s4); border-radius: 50%;
@@ -784,12 +848,16 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       </div>
       <div id="mePane-today"><div id="meToday"></div></div>
       <div id="mePane-work" hidden>
+        <div id="meWorkMain">
+        <div id="meBillCard"></div>
         <div id="meWorkInbox"></div>
         <div class="add">
           <input class="field" id="newWork" type="text" placeholder="Add a work item…" aria-label="Add a work item" autocomplete="off" enterkeyhint="done">
           <button type="button" class="btn" id="addWorkBtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Add</button>
         </div>
         <div id="meWork"></div>
+        </div>
+        <div id="meBilling" hidden></div>
       </div>
       <div id="mePane-prov" hidden><div id="otRoot"></div></div>
       <div id="mePane-life" hidden><div id="meLife"></div></div>
@@ -2070,7 +2138,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       try { Object.keys(localStorage).forEach(function (k) { if (k.indexOf('homeops.data.portal.') === 0) localStorage.removeItem(k); }); } catch (e) {}
     }
     function afterDataPortal() {
-      if (!portalOn()) { state.portal = null; state.prov = null; state.inbox = null; dropPortalCache(); return; }
+      if (!portalOn()) { state.portal = null; state.prov = null; state.inbox = null; state.billing = null; dropPortalCache(); return; }
       if (!state.portal) {
         try { var c = JSON.parse(localStorage.getItem(PORTAL_CACHE_KEY) || 'null'); if (c && c.data) state.portal = c.data; } catch (e) {}
       }
@@ -2147,6 +2215,173 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         },
         function () { it._done = !next; renderInboxes(); toast('Couldn\u2019t save \u2014 try again'); });
     }
+    /* ---------- Billing review (My day > Work; Roni's link only, the server answers 403 to anyone else) ----------
+       Kept in memory only (never cached on the phone). Approve / Flag write back to the private sheet.
+       "Send approval to Michal" opens a Gmail compose window with the text; nothing is ever sent by the app. */
+    function loadBilling(month) {
+      var seq = (state._billSeq = (state._billSeq || 0) + 1);
+      state._billLoading = true;
+      try {
+        run('getBilling', [month ? { month: month } : {}],
+          function (b) {
+            if (seq !== state._billSeq) return;
+            state._billLoading = false; state._billErr = false; state.billing = b || null; state.billMonth = b && b.month;
+            renderBilling();
+          },
+          function () { if (seq !== state._billSeq) return; state._billLoading = false; state._billErr = true; renderBilling(); });
+      } catch (e) { state._billLoading = false; }
+    }
+    function billIcon(path) { var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('class', 'i'); s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('aria-hidden', 'true'); s.innerHTML = path; return s; }
+    function billSummary(b) {
+      var s = b.summary || {}, f = document.createDocumentFragment();
+      f.appendChild(document.createTextNode(s.inN + ' in \u00b7 ' + s.missing + ' missing \u00b7 '));
+      if (s.look) { var x = el('b', '', s.look + ' to look at'); f.appendChild(x); }
+      else f.appendChild(document.createTextNode(s.open ? 'nothing to look at' : 'all checked'));
+      return f;
+    }
+    function renderBilling() {
+      var card = $('meBillCard'), page = $('meBilling'), main = $('meWorkMain');
+      if (!card || !page) return;
+      var b = state.billing;
+      card.innerHTML = '';
+      if (b || state._billErr) {
+        var btn = el('button', 'bl-entry'); btn.type = 'button'; btn.id = 'billOpenBtn';
+        var body = el('span', 'bl-entry__body');
+        body.appendChild(el('div', 'bl-entry__title', b ? 'Billing review \u00b7 ' + b.monthName : 'Billing review'));
+        var sum = el('div', 'bl-entry__sum');
+        if (b) sum.appendChild(billSummary(b)); else sum.textContent = 'Couldn\u2019t load. Tap refresh.';
+        body.appendChild(sum); btn.appendChild(body);
+        btn.appendChild(billIcon('<path d="m9 6 6 6-6 6"/>'));
+        btn.addEventListener('click', function () { if (!b) { loadBilling(); return; } state.billOpen = true; renderBilling(); window.scrollTo(0, 0); });
+        card.appendChild(btn);
+      }
+      var open = !!(state.billOpen && b);
+      main.hidden = open; page.hidden = !open;
+      if (!open) { page.innerHTML = ''; return; }
+      page.innerHTML = '';
+      var back = el('button', 'bl-back'); back.type = 'button';
+      back.appendChild(billIcon('<path d="m15 6-6 6 6 6"/>')); back.appendChild(document.createTextNode('Work'));
+      back.addEventListener('click', function () { state.billOpen = false; renderBilling(); window.scrollTo(0, 0); });
+      page.appendChild(back);
+      var head = el('div', 'bl-head');
+      head.appendChild(el('h2', '', b.monthName + ' billing'));
+      if (b.months && b.months.length > 1) {
+        var sel = el('select', 'bl-month'); sel.setAttribute('aria-label', 'Month');
+        b.months.forEach(function (m) { var o = el('option', '', m); o.value = m; if (m === b.month) o.selected = true; sel.appendChild(o); });
+        sel.addEventListener('change', function () { loadBilling(sel.value); });
+        head.appendChild(sel);
+      }
+      page.appendChild(head);
+      var s = b.summary || {};
+      var needs = el('div', 'bl-needs');
+      needs.appendChild(el('div', 'bl-needs__big ' + (s.look ? 'is-red' : 'is-ok'), s.look ? s.look + ' to look at' : (s.open ? 'Nothing looks off' : 'All checked')));
+      var sub = [s.inN + ' in', s.missing + ' missing'];
+      if (s.approved) sub.push(s.approved + ' approved');
+      if (s.flagged) sub.push(s.flagged + ' flagged');
+      needs.appendChild(el('div', 'bl-needs__sub', sub.join(' \u00b7 ')));
+      page.appendChild(needs);
+      var openItems = b.items.filter(function (x) { return x.status === 'new'; }), doneItems = b.items.filter(function (x) { return x.status !== 'new'; });
+      if (openItems.length) { page.appendChild(makeSec('To check', openItems.length + '')); openItems.forEach(function (it) { page.appendChild(billCard(it)); }); }
+      if (doneItems.length) { page.appendChild(makeSec('Done', doneItems.length + '')); doneItems.forEach(function (it) { page.appendChild(billCard(it)); }); }
+      if (b.missing && b.missing.length) {
+        page.appendChild(makeSec('Not in yet', b.missing.length + ''));
+        var mc = el('div', 'card');
+        b.missing.forEach(function (m) {
+          var r = el('div', 'bl-miss');
+          var t = el('div', 'bl-miss__name', m.name);
+          var subl = [m.students, m.note].filter(Boolean).join(' \u00b7 ');
+          if (subl) t.appendChild(el('div', 'bl-miss__sub', subl));
+          r.appendChild(t);
+          if (m.tag) r.appendChild(el('span', 'bl-tag', m.tag));
+          mc.appendChild(r);
+        });
+        page.appendChild(mc);
+      }
+      var d = b.draft || {}, send = el('div', 'bl-send');
+      var sb = el('a', 'btn', 'Send approval to Michal'); sb.id = 'billSendBtn';
+      var ready = (d.approved || 0) + (d.flagged || 0) > 0;
+      if (ready && /^https:\/\/mail\.google\.com\//.test(d.url || '')) { sb.href = d.url; sb.target = '_blank'; sb.rel = 'noopener'; }
+      else { sb.setAttribute('aria-disabled', 'true'); sb.style.opacity = '.45'; sb.addEventListener('click', function (e) { e.preventDefault(); toast('Approve or flag someone first'); }); }
+      send.appendChild(sb);
+      send.appendChild(el('div', 'bl-send__hint', ready ? 'Opens a Gmail draft (' + (d.approved || 0) + ' approved, ' + (d.flagged || 0) + ' on hold). Nothing is sent until you press Send.'
+        : 'Approve or flag first. Nothing is ever sent for you.'));
+      if (ready) {
+        var cp = el('button', 'bl-copy', 'Copy the text instead'); cp.type = 'button';
+        cp.addEventListener('click', function () {
+          var t = 'To: ' + d.to + '\nSubject: ' + d.subject + '\n\n' + d.body;
+          try { navigator.clipboard.writeText(t).then(function () { toast('Copied'); }, function () { toast('Couldn\u2019t copy'); }); } catch (e) { toast('Couldn\u2019t copy'); }
+        });
+        send.appendChild(cp);
+      }
+      page.appendChild(send);
+    }
+    function billCard(it) {
+      var c = el('div', 'bl-card' + (it.status !== 'new' ? ' is-done' : ''));
+      var top = el('div', 'bl-top'), nm = el('div', 'bl-name', it.name);
+      var meta = [it.students, it.hours ? it.hours + ' hrs' : (it.sessions ? it.sessions + ' sessions' : ''), it.receivedLabel ? 'in ' + it.receivedLabel : ''].filter(Boolean).join(' \u00b7 ');
+      if (meta) nm.appendChild(el('div', 'bl-meta', meta));
+      top.appendChild(nm);
+      if (it.url && /^https:\/\/mail\.google\.com\//.test(it.url)) {
+        var a = el('a', 'bl-open', 'Email'); a.href = it.url; a.target = '_blank'; a.rel = 'noopener';
+        a.setAttribute('aria-label', 'Open the email from ' + it.name); top.appendChild(a);
+      }
+      c.appendChild(top);
+      var reds = it.checks.filter(function (x) { return x.red; });
+      var v = el('div', 'bl-verdict ' + (it.red ? 'is-red' : 'is-ok'), it.red ? 'Look at this' : 'Looks fine');
+      if (it.red && reds[0]) { v.appendChild(el('span', '', reds[0].t)); }
+      c.appendChild(v);
+      var rest = it.red ? it.checks.slice(1) : it.checks;
+      if (rest.length) {
+        var key = 'bl:' + it.id, shown = !!(state.billShow && state.billShow[key]);
+        var mb = el('button', 'bl-more', shown ? 'Hide notes' : (rest.length === 1 ? '1 more note' : rest.length + ' more notes'));
+        mb.type = 'button'; mb.setAttribute('aria-expanded', shown ? 'true' : 'false');
+        mb.addEventListener('click', function () { state.billShow = state.billShow || {}; state.billShow[key] = !shown; renderBilling(); });
+        c.appendChild(mb);
+        if (shown) {
+          var ul = el('ul', 'bl-checks');
+          rest.forEach(function (x) { ul.appendChild(el('li', x.red ? 'is-red' : '', x.t)); });
+          c.appendChild(ul);
+        }
+      }
+      if (it.status === 'new') {
+        if (state.billFlag === it.id) {
+          var ta = el('textarea', 'bl-note'); ta.rows = 2; ta.maxLength = 300; ta.placeholder = 'What should Michal hold or ask about?';
+          ta.setAttribute('aria-label', 'Note for ' + it.name); ta.value = state.billFlagText || '';
+          ta.addEventListener('input', function () { state.billFlagText = ta.value; });
+          c.appendChild(ta);
+          var fa = el('div', 'bl-acts');
+          var cancel = el('button', 'btn btn--quiet', 'Cancel'); cancel.type = 'button';
+          cancel.addEventListener('click', function () { state.billFlag = null; state.billFlagText = ''; renderBilling(); });
+          var save = el('button', 'bl-flagbtn', 'Save flag'); save.type = 'button';
+          save.addEventListener('click', function () { billSet(it, 'flagged', ta.value.trim()); });
+          fa.appendChild(cancel); fa.appendChild(save); c.appendChild(fa);
+          setTimeout(function () { try { ta.focus(); } catch (e) {} }, 0);
+        } else {
+          var acts = el('div', 'bl-acts');
+          var ap = el('button', 'btn', 'Approve'); ap.type = 'button'; ap.setAttribute('aria-label', 'Approve ' + it.name);
+          ap.addEventListener('click', function () { billSet(it, 'approved', ''); });
+          var fl = el('button', 'bl-flagbtn', 'Flag'); fl.type = 'button'; fl.setAttribute('aria-label', 'Flag ' + it.name);
+          fl.addEventListener('click', function () { state.billFlag = it.id; state.billFlagText = it.red && reds[0] ? reds[0].t : ''; renderBilling(); });
+          acts.appendChild(ap); acts.appendChild(fl); c.appendChild(acts);
+        }
+      } else {
+        var st = el('div', 'bl-status is-' + it.status), tx = el('div', 'bl-status__text', it.status === 'approved' ? 'Approved' : 'Flagged');
+        if (it.statusNote) { tx.appendChild(document.createTextNode(': ')); tx.appendChild(el('span', '', it.statusNote)); }
+        st.appendChild(tx);
+        var u = el('button', 'bl-undo', 'Undo'); u.type = 'button'; u.addEventListener('click', function () { billSet(it, 'new', ''); });
+        st.appendChild(u); c.appendChild(st);
+      }
+      return c;
+    }
+    function billSet(it, status, note) {
+      var prev = { status: it.status, note: it.statusNote };
+      it.status = status; it.statusNote = status === 'new' ? '' : note;
+      state.billFlag = null; state.billFlagText = '';
+      renderBilling();
+      run('billingSetStatus', [it.id, status, note],
+        function () { loadBilling(state.billMonth); },
+        function () { it.status = prev.status; it.statusNote = prev.note; renderBilling(); toast('Couldn\u2019t save \u2014 try again'); });
+    }
     function loadPortal(fresh) {
       var seq = (state._portalSeq = (state._portalSeq || 0) + 1);
       run('getPortal', fresh ? [{ fresh: true }] : [],
@@ -2204,6 +2439,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       state.mePane = name;
       ['today', 'work', 'prov', 'life', 'note'].forEach(function (k) { $('mePane-' + k).hidden = k !== name; });
       if (name === 'prov') { ensureProviders(); renderProviders(); }
+      if (name === 'work' && !state.billing && !state._billLoading) loadBilling();
+      if (name !== 'work' && state.billOpen) { state.billOpen = false; renderBilling(); }
       $('meSeg').querySelectorAll('.seg__btn').forEach(function (b) {
         var on = b.getAttribute('data-me') === name;
         b.classList.toggle('is-active', on); b.setAttribute('aria-selected', on ? 'true' : 'false');
@@ -2212,7 +2449,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     function renderMe() {
       if (!portalOn()) return;
       setMePane(state.mePane || 'today');
-      renderMeToday(); renderMeWork(); renderMeNotes(); renderInboxes();
+      renderMeToday(); renderMeWork(); renderMeNotes(); renderInboxes(); renderBilling();
     }
     function renderMeToday() {
       var root = $('meToday'); root.innerHTML = '';
@@ -3097,7 +3334,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       state._navTouched = true;
       showScreen(b.getAttribute('data-screen'));
     });
-    $('refreshBtn').addEventListener('click', function () { loadData(true); if (portalOn()) { loadPortal(true); loadInbox(); if (state._provAsked) loadProviders(true); } });
+    $('refreshBtn').addEventListener('click', function () { loadData(true); if (portalOn()) { loadPortal(true); loadInbox(); if (state._provAsked) loadProviders(true); if (state.billing || state._billErr) loadBilling(state.billMonth); } });
     $('addBtn').addEventListener('click', addItem);
     $('newItem').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); addItem(); } });
     $('autoUploadBtn').addEventListener('click', autoUploadList);
