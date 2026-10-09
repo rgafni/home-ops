@@ -30,6 +30,24 @@
 .inst__x { flex: none; width: 40px; height: 40px; border: 0; background: transparent; color: var(--muted, #5B6478);
   font-size: 1.05rem; border-radius: 50%; }
 #gateMsg { max-width: 320px; font-size: .9375rem; font-weight: 700; color: #B41E44; }
+#signin { position: fixed; inset: 0; z-index: 10001; background: #FFFFFF; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 14px; padding: 32px 24px calc(32px + env(safe-area-inset-bottom));
+  text-align: center; font-family: Manrope, system-ui, sans-serif; color: var(--ink, #14213D); }
+#signin[hidden] { display: none; }
+#signin img { width: 88px; height: 88px; border-radius: 22px; box-shadow: 0 6px 20px rgba(38,92,218,.25); }
+#signin h1 { margin: 10px 0 0; font-size: 1.75rem; font-weight: 800; letter-spacing: -.02em; }
+#signin .si__sub { max-width: 320px; margin: 0 0 6px; font-size: 1.0625rem; font-weight: 600; color: var(--muted, #5B6478); line-height: 1.4; }
+#signin .si__gsi { min-height: 48px; display: flex; justify-content: center; }
+#signin .si__msg { max-width: 320px; font-size: .9375rem; font-weight: 700; color: #B41E44; }
+#signin .si__link { min-height: 48px; padding: 0 16px; border: 0; background: transparent; color: #265CDA;
+  font: 700 1rem Manrope, system-ui, sans-serif; }
+#signin .si__rec { display: flex; gap: 8px; width: 100%; max-width: 320px; }
+#signin .si__rec[hidden] { display: none; }
+#signin .si__input { flex: 1; min-width: 0; height: 52px; padding: 0 14px; border: 1.5px solid #D5DBE7; border-radius: 14px;
+  font: 600 1rem Manrope, system-ui, sans-serif; color: var(--ink, #14213D); background: #fff; }
+#signin .si__input:focus { outline: none; border-color: #265CDA; }
+#signin .si__btn { flex: none; height: 52px; padding: 0 18px; border: 0; border-radius: 14px; background: #265CDA; color: #fff;
+  font: 800 1rem Manrope, system-ui, sans-serif; }
 </style>
 
   <base target="_top">
