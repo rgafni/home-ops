@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta charset="utf-8">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-Ce7G4r9UQP5eTuSQ7apmwzc9e5qy+xMR4j0kgyW7/fY=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
-<link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
 <link rel="preconnect" href="https://script.googleusercontent.com">
+<link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" href="icons/favicon.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -14,6 +16,13 @@
 <script src="config.js"></script>
 <script src="auth.js"></script>
 <style>
+/* Manrope, self-hosted (no third-party font requests) */
+@font-face { font-family: 'Manrope'; font-style: normal; font-weight: 500 800; font-display: swap;
+  src: url(fonts/manrope-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Manrope'; font-style: normal; font-weight: 500 800; font-display: swap;
+  src: url(fonts/manrope-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 #gate { position: fixed; inset: 0; z-index: 10000; background: #FFFFFF; display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 14px; padding: 32px 24px calc(32px + env(safe-area-inset-bottom));
   text-align: center; font-family: Manrope, system-ui, sans-serif; color: var(--ink, #14213D); }
@@ -21,14 +30,36 @@
 #gate img { width: 88px; height: 88px; border-radius: 22px; box-shadow: 0 6px 20px rgba(38,92,218,.25); }
 #gate h1 { margin: 10px 0 0; font-size: 1.75rem; font-weight: 800; letter-spacing: -.02em; }
 #gate p { margin: 0 0 10px; font-size: 1.0625rem; font-weight: 600; color: var(--muted, #5B6478); }
-.inst { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; padding: 10px 8px 10px 12px;
-  border: 1.5px solid #CFDCFA; border-radius: 16px; background: #EEF3FD; font-family: Manrope, system-ui, sans-serif; }
-.inst__icon img { width: 36px; height: 36px; border-radius: 9px; display: block; }
-.inst__text { flex: 1; min-width: 0; font-size: .9375rem; font-weight: 700; color: var(--ink, #14213D); line-height: 1.25; }
-.inst__btn { flex: none; height: 44px; padding: 0 16px; border: 0; border-radius: 12px; background: #265CDA; color: #fff;
-  font: 800 .9375rem Manrope, system-ui, sans-serif; }
-.inst__x { flex: none; width: 40px; height: 40px; border: 0; background: transparent; color: var(--muted, #5B6478);
+.inst { display: flex; align-items: center; gap: 12px; margin: 12px 16px 0; padding: 8px 4px 8px 10px;
+  border: 1px solid #DCE5FA; border-radius: 20px; background: #F4F7FE; box-shadow: 0 6px 18px rgba(38,92,218,.10);
+  font-family: Manrope, system-ui, sans-serif; animation: instIn .3s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes instIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+.inst__icon img { width: 40px; height: 40px; border-radius: 10px; display: block; box-shadow: 0 2px 8px rgba(38,92,218,.25); }
+.inst__text { flex: 1; min-width: 0; font-size: 1rem; font-weight: 800; color: var(--ink, #14213D); line-height: 1.25; }
+.inst__text small { display: block; margin-top: 2px; font-size: .875rem; font-weight: 600; color: var(--muted, #5B6478); }
+.inst__btn { flex: none; height: 48px; padding: 0 18px; border: 0; border-radius: 14px; background: #265CDA; color: #fff;
+  font: 800 1rem Manrope, system-ui, sans-serif; }
+.inst__btn:active { background: #1A45B0; transform: scale(.97); }
+.inst__x { flex: none; width: 44px; height: 48px; border: 0; background: transparent; color: var(--muted, #5B6478);
   font-size: 1.05rem; border-radius: 50%; }
+.ihow-bg { position: fixed; inset: 0; z-index: 70; display: flex; align-items: flex-end; background: rgba(16,24,40,.45);
+  animation: ihowFade .18s ease both; }
+@keyframes ihowFade { from { opacity: 0; } to { opacity: 1; } }
+.ihow { width: 100%; padding: 12px 20px calc(20px + env(safe-area-inset-bottom)); background: #fff; border-radius: 24px 24px 0 0;
+  box-shadow: 0 -8px 32px rgba(16,24,40,.16); font-family: Manrope, system-ui, sans-serif; color: var(--ink, #14213D);
+  animation: ihowUp .26s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes ihowUp { from { transform: translateY(100%); } to { transform: none; } }
+.ihow__handle { width: 40px; height: 4px; margin: 0 auto 18px; border-radius: 999px; background: #D3D9E2; }
+.ihow h3 { margin: 0 0 14px; font-size: 1.375rem; font-weight: 800; letter-spacing: -.015em; }
+.ihow ol { margin: 0 0 18px; padding: 0; list-style: none; counter-reset: s; }
+.ihow li { counter-increment: s; display: flex; align-items: center; gap: 12px; min-height: 56px; font-size: 1.0625rem; font-weight: 600; line-height: 1.35;
+  border-top: 1px solid #E5E8ED; }
+.ihow li:first-child { border-top: 0; }
+.ihow li::before { content: counter(s); flex: none; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
+  background: #EAF1FF; color: #1A45B0; font-weight: 800; font-size: .9375rem; }
+.ihow li svg { width: 22px; height: 22px; vertical-align: -5px; margin: 0 2px; fill: none; stroke: #265CDA; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ihow__ok { width: 100%; height: 56px; border: 0; border-radius: 16px; background: #265CDA; color: #fff; font: 800 1.0625rem Manrope, system-ui, sans-serif; }
+@media (prefers-reduced-motion: reduce) { .inst, .ihow, .ihow-bg { animation: none; } }
 #gateMsg { max-width: 320px; font-size: .9375rem; font-weight: 700; color: #B41E44; }
 #signin { position: fixed; inset: 0; z-index: 10001; background: #FFFFFF; display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 14px; padding: 32px 24px calc(32px + env(safe-area-inset-bottom));
@@ -51,14 +82,10 @@
 </style>
 
   <base target="_top">
-  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#FFFFFF">
   <meta name="color-scheme" content="only light">
   <title>Gafni House</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
 /* =====================================================================
    Home Ops — tokens + components (v10 "big & full" pass)
@@ -754,6 +781,73 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
   font: inherit; font-size: var(--fs-chip); font-weight: 800; }
 .ot-lastnote { margin: var(--s1) 0 0; text-align: center; font-size: var(--fs-meta); font-weight: 600; color: var(--muted); font-style: italic; }
 
+/* ===================== Polish v1 (Oct 9 2026): depth, motion, tap feel, 48px targets ===================== */
+:root { --ease: cubic-bezier(.2, .8, .2, 1); --press: scale(.97);
+  --sh-card: 0 1px 2px rgba(28, 52, 90, .06), 0 6px 18px rgba(28, 52, 90, .06); }
+/* Header: calm at the top, lifts with a soft shadow once the page scrolls */
+.hdr { background: rgba(255, 255, 255, .94); -webkit-backdrop-filter: saturate(180%) blur(14px); backdrop-filter: saturate(180%) blur(14px);
+  border-bottom-color: transparent; transition: box-shadow .2s ease, border-color .2s ease; }
+.hdr.is-scrolled { border-bottom-color: var(--line); box-shadow: 0 6px 20px rgba(28, 52, 90, .07); }
+.nav { background: rgba(255, 255, 255, .96); -webkit-backdrop-filter: saturate(180%) blur(14px); backdrop-filter: saturate(180%) blur(14px);
+  box-shadow: 0 -4px 18px rgba(28, 52, 90, .05); }
+.nav__pill { transition: background-color .2s var(--ease), transform .15s var(--ease); }
+.nav__item:active .nav__pill { transform: scale(.9); }
+.nav__badge { font-size: .8125rem; }
+:root { --fs-badge: .8125rem; }   /* counters and tiny labels: 13px minimum */
+.ot-sess__p, .ot-sess__s { min-width: 48px; }
+/* Press feel: everything tappable gives a quick, soft squeeze */
+.btn, .chip, .cat, .day, .picker, .bl-entry, .bl-flagbtn, .ot-act, .ot-btn2, .ot-done, .ot-ico, .ib-open, .bl-open, .icon-btn,
+.more__toggle, .back, .td-add__btn, .mic-btn, .seg__btn, .opt-row, .empty__btn, .inst__btn {
+  transition: transform .12s var(--ease), background-color .15s ease, box-shadow .15s ease, color .15s ease; }
+.btn:active, .chip:active, .cat:active, .day:active, .picker:active, .bl-entry:active, .bl-flagbtn:active, .ot-act:active, .ot-btn2:active,
+.ot-done:active, .ot-ico:active, .ib-open:active, .bl-open:active, .icon-btn:active, .more__toggle:active, .back:active, .td-add__btn:active,
+.mic-btn:active, .seg__btn:active, .empty__btn:active, .inst__btn:active { transform: var(--press); }
+.row, .ot-row, .ot-need__text, button.ot-stu, .ib-row { transition: background-color .15s ease; }
+/* Screens and panes ease in instead of popping */
+@keyframes scrIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.screen:not([hidden]), #screen-me > div:not([hidden]):not(#meSeg), #meBilling:not([hidden]) { animation: scrIn .24s var(--ease) both; }
+.sheet { transition: transform .26s var(--ease); }
+/* Quiet delete X: grey until pressed, so lists don't read as a wall of red */
+.row__x { color: var(--faint); }
+.row__x:active { color: var(--danger); }
+/* Cards: a touch more air and depth */
+.card { border-color: #E9ECF2; }
+.sec { margin: var(--s8) 0 var(--s3); }
+.sec:first-child { margin-top: 0; }
+.sec--sub { margin: var(--s5) 0 var(--s2); }
+/* 48px tap targets everywhere (visual size stays compact where it should) */
+.ib-open, .bl-open { height: 48px; padding: 0 16px; }
+.bl-more, .bl-undo, .bl-copy { height: 48px; }
+.bl-undo { padding: 0 12px; }
+.bl-month { height: 48px; padding: 0 12px; font-size: var(--fs-meta); }
+.ot-done { height: 48px; }
+.ot-ico { width: 48px; height: 48px; }
+.td__text { min-height: 48px; display: flex; align-items: center; }
+.td-hint button { height: 48px; }
+.ot-sess { min-height: 64px; }
+.ot-sess__who { flex-direction: row; flex-wrap: wrap; align-items: center; column-gap: 10px; padding: 0; }
+.ot-sess__p, .ot-sess__s { width: auto; min-height: 48px; padding: 0; }
+.ot-sess__p, .ot-sess__s { min-width: 48px; }
+.ot-sess__s::before { content: "\00b7"; margin-right: 10px; color: var(--faint); font-weight: 800; }
+/* Empty states: friendly, one clear action */
+.empty { padding: var(--s8) var(--s6) var(--s6); }
+.empty__icon { width: 72px; height: 72px; background: linear-gradient(145deg, #F1F5FF, #E2EAFD); box-shadow: inset 0 0 0 1px rgba(38, 92, 218, .08); }
+.empty__text { max-width: 300px; margin: 0 auto; line-height: 1.45; }
+.empty__btn { margin-top: var(--s5); min-width: 180px; height: var(--tap-lg); }
+.me-ok { display: flex; align-items: center; gap: var(--s3); padding: var(--s4); font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+.me-ok__ic { flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+.me-ok__ic svg.i { width: 20px; height: 20px; stroke-width: 2.5; }
+/* Skeleton blocks for panes that are still loading */
+.skc { padding: 4px 0; }
+.skc .sk-row { min-height: 60px; }
+.sk-sec { height: 22px; width: 140px; margin: 4px 0 14px; border-radius: 8px; }
+/* Billing entry card: a little richer */
+.bl-entry { border-radius: var(--r-lg); min-height: 80px; }
+.bl-entry::before { content: ""; flex: none; width: 44px; height: 44px; border-radius: 14px; background: var(--accent-soft) center / 22px no-repeat;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23265CDA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6M9 13l2 2 4-4'/%3E%3C/svg%3E"); }
+.bl-card { border-radius: var(--r-lg); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
   </style>
 </head>
 <body>
@@ -1178,14 +1272,45 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       }
       return s;
     }
-    function makeEmpty(icon, title, text) {
+    function makeEmpty(icon, title, text, action) {
       var e = el('div', 'empty');
       var i = el('div', 'empty__icon');
       i.innerHTML = svg(icon);
       e.appendChild(i);
       e.appendChild(el('p', 'empty__title', title));
-      e.appendChild(el('p', 'empty__text', text));
+      if (text) e.appendChild(el('p', 'empty__text', text));
+      if (action) {
+        var b = el('button', 'btn empty__btn');
+        b.type = 'button';
+        b.innerHTML = svg(action.icon || 'plus');
+        b.appendChild(document.createTextNode(action.label));
+        b.addEventListener('click', action.onClick);
+        e.appendChild(b);
+      }
       return e;
+    }
+    /* "Add …" action for empty states: bring the add field into view and focus it. */
+    function focusField(id) {
+      return function () { var f = $(id); if (!f) return; window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(function () { try { f.focus(); } catch (e) {} }, 150); };
+    }
+    /* Positive "nothing here" line inside a card (instead of grey dead text). */
+    function okLine(text) {
+      var d = el('div', 'me-ok'), ic = el('span', 'me-ok__ic');
+      ic.innerHTML = svg('check'); d.appendChild(ic); d.appendChild(el('span', '', text));
+      return d;
+    }
+    /* Skeleton placeholder while a pane loads: optional section bar + a card of shimmering rows. */
+    function skel(rows, withSec) {
+      var f = document.createDocumentFragment();
+      if (withSec) f.appendChild(el('div', 'sk sk-sec'));
+      var c = el('div', 'card skc'); c.setAttribute('aria-busy', 'true'); c.setAttribute('aria-label', 'Loading');
+      var w = [62, 48, 70, 40, 56];
+      for (var i = 0; i < (rows || 3); i++) {
+        var r = el('div', 'sk-row'); r.appendChild(el('div', 'sk sk-box'));
+        var l = el('div', 'sk sk-line'); l.style.width = w[i % w.length] + '%'; r.appendChild(l); c.appendChild(r);
+      }
+      f.appendChild(c);
+      return f;
     }
     /* List row: [check] title/meta [X]. Tap row = toggle (or select for plain rows). */
     function makeRow(o) {
@@ -1365,7 +1490,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var root = $('groceryList');
       root.innerHTML = '';
       if (!items.length) {
-        root.appendChild(makeEmpty('cart', store + ' list is empty', 'Type an item above and tap Add.'));
+        root.appendChild(makeEmpty('cart', store + ' list is empty', 'Add what you need and it shows up here for everyone.', { label: 'Add an item', onClick: focusField('newItem') }));
         return;
       }
       if (open.length) {
@@ -1562,7 +1687,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var planned = DAY_KEYS.filter(function (day) { return !!mealForDay(day); });
       root.appendChild(makeSec('This week', planned.length + ' of 7 planned'));
       if (!planned.length) {
-        root.appendChild(makeEmpty('utensils', 'No dinners yet', 'Pick a day and fill in Main.'));
+        root.appendChild(makeEmpty('utensils', 'No dinners planned yet', 'Pick a day above and fill in what\u2019s for dinner.', { label: 'Plan ' + (DAY_NAMES[state.dinnerDay] || 'a dinner'), onClick: focusField('dinnerMain') }));
         return;
       }
       var card = el('div', 'card');
@@ -1867,13 +1992,13 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (root.querySelector('.td__edit') && root.contains(document.activeElement)) return;   // don't wipe an edit in progress
       root.innerHTML = '';
       open.sort(function (a, b) { return tdOrd(b) - tdOrd(a); });   // newest on top
-      if (!todos.length) { root.appendChild(el('p', 'td-empty', 'Nothing to do.')); return; }
+      if (!todos.length) { root.appendChild(makeEmpty('checksq', 'Nothing to do', 'Add a to-do above. Type @ and a name to give it to someone.', { label: 'Add a to-do', onClick: focusField('newTodo') })); return; }
       if (open.length) {
         var list = el('div', 'td-list');
         open.forEach(function (t) { list.appendChild(makeTodoRow(t)); });
         root.appendChild(list);
       } else {
-        root.appendChild(el('p', 'td-empty', 'All done.'));
+        root.appendChild(makeEmpty('check', 'All done', 'Everything on the list is checked off.', { label: 'Add a to-do', onClick: focusField('newTodo') }));
       }
       if (done.length) {
         var bar = el('div', 'td-done');
@@ -2162,18 +2287,18 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     /* Work inbox -> top of My day > Work; personal inbox -> My day > Life. Same row design in both. */
     function renderInboxes() {
       var w = $('meWorkInbox'), l = $('meLife');
-      if (w) { w.innerHTML = ''; if (state.inbox) renderInbox(w, state.inbox.work, 'Nothing waiting on you at work.'); }
+      if (w) { w.innerHTML = ''; if (state.inbox) renderInbox(w, state.inbox.work, 'Nothing waiting on you at work.'); else if (!state._inboxErr) w.appendChild(skel(2, true)); }
       if (l) {
         l.innerHTML = '';
         if (state.inbox) renderInbox(l, state.inbox.personal, 'Nothing waiting on you.');
-        else l.appendChild(el('div', 'me-empty', state._inboxErr ? 'Couldn\u2019t load. Tap refresh.' : 'Loading\u2026'));
+        else if (state._inboxErr) l.appendChild(makeEmpty('mail', 'Couldn\u2019t load', 'Check your connection, then tap refresh.')); else l.appendChild(skel(3, true));
       }
     }
     function renderInbox(root, items, emptyText) {
       if (!items) return;
       root.appendChild(makeSec('Inbox'));
       var card = el('div', 'card');
-      if (!items.length) card.appendChild(el('div', 'me-empty', emptyText || 'Nothing waiting on you.'));
+      if (!items.length) card.appendChild(okLine(emptyText || 'Nothing waiting on you.'));
       items.forEach(function (it) {
         var row = el('div', 'ib-row' + (it._done ? ' is-done' : ''));
         var c = el('button', 'td__check');
@@ -2192,7 +2317,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         row.appendChild(body);
         if (it.url && /^https:\/\/mail\.google\.com\//.test(it.url)) {
           var a = el('a', 'ib-open', 'Open');
-          a.href = it.url; a.target = '_blank'; a.rel = 'noopener';
+          a.href = it.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
           a.setAttribute('aria-label', 'Open in Gmail: ' + it.action);
           row.appendChild(a);
         }
@@ -2221,6 +2346,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     function loadBilling(month) {
       var seq = (state._billSeq = (state._billSeq || 0) + 1);
       state._billLoading = true;
+      if (!state.billing) renderBilling();
       try {
         run('getBilling', [month ? { month: month } : {}],
           function (b) {
@@ -2244,6 +2370,9 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (!card || !page) return;
       var b = state.billing;
       card.innerHTML = '';
+      if (!b && !state._billErr && state._billLoading) { var sk = el('div', 'bl-entry'); sk.setAttribute('aria-busy', 'true'); sk.setAttribute('aria-label', 'Loading billing');
+        var skb = el('span', 'bl-entry__body'), l1 = el('div', 'sk sk-line'), l2 = el('div', 'sk sk-line'); l1.style.width = '70%'; l2.style.cssText = 'width:45%;margin-top:10px';
+        skb.appendChild(l1); skb.appendChild(l2); sk.appendChild(skb); card.appendChild(sk); }
       if (b || state._billErr) {
         var btn = el('button', 'bl-entry'); btn.type = 'button'; btn.id = 'billOpenBtn';
         var body = el('span', 'bl-entry__body');
@@ -2300,7 +2429,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var d = b.draft || {}, send = el('div', 'bl-send');
       var sb = el('a', 'btn', 'Send approval to Michal'); sb.id = 'billSendBtn';
       var ready = (d.approved || 0) + (d.flagged || 0) > 0;
-      if (ready && /^https:\/\/mail\.google\.com\//.test(d.url || '')) { sb.href = d.url; sb.target = '_blank'; sb.rel = 'noopener'; }
+      if (ready && /^https:\/\/mail\.google\.com\//.test(d.url || '')) { sb.href = d.url; sb.target = '_blank'; sb.rel = 'noopener noreferrer'; }
       else { sb.setAttribute('aria-disabled', 'true'); sb.style.opacity = '.45'; sb.addEventListener('click', function (e) { e.preventDefault(); toast('Approve or flag someone first'); }); }
       send.appendChild(sb);
       send.appendChild(el('div', 'bl-send__hint', ready ? 'Opens a Gmail draft (' + (d.approved || 0) + ' approved, ' + (d.flagged || 0) + ' on hold). Nothing is sent until you press Send.'
@@ -2322,7 +2451,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (meta) nm.appendChild(el('div', 'bl-meta', meta));
       top.appendChild(nm);
       if (it.url && /^https:\/\/mail\.google\.com\//.test(it.url)) {
-        var a = el('a', 'bl-open', 'Email'); a.href = it.url; a.target = '_blank'; a.rel = 'noopener';
+        var a = el('a', 'bl-open', 'Email'); a.href = it.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
         a.setAttribute('aria-label', 'Open the email from ' + it.name); top.appendChild(a);
       }
       c.appendChild(top);
@@ -2455,8 +2584,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var root = $('meToday'); root.innerHTML = '';
       var P = state.portal;
       if (!P) {
-        root.appendChild(state._portalErr ? makeEmpty('cal', 'Couldn\u2019t load', 'Check your connection, then tap refresh.')
-          : makeEmpty('cal', 'Loading your day\u2026', ''));
+        if (state._portalErr) root.appendChild(makeEmpty('cal', 'Couldn\u2019t load', 'Check your connection, then tap refresh.'));
+        else { root.appendChild(skel(3, true)); root.appendChild(skel(2, true)); }
         return;
       }
       var now = new Date(), today = ymdLocal(now), nowMin = now.getHours() * 60 + now.getMinutes();
@@ -2465,7 +2594,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       root.appendChild(makeSec('Calendar', dayTitle(today)));
       var todays = events.filter(function (e) { return e.date === today; });
       var card = el('div', 'card');
-      if (!todays.length) card.appendChild(el('div', 'me-empty', 'Nothing on the calendar today.'));
+      if (!todays.length) card.appendChild(okLine('Nothing on the calendar today.'));
       todays.forEach(function (e) {
         var s = hmParts(e.start), en = hmParts(e.end);
         var endMin = en ? (en.mins <= (s ? s.mins : 0) ? 1440 : en.mins) : (s ? s.mins + 30 : 0);
@@ -2536,13 +2665,13 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var work = (P && P.work) || [];
       var open = work.filter(function (w) { return !w.done; }), done = work.filter(function (w) { return w.done; });
       var cnt = $('meWorkCount'); cnt.hidden = !open.length; cnt.textContent = String(open.length);
-      if (!P) { root.appendChild(makeEmpty('checksq', state._portalErr ? 'Couldn\u2019t load' : 'Loading\u2026', '')); return; }
+      if (!P) { if (state._portalErr) root.appendChild(makeEmpty('checksq', 'Couldn\u2019t load', 'Check your connection, then tap refresh.')); else root.appendChild(skel(3, true)); return; }
       root.appendChild(makeSec('TTG open items', open.length + ' open'));
       if (open.length) {
         var c = el('div', 'card');
         open.forEach(function (w) { c.appendChild(workRow(w)); });
         root.appendChild(c);
-      } else root.appendChild(makeEmpty('checksq', 'All clear', 'Nothing open at work.'));
+      } else root.appendChild(makeEmpty('checksq', 'All clear', 'Nothing open at work right now.', { label: 'Add a work item', onClick: focusField('newWork') }));
       if (done.length) {
         root.appendChild(makeSec('Done \u00b7 ' + done.length, null, { sub: true }));
         var dc = el('div', 'card');
@@ -2766,7 +2895,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var root = $('otRoot'); root.innerHTML = '';
       var D = state.prov;
       if (!D) {
-        root.appendChild(makeEmpty('person', state._provErr ? 'Couldn\u2019t load' : 'Loading\u2026', state._provErr ? 'Check your connection, then tap refresh.' : ''));
+        if (state._provErr) root.appendChild(makeEmpty('person', 'Couldn\u2019t load', 'Check your connection, then tap refresh.'));
+        else { root.appendChild(skel(2, true)); root.appendChild(skel(4, true)); }
         return;
       }
       var v = state.ot || { view: 'main' };
@@ -2874,8 +3004,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var sc = el('div', 'card'), rows = [];
       stus.forEach(function (s) { s.rows.forEach(function (r) { r.student = s.student; rows.push(r); }); });
       var past = rows.filter(function (r) { return r.end <= nowMin; }), cur = rows.filter(function (r) { return r.end > nowMin; });
-      if (!rows.length) sc.appendChild(el('div', 'me-empty', 'No sessions on the schedule today.'));
-      else if (!cur.length && !state.otEarlier) sc.appendChild(el('div', 'me-empty', 'All of today\u2019s sessions are done.'));
+      if (!rows.length) sc.appendChild(okLine('No sessions on the schedule today.'));
+      else if (!cur.length && !state.otEarlier) sc.appendChild(okLine('All of today\u2019s sessions are done.'));
       function sessRow(r, isPast) {
         var row = el('div', 'ot-sess' + (isPast ? ' is-past' : ''));
         var tm = el('div', 'ot-sess__time');
@@ -3357,6 +3487,10 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     $('addSpendBtn').addEventListener('click', addSpend);
     $('newSpend').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); addSpend(); } });
 
+    (function () {   // header lifts with a soft shadow once the page scrolls
+      var hdr = $('topBar'), on = false;
+      window.addEventListener('scroll', function () { var s = window.scrollY > 4; if (s !== on) { on = s; hdr.classList.toggle('is-scrolled', s); } }, { passive: true });
+    })();
     updateHeader();
     showScreen('grocery');
     loadData(false);
