@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-EL0fkJFhZcBOQh2Km8xlgy4J9ypkdn+JvyMpftGCU6c=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-nXRkU8t3PFW+Y0oti4zAUo7sEx+lJiBwmqF6mSkOw/k=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -478,6 +478,35 @@ svg.i.i--sm { width: 16px; height: 16px; stroke-width: 2.25; }
 .bar.is-over .bar__fill { width: 100% !important; background: var(--accent-dark); }
 .budget__meta { display: flex; justify-content: space-between; font-size: var(--fs-meta); font-weight: 600; color: var(--muted); }
 .budget__meta b { color: var(--ink); font-weight: 800; }
+/* Weekly goals (Roni + Kayla) */
+.goal + .goal { margin-top: var(--s3); }
+.goal .bar { height: 14px; }
+.goal.is-under .bar__fill { background: #2E9E6B; }
+.goal.is-near .bar__fill { background: #E09B1A; }
+.goal.is-over .bar__fill { background: #D23B5A; width: 100% !important; }
+.pill--under { background: #E5F5EC; color: #1F7A4D; }
+.pill--near { background: #FFF3DC; color: #8A5A00; }
+.pill--over { background: #FCE8EE; color: #B41E44; }
+.goal__left b.is-over { color: #B41E44; }
+.goal__edit { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; border: 0; background: none; color: var(--accent); font: inherit; font-weight: 800; cursor: pointer; }
+.goal__of { border: 0; background: none; padding: 0 2px; min-height: 44px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; color: var(--muted); cursor: pointer; text-decoration: underline dotted; text-underline-offset: 4px; vertical-align: middle; }
+.goal-form { display: flex; gap: var(--s2); align-items: center; margin-top: var(--s3); }
+.goal-form .money { flex: 1; min-width: 0; }
+.goal-form .field { font-size: var(--fs-item); font-weight: 800; }
+.goal-form .btn { flex: none; height: 52px; padding: 0 16px; }
+.gwk { width: 100%; display: flex; align-items: center; gap: var(--s3); min-height: 72px; padding: 10px 8px 10px var(--s4); border: 0; background: transparent; text-align: left; font: inherit; color: inherit; }
+.gwk + .gwk { border-top: 1px solid var(--line); }
+.gwk:active { background: var(--wash); }
+.gwk__body { flex: 1; min-width: 0; display: grid; gap: 6px; }
+.gwk__t { font-weight: 800; }
+.gwk__p { display: flex; flex-wrap: wrap; gap: 6px; }
+.gwk__p .pill { height: 26px; font-size: .8125rem; padding: 0 10px; font-weight: 800; }
+.gwk__ch { flex: none; color: var(--faint); display: grid; }
+.gsum { display: flex; flex-wrap: wrap; gap: 6px var(--s3); margin: 0 0 var(--s3); font-size: var(--fs-meta); color: var(--muted); font-weight: 700; }
+.amz-goal { padding: var(--s4); display: grid; gap: var(--s2); margin-top: var(--s3); }
+.amz-goal__r { display: flex; justify-content: space-between; align-items: center; gap: var(--s2); min-height: 32px; }
+.amz-goal__r b { font-size: var(--fs-item); }
+.amz-goal__s { font-size: var(--fs-meta); color: var(--muted); }
 .money { position: relative; flex: 1; min-width: 0; }
 .money::before { content: "$"; position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
   font-size: var(--fs-item); font-weight: 700; color: var(--muted); }
@@ -4868,6 +4897,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (!isParent(state.viewer)) return;
       var b = state.bud, r = rangeDates(b.range);
       if (what !== 'range' && what !== 'week') {
+        loadGoals();
         b._loading = true;
         ledRun('getLedger', [{ from: r.from, to: r.to }]).then(function (L) { b._loading = false; b._err = false; b.led = L; b.rangeLed = L; renderBudget(); },
           function () { b._loading = false; b._err = true; renderBudget(); });
@@ -4944,8 +4974,22 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var root = $('budgetBody'); root.innerHTML = '';
       var wt = L ? L.weekTotals : { food: Number(base.foodSpent) || 0, amazon: Number(base.amazonSpent) || 0, other: 0 };
       var caps = L && L.caps ? L.caps : { food: Number(base.foodCap) || 500, amazon: Number(base.amazonCap) || 250 };
-      root.appendChild(budgetCard('Food', wt.food || 0, Number(base.foodList) || 0, caps.food));
-      root.appendChild(budgetCard('Amazon', wt.amazon || 0, Number(base.amazonList) || 0, caps.amazon));
+      if (goalViewer()) {
+        var G = state.goals.data;
+        if (!G && !state.goals.loading && !state.goals.err && state.screen === 'budget') loadGoals();
+        if (!G) {
+          if (state.goals.err) {   // goals didn't load: still show this week's spend, plus a quiet note
+            var pe = el('div', 'card');
+            [['Food', wt.food], ['Amazon (logged)', wt.amazon]].forEach(function (x) { var o = el('div', 'tot__r'); o.appendChild(el('span', '', x[0] + ' this week')); o.appendChild(el('b', '', money2(x[1] || 0))); pe.appendChild(o); });
+            root.appendChild(pe); root.appendChild(el('p', 'amz-goal__s', 'Goals didn\u2019t load \u2014 tap refresh to try again.'));
+          } else root.appendChild(skel(2));
+        }
+        else { root.appendChild(goalCard('Food', 'food', G.thisWeek.food, G)); root.appendChild(goalCard('Amazon', 'amazon', G.thisWeek.amazon, G)); }
+      } else {
+        var pl = el('div', 'card');
+        [['Food', wt.food], ['Amazon', wt.amazon]].forEach(function (x) { var o = el('div', 'tot__r'); o.appendChild(el('span', '', x[0] + ' this week')); o.appendChild(el('b', '', money2(x[1] || 0))); pl.appendChild(o); });
+        root.appendChild(pl);
+      }
       if (wt.other) { var o = el('div', 'bud-other'); o.appendChild(el('span', '', 'Everything else this week')); o.appendChild(el('b', '', money2(wt.other))); root.appendChild(o); }
       var cats = $('spendCats');
       if (!cats.childNodes.length) {
@@ -4998,6 +5042,12 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         var W = b.weekLed && b.weekLed.week === b.openWeek ? b.weekLed : null;
         root.appendChild(makeSec(weekRange(b.openWeek), W ? money2(W.weekTotals.total) : ''));
         if (!W) { root.appendChild(skel(3)); return; }
+        var GW = goalViewer() && state.goals.data ? state.goals.data.weeks.filter(function (x) { return x.week === b.openWeek; })[0] : null;
+        if (GW) {
+          var gp = el('div', 'gwk__p'); gp.style.marginBottom = 'var(--s3)';
+          [['Food', GW.food], ['Amazon', GW.amazon]].forEach(function (x) { gp.appendChild(pill(x[0] + ' ' + money0(x[1].spent) + ' of ' + money0(x[1].goal) + ' \u00b7 ' + (x[1].state === 'over' ? 'over by ' + money0(x[1].over) : money0(x[1].left) + ' left'), 'pill--' + x[1].state)); });
+          root.appendChild(gp);
+        }
         var split = el('div', 'bud-split');
         [['Food', W.weekTotals.food], ['Amazon', W.weekTotals.amazon], ['Other', W.weekTotals.other]].forEach(function (x) {
           var t = el('div', 'bud-split__i'); t.appendChild(el('span', '', x[0])); t.appendChild(el('b', '', money0(x[1]))); split.appendChild(t);
@@ -5007,6 +5057,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         var c = el('div', 'card'); W.purchases.forEach(function (p) { c.appendChild(purchaseRow(p, deletePurchase)); }); root.appendChild(c);
         return;
       }
+      if (goalViewer() && state.goals.data) { renderGoalWeeks(root, L); return; }
       var weeks = L.history || [];
       var any = weeks.some(function (w) { return w.n; });
       root.appendChild(makeSec('Every week', any ? plural(weeks.filter(function (w) { return w.n; }).length, 'week') : ''));
@@ -5134,6 +5185,100 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     }
 
 
+
+    /* ====================== Weekly goals (Roni + Kayla; Roni edits) ======================
+       Server: getGoals / setGoals (Goals.gs), stored in the sheet's Settings tab. Food = Purchases (food bucket);
+       Amazon = the Amazon tab by order date. Green under 80%, amber 80-100%, red over. */
+    var GOAL_VIEWERS = ['Roni', 'Kayla'], GOAL_EDITORS = ['Roni'];
+    state.goals = { data: null, loading: false, err: false, edit: '' };
+    function goalViewer() { return GOAL_VIEWERS.indexOf(state.viewer) >= 0; }
+    function goalEditor() { return GOAL_EDITORS.indexOf(state.viewer) >= 0; }
+    function loadGoals() {
+      if (!goalViewer()) return;
+      var g = state.goals; g.loading = true;
+      ledRun('getGoals', [{}]).then(function (d) { g.loading = false; var good = d && d.thisWeek && d.goals && Array.isArray(d.weeks); g.err = !good; g.data = good ? d : null; renderBudget(); },
+        function () { g.loading = false; g.err = true; renderBudget(); });
+    }
+    var GOAL_WORD = { under: 'Under goal', near: 'Close to goal', over: 'Over goal', none: 'Nothing logged' };
+    function goalCard(label, key, P, G) {
+      var c = el('div', 'card budget goal is-' + P.state); c.setAttribute('data-goal', key);
+      var head = el('div', 'budget__head');
+      head.appendChild(el('span', 'budget__label', label + ' this week'));
+      head.appendChild(pill(P.pct + '%', 'pill--' + P.state));
+      c.appendChild(head);
+      var amt = el('div', 'budget__amt', money0(P.spent));
+      var of = el(goalEditor() ? 'button' : 'span', 'budget__of' + (goalEditor() ? ' goal__of' : ''), 'of ' + money0(P.goal));
+      if (goalEditor()) { of.type = 'button'; of.setAttribute('aria-label', 'Change the ' + label + ' goal (' + money0(P.goal) + ' a week)'); of.addEventListener('click', function () { state.goals.edit = key; renderBudget(); }); }
+      amt.appendChild(of); c.appendChild(amt);
+      var bar = el('div', 'bar'), fill = el('div', 'bar__fill'); fill.style.width = Math.min(100, P.pct) + '%'; bar.appendChild(fill); c.appendChild(bar);
+      bar.setAttribute('role', 'img'); bar.setAttribute('aria-label', label + ': ' + money0(P.spent) + ' of ' + money0(P.goal) + ', ' + GOAL_WORD[P.state]);
+      var meta = el('div', 'budget__meta');
+      meta.appendChild(el('span', '', GOAL_WORD[P.state] + ' \u00b7 ' + shortRange(G.week, G.weekEnd)));
+      var right = el('span', 'goal__left');
+      if (P.state === 'over') right.appendChild(el('b', 'is-over', 'Over by ' + money0(P.over)));
+      else { right.appendChild(el('b', '', money0(P.left))); right.appendChild(document.createTextNode(' left')); }
+      meta.appendChild(right); c.appendChild(meta);
+      if (goalEditor()) {
+        if (state.goals.edit === key) {
+          var f = el('form', 'goal-form'); f.setAttribute('novalidate', '');
+          var wrap = el('label', 'money'), inp = el('input', 'field'); inp.type = 'text'; inp.inputMode = 'decimal'; inp.id = 'goalInput-' + key;
+          inp.value = String(P.goal); inp.setAttribute('aria-label', label + ' goal per week'); inp.maxLength = 8; inp.setAttribute('enterkeyhint', 'done');
+          wrap.appendChild(inp); f.appendChild(wrap);
+          var sv = el('button', 'btn', 'Save'); sv.type = 'submit'; f.appendChild(sv);
+          var cx = el('button', 'btn btn--quiet', 'Cancel'); cx.type = 'button'; cx.addEventListener('click', function () { state.goals.edit = ''; renderBudget(); }); f.appendChild(cx);
+          f.addEventListener('submit', function (e) { e.preventDefault(); saveGoal(key, label, inp.value, sv); });
+          c.appendChild(f);
+          setTimeout(function () { try { inp.focus(); inp.select(); } catch (e) {} }, 50);
+        } else {
+          var eb = el('button', 'goal__edit', 'Edit goal'); eb.type = 'button'; eb.setAttribute('aria-label', 'Edit the ' + label + ' weekly goal');
+          eb.addEventListener('click', function () { state.goals.edit = key; renderBudget(); });
+          c.appendChild(eb);
+        }
+      }
+      return c;
+    }
+    function shortRange(a, b) { var x = parseYmd(a), y = parseYmd(b); return x && y ? MONTHS[x.getMonth()] + ' ' + x.getDate() + '\u2013' + (x.getMonth() === y.getMonth() ? '' : MONTHS[y.getMonth()] + ' ') + y.getDate() : ''; }
+    function saveGoal(key, label, raw, btn) {
+      var v = Number(String(raw || '').replace(/[$,\s]/g, ''));
+      if (!(v >= 1 && v <= 100000)) { toast('Enter an amount like 250'); return; }
+      v = Math.round(v * 100) / 100;
+      var G = state.goals.data, old = G.goals[key], arg = {}; arg[key] = v;
+      btn.disabled = true;
+      ledRun('setGoals', [arg]).then(function () {
+        state.goals.edit = ''; toast(label + ' goal: ' + money0(v) + ' a week'); loadGoals();
+      }, function (e) { btn.disabled = false; toast((e && e.message && /Roni/.test(e.message)) ? 'Only Roni can change goals' : 'Couldn\u2019t save \u2014 try again'); G.goals[key] = old; });
+    }
+    function renderGoalWeeks(root, L) {
+      var G = state.goals.data, ws = G.weeks;
+      var past = ws.filter(function (w) { return !w.current; });
+      function cnt(k, ok) { return past.filter(function (w) { return w[k].state !== 'none' && (w[k].state === 'over') !== ok; }).length; }
+      var nf = cnt('food', true), na = cnt('amazon', true), of = cnt('food', false), oa = cnt('amazon', false);
+      root.appendChild(makeSec('Week by week', 'goals ' + money0(G.goals.food) + ' food \u00b7 ' + money0(G.goals.amazon) + ' Amazon'));
+      var sum = el('div', 'gsum');
+      sum.appendChild(el('span', '', 'Last ' + past.length + ' weeks \u00b7 Food: ' + nf + ' under, ' + of + ' over \u00b7 Amazon: ' + na + ' under, ' + oa + ' over'));
+      root.appendChild(sum);
+      var c = el('div', 'card');
+      ws.forEach(function (w) {
+        var r = el('button', 'gwk'); r.type = 'button'; r.setAttribute('data-week', w.week);
+        var body = el('span', 'gwk__body');
+        body.appendChild(el('span', 'gwk__t', (w.current ? 'This week \u00b7 ' : '') + weekRange(w.week)));
+        var pp = el('span', 'gwk__p');
+        [['Food', w.food], ['Amazon', w.amazon]].forEach(function (x) {
+          var st = x[1].state, word = st === 'over' ? 'over' : (w.current ? (st === 'near' ? 'close' : 'on track') : 'under');
+          if (st === 'none') pp.appendChild(pill(x[0] + ' \u00b7 nothing logged', ''));
+          else pp.appendChild(pill(x[0] + ' ' + money0(x[1].spent) + ' \u00b7 ' + word, 'pill--' + st));
+        });
+        body.appendChild(pp); r.appendChild(body);
+        var ch = el('span', 'gwk__ch'); ch.innerHTML = svg('chev'); r.appendChild(ch);
+        r.setAttribute('aria-label', weekRange(w.week) + '. Food ' + money0(w.food.spent) + ' ' + GOAL_WORD[w.food.state] + '. Amazon ' + money0(w.amazon.spent) + ' ' + GOAL_WORD[w.amazon.state]);
+        r.addEventListener('click', function () {
+          var b = state.bud; b.openWeek = w.week; b.weekLed = null; loadLedger('week'); window.scrollTo(0, 0);
+          if (!navHas('budWeek')) navPush('budWeek', function () { b.openWeek = ''; renderBudget(); window.scrollTo(0, 0); });
+        });
+        c.appendChild(r);
+      });
+      root.appendChild(c);
+    }
     /* ====================== Budget -> Amazon (Roni + Kayla only) ======================
        The server answers getAmazon only for AMAZON_PEOPLE (person from the link token); everyone else gets 403 and never
        sees the tab. Data lives in memory only (never localStorage). */
@@ -5223,10 +5368,23 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       }
       var H = D.headline, grid = el('div', 'kpis amz-kpis');
       [['This month', money0(H.thisMonth), plural(H.thisMonthN, 'order') + ' so far'], ['Last month', money0(H.lastMonth), plural(H.lastMonthN, 'order')],
-       ['Monthly average', money0(H.avg12), H.avgMonths >= 12 ? 'last 12 months' : 'last ' + plural(H.avgMonths, 'month')], ['Year to date', money0(H.ytd), plural(H.ytdN, 'order')]].forEach(function (k) {
+       ['Monthly average', money0(H.avg12), (H.avgMonths >= 12 ? 'last 12 months' : 'last ' + plural(H.avgMonths, 'month')) + (state.goals.data ? ' \u00b7 goal \u2248 ' + money0(state.goals.data.monthly.amazon) : '')], ['Year to date', money0(H.ytd), plural(H.ytdN, 'order')]].forEach(function (k) {
         var t = el('div', 'kpi'); t.appendChild(el('div', 'kpi__lbl', k[0])); t.appendChild(el('div', 'kpi__v', k[1])); t.appendChild(el('div', 'kpi__s', k[2])); grid.appendChild(t);
       });
       root.appendChild(grid);
+      var GG = state.goals.data;
+      if (!GG && !state.goals.loading && !state.goals.err) loadGoals();
+      if (GG) {
+        var gc = el('div', 'card amz-goal');
+        gc.appendChild(el('div', 'amz-goal__s', 'Goals as a month (weekly goal \u00d7 52 \u00f7 12)'));
+        [['Amazon', GG.monthly.amazon, GG.goals.amazon, H.avg12], ['Food', GG.monthly.food, GG.goals.food, null]].forEach(function (x) {
+          var r = el('div', 'amz-goal__r'), l = el('span'); l.appendChild(el('b', '', x[0] + ' \u2248 ' + money0(x[1]) + '/mo'));
+          l.appendChild(el('span', 'amz-goal__s', ' \u00b7 ' + money0(x[2]) + '/week')); r.appendChild(l);
+          if (x[3] != null) { var d = x[3] - x[1]; r.appendChild(pill(d > 0 ? 'avg ' + money0(d) + ' over' : 'avg ' + money0(-d) + ' under', d > 0 ? 'pill--over' : 'pill--under')); }
+          gc.appendChild(r);
+        });
+        root.appendChild(gc);
+      }
       // Month by month: big tappable bars, newest first
       root.appendChild(makeSec('Month by month', 'tap a month'));
       root.appendChild(amzLegend());
