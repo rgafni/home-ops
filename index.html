@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-SQyncduivPJwxwJCmttKFF9h70F9UbTo9u1DKsRl0QU=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-YXDK3Z6z+3YmYespUNiryAeOisALHScOmy87M656jVw=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -568,8 +568,65 @@ svg.i.i--sm { width: 16px; height: 16px; stroke-width: 2.25; }
 .undo button { height: var(--tap); padding: 0 var(--s4); border: 0; border-radius: var(--r-sm);
   background: transparent; color: #A9C2FF; font-weight: 800; }
 
+/* ---------- Back arrow (every sheet / picker / detail view) + Lists dashboard (Oct 11 2026) ---------- */
+.sheet__top { display: flex; align-items: center; gap: var(--s1); margin: 0 0 var(--s3) calc(-1 * var(--s3)); }
+.sheet__top .sheet__title { margin: 0; min-width: 0; }
+.navback { flex: none; width: 48px; height: 48px; display: grid; place-items: center; padding: 0; border: 0;
+  border-radius: 50%; background: transparent; color: var(--ink); }
+.navback:active { background: var(--wash); }
+.navback svg.i { width: 28px; height: 28px; stroke-width: 2.5; }
+.back svg.i { width: 24px; height: 24px; stroke-width: 2.5; }
+.sheet--list .opt-list { flex: 1; min-height: 0; }
+.dash { margin-bottom: var(--s5); }
+.dash__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--s2); }
+.dash__title { margin: 0; font-size: var(--fs-label); font-weight: 800; color: var(--muted); letter-spacing: .02em; text-transform: uppercase; }
+.dash__all { display: inline-flex; align-items: center; gap: 2px; min-height: 44px; padding: 0 4px 0 10px; border: 0; background: none;
+  font-size: var(--fs-meta); font-weight: 700; color: var(--accent); }
+.dash__all svg.i { width: 18px; height: 18px; }
+.dash__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.dash__t { min-width: 0; min-height: 76px; padding: 10px 12px; text-align: left; border: 1.5px solid var(--line); border-radius: var(--r-md);
+  background: var(--paper); box-shadow: var(--sh-card); display: flex; flex-direction: column; gap: 4px; color: var(--ink); }
+.dash__t:active { background: var(--wash); }
+.dash__t.is-current { border-color: var(--accent); background: var(--accent-soft); }
+.dash__r { display: flex; align-items: center; gap: var(--s2); }
+.dash__name { flex: 1; min-width: 0; font-size: var(--fs-body); font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dash__n { flex: none; min-width: 28px; height: 28px; padding: 0 8px; border-radius: var(--r-pill); display: grid; place-items: center;
+  background: var(--accent); color: var(--on-accent); font-size: var(--fs-badge); font-weight: 800; }
+.dash__prev { font-size: var(--fs-label); font-weight: 600; color: var(--muted); line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dash__who { font-size: 12px; font-weight: 700; color: var(--faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bw { margin: 0 0 var(--s5); border: 1.5px solid var(--line); border-radius: var(--r-md); background: var(--card, #fff); overflow: hidden; }
+.bw__toggle { width: 100%; min-height: 56px; display: flex; align-items: center; gap: var(--s2); padding: 8px 12px; border: 0; background: none; text-align: left; color: inherit; font: inherit; cursor: pointer; }
+.bw__toggle:active { background: var(--wash); }
+.bw__toggle svg.i { flex: none; width: 20px; height: 20px; transition: transform .15s; color: var(--muted); }
+.bw__toggle[aria-expanded="true"] svg.i { transform: rotate(180deg); }
+.bw__l { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.bw__title { font-size: var(--fs-body); font-weight: 800; }
+.bw__sum { font-size: var(--fs-label); font-weight: 600; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bw__money { flex: none; font-weight: 800; font-variant-numeric: tabular-nums; }
+.bw__body { padding: 0 12px 6px; border-top: 1px solid var(--line); }
+.bw__store { padding: 10px 0 4px; }
+.bw__store + .bw__store { border-top: 1px solid var(--line); }
+.bw__sh { display: flex; align-items: baseline; gap: var(--s2); margin-bottom: 2px; }
+.bw__sn { flex: 1; min-width: 0; font-weight: 800; }
+.bw__sc { font-size: var(--fs-label); font-weight: 700; color: var(--muted); }
+.bw__st { font-weight: 800; font-variant-numeric: tabular-nums; }
+.bw__it { display: flex; align-items: center; gap: var(--s2); min-height: 40px; padding: 4px 0; }
+.bw__ic { flex: none; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; background: var(--ok-soft, #e6f6ec); color: var(--ok, #1a7f45); }
+.bw__ic svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 3; }
+.bw__m { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.bw__n { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bw__w { font-size: 12px; font-weight: 700; color: var(--faint); }
+.bw__a { flex: none; font-size: var(--fs-label); font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+.bw__empty { margin: 0; padding: 12px 0; color: var(--muted); }
+.bw__past { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 44px; margin-top: 4px; border: 0; background: none; color: var(--accent); font: inherit; font-weight: 700; cursor: pointer; }
+.bwk__body { flex: 1; min-height: 0; overflow-y: auto; padding: 0 var(--s4) var(--s4); }
+.bwk__body .opt-row { width: 100%; }
+.dash__empty { margin: 0; padding: var(--s3) 0; font-size: var(--fs-body); color: var(--muted); }
+.shop-cur { display: flex; align-items: center; gap: var(--s2); margin: 0 0 var(--s3); scroll-margin-top: 12px; }
+.shop-cur__name { margin: 0; font-size: var(--fs-h2); font-weight: 800; letter-spacing: -.015em; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 /* ---------- Shopping: For (Roni), split review, edit sheet (Oct 11 2026) ---------- */
 .shop-for { display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap; margin: calc(-1 * var(--s3)) 0 var(--s5); }
+.btn.is-for { background: var(--ink); }
 .shop-for__lbl { font-size: var(--fs-meta); font-weight: 800; color: var(--muted); margin-right: 2px; }
 .shop-for .chip, .ied .chip { height: 44px; padding: 0 14px; }
 .ied__people { display: flex; flex-wrap: wrap; gap: var(--s2); }
@@ -1197,9 +1254,16 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
 
     <!-- GROCERY -->
     <section class="screen" id="screen-grocery">
-      <button type="button" class="picker" id="storePicker" aria-haspopup="dialog" aria-controls="storeSheetBg">
-        <span class="picker__name" id="storePickerName">Lidl</span><span class="picker__count" id="storePickerCount" hidden></span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-      </button>
+      <div class="dash" id="shopDash">
+        <div class="dash__head"><h2 class="dash__title">Lists</h2>
+          <button type="button" class="dash__all" id="storePicker" aria-haspopup="dialog" aria-controls="storeSheetBg">All stores<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></div>
+        <div class="dash__grid" id="dashGrid"></div>
+      </div>
+      <section class="bw" id="boughtBox" hidden aria-labelledby="bwTitle">
+        <button type="button" class="bw__toggle" id="bwToggle" aria-expanded="false" aria-controls="bwBody"><span class="bw__l"><span class="bw__title" id="bwTitle">Bought this week</span><span class="bw__sum" id="bwSum"></span></span><span class="bw__money" id="bwMoney" hidden></span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="bw__body" id="bwBody" hidden></div>
+      </section>
+      <div class="shop-cur" id="shopCur"><h2 class="shop-cur__name" id="storePickerName">Lidl</h2><span class="picker__count" id="storePickerCount" hidden></span></div>
       <div class="add">
         <input class="field" id="newItem" type="text" placeholder="Add to Lidl…" aria-label="Add item" autocomplete="off" enterkeyhint="done">
         <button type="button" class="btn" id="addBtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Add</button>
@@ -1302,18 +1366,13 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
 
   <div class="sheet-bg" id="storeSheetBg" aria-hidden="true">
     <div class="sheet sheet--list" role="dialog" aria-modal="true" aria-labelledby="storeSheetTitle">
-      <div class="sheet__handle"></div>
-      <h3 class="sheet__title" id="storeSheetTitle">Choose store</h3>
+      <div class="sheet__top"><button type="button" class="navback" id="storeBack" aria-label="Back"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><h3 class="sheet__title" id="storeSheetTitle">Choose store</h3></div>
       <div class="opt-list" id="storeSheetList" role="listbox" aria-labelledby="storeSheetTitle"></div>
     </div>
   </div>
   <div class="sheet-bg" id="uplSheetBg" aria-hidden="true">
     <div class="sheet upl" role="dialog" aria-modal="true" aria-labelledby="uplTitle">
-      <div class="sheet__handle"></div>
-      <div class="upl__head">
-        <h3 class="sheet__title" id="uplTitle">Upload</h3>
-        <button type="button" class="upl__close" id="uplClose" aria-label="Close"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
-      </div>
+      <div class="sheet__top"><button type="button" class="navback" id="uplClose" aria-label="Back"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><h3 class="sheet__title" id="uplTitle">Upload</h3></div>
       <p class="upl__hint" id="uplHint"></p>
       <div class="upl__for" id="uplFor" hidden></div>
       <div class="upl__pick" id="uplPick">
@@ -1338,10 +1397,15 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       <input type="file" id="uplFileIn" accept="image/*,application/pdf" multiple hidden>
     </div>
   </div>
+  <div class="sheet-bg" id="bwkBg" aria-hidden="true">
+    <div class="sheet sheet--tall sheet--list" role="dialog" aria-modal="true" aria-labelledby="bwkTitle">
+      <div class="sheet__top"><button type="button" class="navback" id="bwkBack" aria-label="Back"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><h3 class="sheet__title" id="bwkTitle">Past weeks</h3></div>
+      <div class="bwk__body" id="bwkBody"></div>
+    </div>
+  </div>
   <div class="sheet-bg" id="ssrBg" aria-hidden="true">
     <div class="sheet sheet--tall" role="dialog" aria-modal="true" aria-labelledby="ssrTitle">
-      <div class="sheet__handle"></div>
-      <h3 class="sheet__title" id="ssrTitle">Looks like a few things. One item per line?</h3>
+      <div class="sheet__top"><button type="button" class="navback" id="ssrBack" aria-label="Back"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><h3 class="sheet__title" id="ssrTitle">Looks like a few things. One item per line?</h3></div>
       <p class="ssr__hint" id="ssrHint">Tap the word where the next thing starts.</p>
       <div class="ssr__groups" id="ssrGroups"></div>
       <div class="sheet__actions">
@@ -1352,8 +1416,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
   </div>
   <div class="sheet-bg" id="iedBg" aria-hidden="true">
     <div class="sheet sheet--tall" role="dialog" aria-modal="true" aria-labelledby="iedTitle">
-      <div class="sheet__handle"></div>
-      <h3 class="sheet__title" id="iedTitle">Edit item</h3>
+      <div class="sheet__top"><button type="button" class="navback" id="iedBack" aria-label="Back"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><h3 class="sheet__title" id="iedTitle">Edit item</h3></div>
       <div class="ied">
         <label><span class="ied__lbl">Item</span><input class="field" id="iedName" type="text" maxlength="120" autocomplete="off"></label>
         <label><span class="ied__lbl">Store</span><select class="field" id="iedStore"></select></label>
@@ -1371,8 +1434,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
   </div>
   <div class="sheet-bg" id="sheetBackdrop" aria-hidden="true">
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
-      <div class="sheet__handle"></div>
-      <h3 class="sheet__title" id="sheetTitle"></h3>
+      <div class="sheet__top"><button type="button" class="navback" id="sheetBack" aria-label="Back"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><h3 class="sheet__title" id="sheetTitle"></h3></div>
       <p class="sheet__body" id="sheetLine"></p>
       <div class="sheet__actions">
         <button type="button" class="btn btn--danger btn--block" id="sheetOk">Clear</button>
@@ -1557,6 +1619,44 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (fnName !== 'getData') setTimeout(saveCache, 0);   // keep the phone copy in step with optimistic edits
     }
 
+    /* ---------- Back (Oct 11 2026): one stack for every sheet, picker and detail view ----------
+       Opening a layer pushes a history entry, so Android back / iOS swipe step back one level instead of leaving.
+       navPush(key, hide): hide() closes the layer's UI (return false to stay open). The app closing a layer
+       itself (back arrow, Save, picking a store, tapping outside) calls navDrop(key): hide + drop its entry quietly. */
+    var navStack = [], navSkip = 0, navQueue = 0;
+    function navPush(key, hide) {
+      navStack.push({ key: key, hide: hide });
+      if (navSkip > 0) { navQueue++; return; }            // a quiet history.back() is still on its way
+      try { history.pushState({ gh: navStack.length }, ''); } catch (e) {}
+    }
+    function navHas(key) { for (var i = 0; i < navStack.length; i++) if (navStack[i].key === key) return true; return false; }
+    function navDrop(key) {
+      for (var i = navStack.length - 1; i >= 0; i--) {
+        if (navStack[i].key !== key) continue;
+        navStack.splice(i, 1);
+        if (navQueue > 0) { navQueue--; return; }        // its entry was never pushed
+        navSkip++;
+        try { history.back(); } catch (e) { navSkip--; }
+        return;
+      }
+    }
+    function navCloseAll() {
+      var n = navStack.length - navQueue;
+      var all = navStack.splice(0);
+      navQueue = 0;
+      all.reverse().forEach(function (l) { try { l.hide(); } catch (e) {} });
+      if (n > 0) { navSkip++; try { history.go(-n); } catch (e) { navSkip--; } }
+    }
+    window.addEventListener('popstate', function () {
+      if (navSkip > 0) {
+        navSkip--;
+        if (!navSkip) for (; navQueue > 0; navQueue--) { try { history.pushState({ gh: navStack.length }, ''); } catch (e) {} }
+        return;
+      }
+      var top = navStack.pop();
+      if (top && top.hide() === false) navPush(top.key, top.hide);   // e.g. an upload still sending
+    });
+
     /* ---------- Shared building blocks ---------- */
     function makeSec(title, meta, opts) {
       opts = opts || {};
@@ -1666,9 +1766,9 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (name === 'me' && !portalOn()) name = 'grocery';
       state.screen = name;
       closeAllMore();
-      closeSheet();
-      closeStoreSheet();
+      navCloseAll();
       closeBg('ssrBg'); closeBg('iedBg');
+      if (state.data && name !== 'grocery') state.shopFor = '';      // back to Roni next time
       SCREENS.forEach(function (id) { $('screen-' + id).hidden = id !== name; });
       document.querySelectorAll('#mainNav .nav__item').forEach(function (b) {
         var on = b.getAttribute('data-screen') === name;
@@ -1735,8 +1835,207 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var cnt = $('storePickerCount');
       cnt.hidden = !n;
       cnt.textContent = String(n);
-      $('storePicker').setAttribute('aria-label', 'Store: ' + state.selectedStore + (n ? ', ' + plural(n, 'item') : '') + '. Change store');
+      $('storePicker').setAttribute('aria-label', 'All stores');
+      renderShopDash(sc);
     }
+    /* Lists dashboard: every store with something still to buy, in the usual store order. Tap = open that list. */
+    function renderShopDash(sc) {
+      renderBought();
+      var grid = $('dashGrid');
+      grid.innerHTML = '';
+      var open = sc.order.filter(function (st) { return (sc.counts[st] || 0) > 0; });
+      if (!open.length) { grid.appendChild(el('p', 'dash__empty', 'Nothing on any list right now.')); grid.style.display = 'block'; return; }
+      grid.style.display = '';
+      open.forEach(function (st) {
+        var items = storeItems(st).filter(function (x) { return !x.checked; });
+        var who = [];
+        items.forEach(function (x) { var o = shopOwner(x); o = o === SHOP_EARLIER ? 'earlier' : (o === shopMe() ? 'you' : o); if (who.indexOf(o) < 0) who.push(o); });
+        var t = el('button', 'dash__t' + (st === state.selectedStore ? ' is-current' : ''));
+        t.type = 'button';
+        t.setAttribute('aria-label', st + ', ' + plural(items.length, 'item') + ' to buy' + (st === state.selectedStore ? ', open now' : ''));
+        if (st === state.selectedStore) t.setAttribute('aria-current', 'true');
+        var r = el('div', 'dash__r');
+        r.appendChild(el('span', 'dash__name', st));
+        r.appendChild(el('span', 'dash__n', String(items.length)));
+        t.appendChild(r);
+        t.appendChild(el('span', 'dash__prev', items.slice(0, 3).map(function (x) { return x.item; }).join(' \u00b7 ')));
+        t.appendChild(el('span', 'dash__who', who.slice(0, 3).join(', ') + (who.length > 3 ? ' +' + (who.length - 3) : '')));
+        t.addEventListener('click', function () {
+          if (st !== state.selectedStore) shopForReset();
+          state.selectedStore = st;
+          state._storeChosen = true;
+          renderGrocery();
+          var cur = $('shopCur');
+          try { cur.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { cur.scrollIntoView(); }
+        });
+        grid.appendChild(t);
+      });
+    }
+
+    /* ---------- Bought this week (Oct 11 2026) ----------
+       Roni's tick = bought: the item leaves the open list and shows here (Undo puts it back). Receipt lines land here too.
+       Everyone sees items, stores, who asked and the day; $ only when the server says money (Roni / Kayla). */
+    var BW_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], BW_MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    function bwDate(ymd) { var p = String(ymd).split('-'); return new Date(+p[0], +p[1] - 1, +p[2], 12); }
+    function bwDay(ymd) { return BW_DAYS[bwDate(ymd).getDay()]; }
+    function bwShort(ymd) { var d = bwDate(ymd); return BW_MON[d.getMonth()] + ' ' + d.getDate(); }
+    function bwToday() { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+    function bwMoney(n) { return '$' + Number(n || 0).toFixed(2); }
+    function bwCount(b) { return (b.stores || []).reduce(function (a, s) { return a + s.items.length; }, 0); }
+    function bwStoresEl(b, pastWeek) {
+      var box = document.createDocumentFragment();
+      (b.stores || []).forEach(function (st) {
+        var sec = el('div', 'bw__store'), h = el('div', 'bw__sh');
+        h.appendChild(el('span', 'bw__sn', st.store));
+        h.appendChild(el('span', 'bw__sc', plural(st.items.length, 'item')));
+        if (b.money && st.total) h.appendChild(el('span', 'bw__st', bwMoney(st.total)));
+        sec.appendChild(h);
+        st.items.forEach(function (it) {
+          var r = el('div', 'bw__it'), ic = el('span', 'bw__ic'), m = el('div', 'bw__m');
+          ic.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+          m.appendChild(el('span', 'bw__n', (Number(it.qty) > 1 ? it.qty + ' \u00d7 ' : '') + it.item));
+          var w = [];
+          if (it.askedBy) w.push('for ' + (it.askedBy === shopMe() ? 'you' : it.askedBy));
+          else if (it.source === 'receipt') w.push('receipt');
+          w.push(pastWeek ? bwDay(it.date) + ' ' + bwShort(it.date) : bwDay(it.date));
+          m.appendChild(el('span', 'bw__w', w.join(' \u00b7 ')));
+          r.appendChild(ic); r.appendChild(m);
+          if (b.money && it.amount != null) r.appendChild(el('span', 'bw__a', bwMoney(it.amount)));
+          sec.appendChild(r);
+        });
+        box.appendChild(sec);
+      });
+      return box;
+    }
+    function renderBought() {
+      var b = state.data && state.data.bought, box = $('boughtBox');
+      if (!box) return;
+      if (!b || !b.stores) { box.hidden = true; return; }
+      box.hidden = false;
+      var n = bwCount(b), open = !!state.bwOpen;
+      $('bwSum').textContent = n ? plural(n, 'item') + ' \u00b7 ' + b.stores.map(function (s) { return s.store; }).join(', ') : 'Nothing yet this week';
+      var mo = $('bwMoney');
+      mo.hidden = !(b.money && b.total);
+      mo.textContent = b.money && b.total ? bwMoney(b.total) : '';
+      $('bwToggle').setAttribute('aria-expanded', open ? 'true' : 'false');
+      $('bwToggle').setAttribute('aria-label', 'Bought this week, ' + plural(n, 'item') + (b.money && b.total ? ', ' + bwMoney(b.total) + ' spent' : ''));
+      var body = $('bwBody');
+      body.hidden = !open;
+      body.innerHTML = '';
+      if (!open) return;
+      if (!n) body.appendChild(el('p', 'bw__empty', 'When Roni ticks an item it moves here.'));
+      else body.appendChild(bwStoresEl(b, false));
+      if ((b.weeks || []).some(function (w) { return w.week !== b.week; })) {
+        var past = el('button', 'bw__past', 'Past weeks');
+        past.type = 'button'; past.id = 'bwPast';
+        past.addEventListener('click', openPastWeeks);
+        body.appendChild(past);
+      }
+    }
+    $('bwToggle').addEventListener('click', function () {
+      state.bwOpen = !state.bwOpen;
+      try { localStorage.setItem('homeops.bwopen', state.bwOpen ? '1' : '0'); } catch (e) {}
+      renderBought();
+    });
+    try { state.bwOpen = localStorage.getItem('homeops.bwopen') === '1'; } catch (e) {}
+    /* Optimistic: show the items as bought right away; the server row ids come back for Undo. */
+    function bwAddLocal(items) {
+      var b = state.data && state.data.bought;
+      if (!b || !b.stores || !b.current) return;
+      var today = bwToday();
+      items.forEach(function (s) {
+        var k = s.store || 'Other', g = null;
+        b.stores.forEach(function (x) { if (x.store === k) g = x; });
+        if (!g) { g = { store: k, items: [], total: 0 }; b.stores.unshift(g); }
+        var o = shopOwner(s);
+        g.items.unshift({ id: '', _src: s.id, item: s.item, qty: s.qty, askedBy: o === SHOP_EARLIER ? '' : o, date: today, amount: null, source: 'list' });
+      });
+    }
+    function bwDropLocal(srcIds) {
+      var b = state.data && state.data.bought;
+      if (!b || !b.stores) return;
+      b.stores.forEach(function (g) { g.items = g.items.filter(function (i) { return !(i._src && srcIds.indexOf(i._src) >= 0); }); });
+      b.stores = b.stores.filter(function (g) { return g.items.length; });
+    }
+    function buyGroceries(items) {
+      items = items.filter(function (s) { return s && !s._saving; });
+      if (!items.length) return;
+      var d = state.data, src = items.map(function (s) { return s.id; });
+      d.shopping = d.shopping.filter(function (x) { return items.indexOf(x) < 0; });
+      bwAddLocal(items);
+      renderGrocery();
+      var my = showUndo(items.length === 1 ? 'Bought \u00b7 ' + items[0].item : 'Bought ' + items.length + ' items', 'Undo', 5000);
+      my.restore = function () {
+        bwDropLocal(src);
+        d.shopping = d.shopping.concat(items.filter(function (s) { return d.shopping.indexOf(s) < 0; }));
+        renderGrocery();
+        if (!my.ids || !my.ids.length) { loadData(false); return; }
+        run('unbuyItems', [{ ids: my.ids }],
+          function () { toast('Back on the list'); loadData(false); },
+          function () { toast('Couldn\u2019t undo'); loadData(false); });
+      };
+      run('buyItems', [{ ids: src }],
+        function (res) {
+          my.pending = false;
+          my.ids = (res && res.ids) || [];
+          var map = {};
+          ((res && res.map) || []).forEach(function (p) { map[p[0]] = p[1]; });
+          var b = d.bought;
+          if (b && b.stores) b.stores.forEach(function (g) { g.items.forEach(function (i) { if (i._src && map[i._src]) i.id = map[i._src]; }); });
+          if (my.wantUndo) doRestore(my);
+        },
+        function () {
+          my.pending = false;
+          hideUndo();
+          bwDropLocal(src);
+          d.shopping = d.shopping.concat(items.filter(function (s) { return d.shopping.indexOf(s) < 0; }));
+          renderGrocery();
+          toast('Couldn\u2019t save \u2014 try again');
+        });
+    }
+    /* Past weeks: a list of archived weeks; tap one to see it (back arrow / system back steps out one level). */
+    var bwk = { weeks: [] };
+    function bwkRange(w) { var e = bwDate(w); e.setDate(e.getDate() + 6); return bwShort(w) + ' \u2013 ' + BW_MON[e.getMonth()] + ' ' + e.getDate(); }
+    function bwkList() {
+      var b = state.data && state.data.bought, body = $('bwkBody');
+      $('bwkTitle').textContent = 'Past weeks';
+      body.innerHTML = '';
+      var weeks = ((b && b.weeks) || []).filter(function (w) { return !b || w.week !== b.week; });
+      if (!weeks.length) { body.appendChild(el('p', 'bw__empty', 'No earlier weeks yet.')); return; }
+      var list = el('div', 'opt-list');
+      weeks.forEach(function (w) {
+        var r = el('button', 'opt-row');
+        r.type = 'button';
+        r.appendChild(el('span', 'opt-row__name', bwkRange(w.week)));
+        r.appendChild(el('span', 'opt-row__count', String(w.count)));
+        r.addEventListener('click', function () { bwkOpen(w.week); });
+        list.appendChild(r);
+      });
+      body.appendChild(list);
+    }
+    function bwkOpen(week) {
+      var body = $('bwkBody');
+      $('bwkTitle').textContent = bwkRange(week);
+      body.innerHTML = '';
+      body.appendChild(el('p', 'bw__empty', 'Loading\u2026'));
+      if (!navHas('bwkWeek')) navPush('bwkWeek', bwkList);
+      run('getBought', [{ week: week }],
+        function (res) {
+          if (!navHas('bwkWeek')) return;
+          body.innerHTML = '';
+          var tot = res && res.money && res.total ? el('p', 'bw__sc', 'Food spent: ' + bwMoney(res.total)) : null;
+          if (tot) body.appendChild(tot);
+          if (!res || !bwCount(res)) body.appendChild(el('p', 'bw__empty', 'Nothing that week.'));
+          else body.appendChild(bwStoresEl(res, true));
+        },
+        function () { body.innerHTML = ''; body.appendChild(el('p', 'bw__empty', 'Couldn\u2019t load that week')); });
+    }
+    function openPastWeeks() { bwkList(); sheetShow('bwkBg'); }
+    function bwkClose() { if (navHas('bwkWeek')) navDrop('bwkWeek'); sheetHide('bwkBg'); }
+    $('bwkBack').addEventListener('click', function () {
+      if (navHas('bwkWeek')) { navDrop('bwkWeek'); bwkList(); } else sheetHide('bwkBg');
+    });
+    $('bwkBg').addEventListener('click', function (e) { if (e.target === $('bwkBg')) bwkClose(); });
     function openStoreSheet() {
       _sheetMode = 'store';
       $('storeSheetTitle').textContent = 'Choose store';
@@ -1757,8 +2056,10 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         ck.innerHTML = svg('check');
         r.appendChild(ck);
         r.addEventListener('click', function () {
+          state._forStore = state.selectedStore;
           state.selectedStore = store;
           state._storeChosen = true;
+          if (store !== state._forStore) shopForReset();
           closeStoreSheet();
           renderGrocery();
         });
@@ -1767,15 +2068,18 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       });
       $('storeSheetBg').classList.add('is-open');
       $('storeSheetBg').setAttribute('aria-hidden', 'false');
+      if (!navHas('store')) navPush('store', storeSheetHide);
       if (current) {
         list.scrollTop = Math.max(0, current.offsetTop - list.clientHeight / 2 + 30);
         setTimeout(function () { try { current.focus({ preventScroll: true }); } catch (e) {} }, 220);
       }
     }
-    function closeStoreSheet() {
+    function storeSheetHide() {
       $('storeSheetBg').classList.remove('is-open');
       $('storeSheetBg').setAttribute('aria-hidden', 'true');
     }
+    function closeStoreSheet() { storeSheetHide(); navDrop('store'); }
+    $('storeBack').addEventListener('click', closeStoreSheet);
     $('storePicker').addEventListener('click', openStoreSheet);
     $('storeSheetBg').addEventListener('click', function (e) {
       if (e.target === $('storeSheetBg')) closeStoreSheet();
@@ -1818,7 +2122,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (bought.length) {
         var mineInCart = bought.some(shopCanTouch);
         root.appendChild(makeSec('In cart \u00b7 ' + bought.length, null,
-          mineInCart ? { sub: true, link: { label: shopIsBuyer() ? 'Clear' : 'Clear mine', onClick: function () { clearStoreItems(true); } } } : { sub: true }));
+          mineInCart ? { sub: true, link: shopIsBuyer() ? { label: 'Mark all bought', onClick: function () { buyGroceries(bought.slice()); } }
+            : { label: 'Clear mine', onClick: function () { clearStoreItems(true); } } } : { sub: true }));
         var bc = el('div', 'card');
         bought.forEach(function (s) { bc.appendChild(makeGroceryRow(s, true)); });
         root.appendChild(bc);
@@ -1855,7 +2160,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (!mine) r.classList.add('row--ro');
       if (buyer) {                                   // Roni: circle = in cart, text = edit (name, store, qty, note, who)
         var ck = r.querySelector('.row__check');
-        if (ck) ck.addEventListener('click', function (ev) { ev.stopPropagation(); toggleGrocery(s); });
+        if (ck) { ck.addEventListener('click', function (ev) { ev.stopPropagation(); buyGroceries([s]); }); ck.setAttribute('aria-label', 'Bought ' + s.item); }
         var bd = r.querySelector('.row__body');
         bd.classList.add('is-edit'); bd.setAttribute('role', 'button'); bd.tabIndex = 0;
         bd.setAttribute('aria-label', 'Edit ' + s.item);
@@ -1942,12 +2247,15 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       $('sheetOk').textContent = okLabel || 'Clear';
       $('sheetBackdrop').classList.add('is-open');
       $('sheetBackdrop').setAttribute('aria-hidden', 'false');
+      if (!navHas('confirm')) navPush('confirm', confirmHide);
     }
-    function closeSheet() {
+    function confirmHide() {
       sheetCb = null;
       $('sheetBackdrop').classList.remove('is-open');
       $('sheetBackdrop').setAttribute('aria-hidden', 'true');
     }
+    function closeSheet() { confirmHide(); navDrop('confirm'); }
+    $('sheetBack').addEventListener('click', closeSheet);
     $('sheetOk').addEventListener('click', function () {
       var cb = sheetCb;
       closeSheet();
@@ -2145,7 +2453,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         b.type = 'button';
         b.setAttribute('role', 'tab');
         b.setAttribute('aria-selected', on ? 'true' : 'false');
-        b.addEventListener('click', function () { state.person = p; state.closetCat = null; renderCloset(); });
+        b.addEventListener('click', function () { state.person = p; state.closetCat = null; navDrop('closetCat'); renderCloset(); });
         chips.appendChild(b);
       });
       var byItem = closetByItem();
@@ -2176,7 +2484,10 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           txt.appendChild(el('div', 'cat__title', c.title));
           txt.appendChild(el('div', 'cat__items', (c.items.length ? c.items : names).join(' \u00b7 ')));
           b.appendChild(txt);
-          b.addEventListener('click', function () { state.closetCat = c.id; renderCloset(); window.scrollTo(0, 0); });
+          b.addEventListener('click', function () {
+            state.closetCat = c.id; renderCloset(); window.scrollTo(0, 0);
+            if (!navHas('closetCat')) navPush('closetCat', function () { state.closetCat = null; renderCloset(); window.scrollTo(0, 0); });
+          });
           grid.appendChild(b);
         });
         body.appendChild(grid);
@@ -2189,7 +2500,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var back = el('button', 'back');
       back.type = 'button';
       back.innerHTML = svg('back') + 'All';
-      back.addEventListener('click', function () { state.closetCat = null; renderCloset(); });
+      back.setAttribute('aria-label', 'Back to all');
+      back.addEventListener('click', function () { state.closetCat = null; renderCloset(); navDrop('closetCat'); window.scrollTo(0, 0); });
       bar.appendChild(back);
       bar.appendChild(el('h2', 'sec__title', cat.title));
       bar.appendChild(el('span', 'sec__meta', counts.need ? counts.need + ' need' : ''));
@@ -3177,23 +3489,17 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       (p.cases || []).forEach(function (c) { var k = c.student.toLowerCase(); if (!seen[k]) { seen[k] = 1; out.push(c.student); } });
       return out;
     }
+    function otUp() { state.ot = (state.ot && state.ot.prev) || { view: 'main' }; renderProviders(); window.scrollTo(0, 0); }
     function otGo(v) {
       state.ot = v;
-      try { history.pushState({ ot: v.view }, ''); state._otPushed = (state._otPushed || 0) + 1; } catch (e) {}
+      navPush('ot', otUp);
       renderProviders(); window.scrollTo(0, 0);
     }
-    function otBack() {
-      if (state._otPushed) { try { history.back(); return; } catch (e) {} }
-      state.ot = { view: 'main' }; renderProviders(); window.scrollTo(0, 0);
-    }
-    window.addEventListener('popstate', function () {
-      if (state.ot.view === 'main') return;
-      state._otPushed = Math.max(0, (state._otPushed || 0) - 1);
-      state.ot = state.ot.prev || { view: 'main' }; renderProviders(); window.scrollTo(0, 0);
-    });
+    function otBack() { otUp(); navDrop('ot'); }
     function otBackBtn() {
       var b = el('button', 'back pv-back'); b.type = 'button'; b.id = 'otBack';
       b.innerHTML = svg('back'); b.appendChild(document.createTextNode('Back'));
+      b.setAttribute('aria-label', 'Back');
       b.addEventListener('click', otBack);
       return b;
     }
@@ -3777,6 +4083,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
 
     function openBg(id) { $(id).classList.add('is-open'); $(id).setAttribute('aria-hidden', 'false'); }
     function closeBg(id) { var b = $(id); if (!b) return; b.classList.remove('is-open'); b.setAttribute('aria-hidden', 'true'); }
+    function sheetShow(id) { openBg(id); if (!navHas(id)) navPush(id, function () { closeBg(id); }); }
+    function sheetHide(id) { closeBg(id); navDrop(id); }
     /* Family for the "For" chips: grown-ups then kids, as the server sends them. */
     function shopPeople() {
       var d = state.data || {}, out = [];
@@ -3791,10 +4099,16 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (shopPeople().indexOf(state.shopFor) < 0) state.shopFor = shopMe();
       return state.shopFor;
     }
+    /* "For" is one-shot (Oct 11 2026 fix): it goes back to Roni after every add, and on store or screen change.
+       Before, a tap on Maya stuck for the whole session, so later adds by Roni were saved as Maya's. */
+    function shopForReset() { state.shopFor = shopMe(); }
     function renderShopFor() {
       var box = $('shopFor'), store = normalizeStore(state.selectedStore || 'Lidl');
-      var forP = shopAddFor();
-      $('newItem').placeholder = (forP && forP !== shopMe() ? 'Add for ' + forP + ' to ' : 'Add to ') + store + '\u2026';
+      var forP = shopAddFor(), other = !!forP && forP !== shopMe();
+      $('newItem').placeholder = (other ? 'Add for ' + forP + ' to ' : 'Add to ') + store + '\u2026';
+      var lbl = $('addBtn').lastChild;
+      if (lbl && lbl.nodeType === 3) lbl.nodeValue = other ? 'Add for ' + forP : 'Add';
+      $('addBtn').classList.toggle('is-for', other);
       if (!forP) { box.hidden = true; box.innerHTML = ''; return; }
       box.hidden = false; box.innerHTML = '';
       box.appendChild(el('span', 'shop-for__lbl', 'For:'));
@@ -3823,7 +4137,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (forP) f.forPerson = forP;
       btn.disabled = true;
       run('addItem', [f],
-        function () { input.value = ''; btn.disabled = false; toast(shopAddDone(store, forP)); loadData(false); },
+        function () { if (input.value.trim() === name.trim()) input.value = ''; btn.disabled = false; shopForReset(); renderShopFor(); toast(shopAddDone(store, forP)); loadData(false); },
         function () { btn.disabled = false; toast('Couldn\u2019t add \u2014 try again'); });
     }
     /* Several items from one line: add them all, then "Added 3 items · Keep as one" for a few seconds. */
@@ -3836,7 +4150,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       btn.disabled = true;
       run('addItemsBulk', [f],
         function (res) {
-          input.value = ''; btn.disabled = false;
+          if (input.value.trim() === raw.trim()) input.value = '';
+          btn.disabled = false; shopForReset(); renderShopFor();
           var ids = (res && res.ids) || [];
           var my = showUndo('Added ' + ids.length + ' items' + (forP && forP !== shopMe() ? ' for ' + forP : ''), 'Keep as one', 6000);
           my.pending = false;
@@ -3856,7 +4171,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       ssr = { raw: raw, groups: sp.groups.map(function (g) { return g.slice(); }) };
       $('ssrTitle').textContent = sp.why === 'pair' ? 'One thing or two?' : 'Looks like a few things. One item per line?';
       renderSsr();
-      openBg('ssrBg');
+      sheetShow('ssrBg');
     }
     function renderSsr() {
       var box = $('ssrGroups');
@@ -3888,11 +4203,12 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     }
     $('ssrAdd').addEventListener('click', function () {
       var items = ssr.groups.map(shopGroupText).filter(Boolean), raw = ssr.raw;
-      closeBg('ssrBg');
+      sheetHide('ssrBg');
       if (items.length > 1) addSplit(raw, items); else addOne(items[0] || raw);
     });
-    $('ssrOne').addEventListener('click', function () { closeBg('ssrBg'); addOne(ssr.raw.replace(/\s*\r?\n\s*/g, ', ')); });
-    $('ssrBg').addEventListener('click', function (e) { if (e.target === $('ssrBg')) closeBg('ssrBg'); });
+    $('ssrBack').addEventListener('click', function () { sheetHide('ssrBg'); });
+    $('ssrOne').addEventListener('click', function () { sheetHide('ssrBg'); addOne(ssr.raw.replace(/\s*\r?\n\s*/g, ', ')); });
+    $('ssrBg').addEventListener('click', function (e) { if (e.target === $('ssrBg')) sheetHide('ssrBg'); });
 
     /* Roni only: edit any item (the server refuses everyone else). */
     var ied = null;
@@ -3907,7 +4223,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       opts.push('Other');
       opts.forEach(function (o) { var op = el('option', '', o); op.value = o; if (o === ied.store) op.selected = true; sel.appendChild(op); });
       renderIed();
-      openBg('iedBg');
+      sheetShow('iedBg');
     }
     function renderIed() {
       $('iedQty').textContent = String(ied.qty);
@@ -3923,9 +4239,10 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     }
     $('iedMinus').addEventListener('click', function () { if (ied.qty > 1) { ied.qty--; renderIed(); } });
     $('iedPlus').addEventListener('click', function () { if (ied.qty < 99) { ied.qty++; renderIed(); } });
-    $('iedCancel').addEventListener('click', function () { closeBg('iedBg'); });
-    $('iedBg').addEventListener('click', function (e) { if (e.target === $('iedBg')) closeBg('iedBg'); });
-    $('iedDel').addEventListener('click', function () { var s = ied.s; closeBg('iedBg'); deleteGrocery(s); });
+    $('iedCancel').addEventListener('click', function () { sheetHide('iedBg'); });
+    $('iedBack').addEventListener('click', function () { sheetHide('iedBg'); });
+    $('iedBg').addEventListener('click', function (e) { if (e.target === $('iedBg')) sheetHide('iedBg'); });
+    $('iedDel').addEventListener('click', function () { var s = ied.s; sheetHide('iedBg'); deleteGrocery(s); });
     $('iedSave').addEventListener('click', function () {
       var s = ied.s, name = ($('iedName').value || '').trim();
       if (!name) { $('iedName').focus(); return; }
@@ -3936,7 +4253,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (ied.qty !== (Math.round(Number(s.qty)) || 1)) f.qty = ied.qty;
       if (notes !== (s.notes || '')) f.notes = notes;
       if (ied.who !== shopOwner(s)) f.addedBy = ied.who;
-      closeBg('iedBg');
+      sheetHide('iedBg');
       if (Object.keys(f).length === 1) return;
       var prev = { item: s.item, store: s.store, qty: s.qty, notes: s.notes, addedBy: s.addedBy };
       if (f.item) s.item = f.item;
@@ -4116,13 +4433,15 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       }
       uplView('pick');
       $('uplSheetBg').classList.add('is-open'); $('uplSheetBg').setAttribute('aria-hidden', 'false');
+      if (!navHas('upl')) navPush('upl', uplHide);
       setTimeout(function () { try { ($('uplCamBtn').hidden ? $('uplFileBtn') : $('uplCamBtn')).focus({ preventScroll: true }); } catch (e) {} }, 200);
     }
-    function closeUpload() {
-      if (upl.busy) return;
+    function uplHide() {
+      if (upl.busy) return false;                       // still sending: stay open
       $('uplSheetBg').classList.remove('is-open'); $('uplSheetBg').setAttribute('aria-hidden', 'true');
       try { $('uplBtn').focus({ preventScroll: true }); } catch (e) {}
     }
+    function closeUpload() { if (uplHide() !== false) navDrop('upl'); }
     function uplView(v, msg) {   // pick | ready | sending | done
       $('uplPick').hidden = v === 'sending' || v === 'done' || upl.files.length >= UPL_MAX_FILES;
       $('uplFor').hidden = !($('uplFor').childNodes.length && (v === 'pick' || v === 'ready'));
@@ -4310,14 +4629,14 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       } else {
         b._wloading = true; renderBudget();
         ledRun('getLedger', [{ week: b.openWeek }]).then(function (L) { b._wloading = false; b.weekLed = L; renderBudget(); },
-          function () { b._wloading = false; b.openWeek = ''; toast('Couldn\u2019t load that week'); renderBudget(); });
+          function () { b._wloading = false; b.openWeek = ''; navDrop('budWeek'); toast('Couldn\u2019t load that week'); renderBudget(); });
       }
     }
     function setBudPane(p) {
       state.bud.pane = p;
       ['week', 'history', 'trends'].forEach(function (k) { $('budPane-' + k).hidden = k !== p; });
       $('budSeg').querySelectorAll('.seg__btn').forEach(function (x) { var on = x.getAttribute('data-bud') === p; x.classList.toggle('is-active', on); x.setAttribute('aria-selected', on ? 'true' : 'false'); });
-      if (p !== 'history') state.bud.openWeek = '';
+      if (p !== 'history') { state.bud.openWeek = ''; navDrop('budWeek'); }
       renderBudget();
     }
     $('budSeg').addEventListener('click', function (e) { var b = e.target.closest('.seg__btn[data-bud]'); if (b) { setBudPane(b.getAttribute('data-bud')); window.scrollTo(0, 0); } });
@@ -4423,7 +4742,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (!L) { root.appendChild(skel(4, true)); return; }
       if (b.openWeek) {
         var back = el('button', 'back'); back.type = 'button'; back.innerHTML = svg('back') + 'All weeks';
-        back.addEventListener('click', function () { b.openWeek = ''; renderBudget(); window.scrollTo(0, 0); });
+        back.setAttribute('aria-label', 'Back to all weeks');
+        back.addEventListener('click', function () { b.openWeek = ''; renderBudget(); navDrop('budWeek'); window.scrollTo(0, 0); });
         var bar = el('div', 'sec sec--bar'); bar.appendChild(back); root.appendChild(bar);
         var W = b.weekLed && b.weekLed.week === b.openWeek ? b.weekLed : null;
         root.appendChild(makeSec(weekRange(b.openWeek), W ? money2(W.weekTotals.total) : ''));
@@ -4453,7 +4773,10 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         r.appendChild(el('span', 'wk__amt', money0(w.total)));
         var ch = el('span', 'wk__ch'); ch.innerHTML = svg('chev'); r.appendChild(ch);
         r.setAttribute('aria-label', weekRange(w.week) + ', ' + money0(w.total) + ', ' + plural(w.n, 'purchase'));
-        r.addEventListener('click', function () { b.openWeek = w.week; b.weekLed = null; loadLedger('week'); window.scrollTo(0, 0); });
+        r.addEventListener('click', function () {
+          b.openWeek = w.week; b.weekLed = null; loadLedger('week'); window.scrollTo(0, 0);
+          if (!navHas('budWeek')) navPush('budWeek', function () { b.openWeek = ''; renderBudget(); window.scrollTo(0, 0); });
+        });
         c2.appendChild(r);
       });
       root.appendChild(c2);
