@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-OJW0UxBN4TFHvdfFKqkQooR0SjRkN8jvwT6Ysv9H3b8=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-bBuvn+bwIlZSuza2Me2icM8sEzeqK0f3ss1VGep1M3M=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -1013,7 +1013,21 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
   .upl-coach { right: calc(50% - 312px); }
   #installBar { max-width: 624px; }
 }
-  </style>
+  
+/* ---- Shopping: one section per person ---- */
+.shop-group { margin-bottom: var(--s4); }
+.shop-group__h { display: flex; align-items: center; gap: var(--s2); padding: 0 var(--s1) var(--s2); }
+.shop-group__av { flex: none; width: 28px; height: 28px; border-radius: var(--r-pill); display: grid; place-items: center;
+  background: var(--accent-soft); color: var(--accent-dark); font-size: var(--fs-nav); font-weight: 800; }
+.shop-group__name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); }
+.shop-group__n { margin-left: auto; min-width: 28px; text-align: center; padding: 2px 10px; border-radius: var(--r-pill);
+  background: var(--surface); color: var(--muted); font-size: var(--fs-nav); font-weight: 700; }
+.row--ro { cursor: default; }
+.row--ro:active { background: transparent; }
+.name-tag { flex: none; margin-right: var(--s4); padding: 3px 10px; border-radius: var(--r-pill); background: var(--surface);
+  color: var(--muted); font-size: var(--fs-nav); font-weight: 700; }
+.name-tag:has(+ .row__x) { margin-right: 0; }
+</style>
 </head>
 <body>
 <div id="gate" hidden>
@@ -1548,12 +1562,15 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         body.appendChild(m);
       }
       row.appendChild(body);
-      var x = el('button', 'row__x');
-      x.type = 'button';
-      x.setAttribute('aria-label', 'Delete ' + o.title);
-      x.innerHTML = svg('x');
-      x.addEventListener('click', function (ev) { ev.stopPropagation(); o.onDelete(); });
-      row.appendChild(x);
+      if (o.tag) row.appendChild(o.tag);
+      if (o.onDelete) {
+        var x = el('button', 'row__x');
+        x.type = 'button';
+        x.setAttribute('aria-label', 'Delete ' + o.title);
+        x.innerHTML = svg('x');
+        x.addEventListener('click', function (ev) { ev.stopPropagation(); o.onDelete(); });
+        row.appendChild(x);
+      }
       if (o.onTap) row.addEventListener('click', function () { o.onTap(row); });
       return row;
     }
@@ -1699,7 +1716,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       renderStorePicker();
       var store = state.selectedStore;
       $('newItem').placeholder = 'Add to ' + store + '\u2026';
-      $('clearStoreBtn').textContent = 'Clear ' + store + ' list';
+      $('clearStoreBtn').textContent = shopIsBuyer() ? 'Clear ' + store + ' list' : 'Clear my ' + store + ' items';
       recount();
       var items = storeItems(store);
       var open = items.filter(function (x) { return !x.checked; });
@@ -1712,27 +1729,58 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       }
       if (open.length) {
         root.appendChild(makeSec('To buy', plural(open.length, 'item')));
-        var card = el('div', 'card');
-        open.forEach(function (s) { card.appendChild(makeGroceryRow(s)); });
-        root.appendChild(card);
+        shopGroups(open).forEach(function (g) {
+          var sec = el('section', 'shop-group');
+          sec.setAttribute('aria-label', g.label + ', ' + plural(g.items.length, 'item'));
+          var h = el('div', 'shop-group__h');
+          h.appendChild(el('span', 'shop-group__av', g.name === SHOP_EARLIER ? '\u2022' : g.name.charAt(0)));
+          h.appendChild(el('span', 'shop-group__name', g.label));
+          h.appendChild(el('span', 'shop-group__n', String(g.items.length)));
+          sec.appendChild(h);
+          var card = el('div', 'card');
+          g.items.forEach(function (s) { card.appendChild(makeGroceryRow(s, false)); });
+          sec.appendChild(card);
+          root.appendChild(sec);
+        });
       }
       if (bought.length) {
+        var mineInCart = bought.some(shopCanTouch);
         root.appendChild(makeSec('In cart \u00b7 ' + bought.length, null,
-          { sub: true, link: { label: 'Clear', onClick: function () { clearStoreItems(true); } } }));
+          mineInCart ? { sub: true, link: { label: shopIsBuyer() ? 'Clear' : 'Clear mine', onClick: function () { clearStoreItems(true); } } } : { sub: true }));
         var bc = el('div', 'card');
-        bought.forEach(function (s) { bc.appendChild(makeGroceryRow(s)); });
+        bought.forEach(function (s) { bc.appendChild(makeGroceryRow(s, true)); });
         root.appendChild(bc);
       }
     }
-    function makeGroceryRow(s) {
+    /* ---------- Who added what (the server decides; this only hides buttons that would be refused) ---------- */
+    var SHOP_BUYERS = ['Roni'], SHOP_EARLIER = 'Earlier';
+    function shopMe() { return (state.data && state.data.signedInAs) || ''; }
+    function shopIsBuyer() { return SHOP_BUYERS.indexOf(shopMe()) >= 0; }
+    function shopOwner(s) { return s.addedBy || SHOP_EARLIER; }
+    function shopCanTouch(s) { return shopIsBuyer() || (!!shopMe() && shopOwner(s) === shopMe()); }
+    /** One section per person: you first, then everyone else A-Z, items from before names were kept last. */
+    function shopGroups(items) {
+      var me = shopMe(), by = {};
+      items.forEach(function (s) { var k = shopOwner(s); (by[k] = by[k] || []).push(s); });
+      return Object.keys(by).sort(function (a, b) {
+        function rank(n) { return n === me ? 0 : (n === SHOP_EARLIER ? 2 : 1); }
+        return rank(a) - rank(b) || a.localeCompare(b);
+      }).map(function (k) { return { name: k, label: k === SHOP_EARLIER ? 'Added earlier' : k, items: by[k] }; });
+    }
+    function makeGroceryRow(s, withTag) {
       var meta = [];
       if (s.qty !== '' && s.qty != null && Number(s.qty) !== 1) meta.push(fmtQty(s));
       if (s.notes) meta.push(s.notes);
-      return makeRow({
-        title: s.item, meta: meta.join(' \u00b7 '), done: s.checked, saving: s._saving,
-        onTap: function () { toggleGrocery(s); },
-        onDelete: function () { deleteGrocery(s); }
+      var mine = shopCanTouch(s);
+      var tag = null;
+      if (withTag && shopOwner(s) !== SHOP_EARLIER) tag = el('span', 'name-tag', shopOwner(s) === shopMe() ? 'You' : shopOwner(s));
+      var r = makeRow({
+        title: s.item, meta: meta.join(' \u00b7 '), done: s.checked, saving: s._saving, plain: !mine, tag: tag,
+        onTap: mine ? function () { toggleGrocery(s); } : null,
+        onDelete: mine ? function () { deleteGrocery(s); } : null
       });
+      if (!mine) r.classList.add('row--ro');
+      return r;
     }
     function toggleGrocery(s) {
       if (s._saving) return;
@@ -1850,18 +1898,18 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
 
     function clearStoreItems(onlyChecked) {
       var store = normalizeStore(state.selectedStore || 'Lidl');
-      var items = storeItems(store).filter(function (x) { return onlyChecked ? x.checked : true; });
+      var items = storeItems(store).filter(function (x) { return (onlyChecked ? x.checked : true) && shopCanTouch(x); });
       if (!onlyChecked) closeAllMore();
-      if (!items.length) { toast(onlyChecked ? 'Nothing in the cart' : store + ' list is already empty'); return; }
+      if (!items.length) { toast(onlyChecked ? 'Nothing of yours in the cart' : (shopIsBuyer() ? store + ' list is already empty' : 'You have nothing on the ' + store + ' list')); return; }
       function go() {
         var d = state.data;
         d.shopping = d.shopping.filter(function (x) { return items.indexOf(x) < 0; });
         renderGrocery();
-        var my = showUndo(onlyChecked ? ('Cleared ' + items.length + ' from cart') : ('Cleared ' + store + ' list'));
+        var my = showUndo(onlyChecked ? ('Cleared ' + items.length + ' from cart') : (shopIsBuyer() ? 'Cleared ' + store + ' list' : 'Cleared your ' + store + ' items'));
         serverDelete('clearStore', [{ store: store, onlyChecked: !!onlyChecked }], my);
       }
       if (onlyChecked) go();
-      else askSheet('Clear ' + store + ' list?', 'Removes ' + plural(items.length, 'item') + '.', 'Clear list', go);
+      else askSheet(shopIsBuyer() ? 'Clear ' + store + ' list?' : 'Clear your ' + store + ' items?', 'Removes ' + plural(items.length, 'item') + '.', shopIsBuyer() ? 'Clear list' : 'Clear mine', go);
     }
 
     /* ---------- Dinners ---------- */
