@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-xvhJKscorPPG/ypkxQPsz15e/ai2IWdtATMu9fnNT84=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-SQyncduivPJwxwJCmttKFF9h70F9UbTo9u1DKsRl0QU=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -568,6 +568,33 @@ svg.i.i--sm { width: 16px; height: 16px; stroke-width: 2.25; }
 .undo button { height: var(--tap); padding: 0 var(--s4); border: 0; border-radius: var(--r-sm);
   background: transparent; color: #A9C2FF; font-weight: 800; }
 
+/* ---------- Shopping: For (Roni), split review, edit sheet (Oct 11 2026) ---------- */
+.shop-for { display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap; margin: calc(-1 * var(--s3)) 0 var(--s5); }
+.shop-for__lbl { font-size: var(--fs-meta); font-weight: 800; color: var(--muted); margin-right: 2px; }
+.shop-for .chip, .ied .chip { height: 44px; padding: 0 14px; }
+.ied__people { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.sheet--tall { max-height: 88vh; overflow-y: auto; }
+.ssr__hint { margin: 0 0 var(--s4); font-size: var(--fs-body); color: var(--muted); }
+.ssr__groups { display: grid; gap: 10px; margin-bottom: var(--s5); }
+.ssr__g { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border: 1.5px solid var(--line-strong);
+  border-radius: var(--r-md); background: var(--paper); }
+.ssr__n { flex: none; width: 28px; height: 28px; border-radius: var(--r-pill); display: grid; place-items: center;
+  background: var(--accent-soft); color: var(--accent-dark); font-size: var(--fs-badge); font-weight: 800; margin-right: 2px; }
+.ssr__w { min-height: 44px; padding: 0 12px; border: 0; border-radius: var(--r-sm); background: var(--surface);
+  color: var(--ink); font-size: var(--fs-item); font-weight: 650; }
+.ssr__w:active { background: var(--wash); }
+.ssr__w.is-join { color: var(--faint); font-weight: 500; }
+.ied { display: grid; gap: var(--s4); margin-bottom: var(--s5); }
+.ied__lbl { display: block; margin-bottom: 6px; font-size: var(--fs-label); font-weight: 800; color: var(--muted);
+  letter-spacing: .02em; text-transform: uppercase; }
+.ied .field { width: 100%; }
+select.field { background: var(--paper) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23667' stroke-width='2.2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center; padding-right: 44px; }
+.ied__qty { display: flex; align-items: center; gap: var(--s3); }
+.ied__qty button { width: 56px; height: 56px; border: 1.5px solid var(--line-strong); border-radius: var(--r-md); background: var(--paper);
+  font-size: 26px; font-weight: 700; color: var(--ink); }
+.ied__qty button:active { background: var(--wash); }
+.ied__qty output { min-width: 40px; text-align: center; font-size: var(--fs-h2); font-weight: 800; }
+.row__body.is-edit { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
 /* ---------- Home Ops app extras (on top of Maya's tokens) ---------- */
@@ -1177,6 +1204,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         <input class="field" id="newItem" type="text" placeholder="Add to Lidl…" aria-label="Add item" autocomplete="off" enterkeyhint="done">
         <button type="button" class="btn" id="addBtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Add</button>
       </div>
+      <div class="shop-for" id="shopFor" role="group" aria-label="Add for" hidden></div>
       <div id="groceryList"></div>
       <div class="more">
         <button type="button" class="more__toggle" data-more="morePanel" aria-expanded="false" aria-controls="morePanel">⋯ More <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
@@ -1308,6 +1336,37 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       <p class="upl__fine">Photos and PDFs, up to 6 at a time. Kept private in the family’s own files, never shared.</p>
       <input type="file" id="uplCamIn" accept="image/*" capture="environment" hidden>
       <input type="file" id="uplFileIn" accept="image/*,application/pdf" multiple hidden>
+    </div>
+  </div>
+  <div class="sheet-bg" id="ssrBg" aria-hidden="true">
+    <div class="sheet sheet--tall" role="dialog" aria-modal="true" aria-labelledby="ssrTitle">
+      <div class="sheet__handle"></div>
+      <h3 class="sheet__title" id="ssrTitle">Looks like a few things. One item per line?</h3>
+      <p class="ssr__hint" id="ssrHint">Tap the word where the next thing starts.</p>
+      <div class="ssr__groups" id="ssrGroups"></div>
+      <div class="sheet__actions">
+        <button type="button" class="btn btn--block" id="ssrAdd">Add 1 item</button>
+        <button type="button" class="btn btn--quiet btn--block" id="ssrOne">Keep as one</button>
+      </div>
+    </div>
+  </div>
+  <div class="sheet-bg" id="iedBg" aria-hidden="true">
+    <div class="sheet sheet--tall" role="dialog" aria-modal="true" aria-labelledby="iedTitle">
+      <div class="sheet__handle"></div>
+      <h3 class="sheet__title" id="iedTitle">Edit item</h3>
+      <div class="ied">
+        <label><span class="ied__lbl">Item</span><input class="field" id="iedName" type="text" maxlength="120" autocomplete="off"></label>
+        <label><span class="ied__lbl">Store</span><select class="field" id="iedStore"></select></label>
+        <div><span class="ied__lbl">How many</span>
+          <div class="ied__qty"><button type="button" id="iedMinus" aria-label="One less">&minus;</button><output id="iedQty">1</output><button type="button" id="iedPlus" aria-label="One more">+</button></div></div>
+        <label><span class="ied__lbl">Note</span><input class="field" id="iedNotes" type="text" maxlength="200" placeholder="Optional" autocomplete="off"></label>
+        <div><span class="ied__lbl">For</span><div class="ied__people" id="iedFor" role="group" aria-label="For"></div></div>
+      </div>
+      <div class="sheet__actions">
+        <button type="button" class="btn btn--block" id="iedSave">Save</button>
+        <button type="button" class="btn btn--outline-danger btn--block" id="iedDel">Delete</button>
+        <button type="button" class="btn btn--quiet btn--block" id="iedCancel">Cancel</button>
+      </div>
     </div>
   </div>
   <div class="sheet-bg" id="sheetBackdrop" aria-hidden="true">
@@ -1609,6 +1668,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       closeAllMore();
       closeSheet();
       closeStoreSheet();
+      closeBg('ssrBg'); closeBg('iedBg');
       SCREENS.forEach(function (id) { $('screen-' + id).hidden = id !== name; });
       document.querySelectorAll('#mainNav .nav__item').forEach(function (b) {
         var on = b.getAttribute('data-screen') === name;
@@ -1727,7 +1787,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       state.selectedStore = normalizeStore(state.selectedStore || 'Lidl');
       renderStorePicker();
       var store = state.selectedStore;
-      $('newItem').placeholder = 'Add to ' + store + '\u2026';
+      renderShopFor();
       $('clearStoreBtn').textContent = shopIsBuyer() ? 'Clear ' + store + ' list' : 'Clear my ' + store + ' items';
       recount();
       var items = storeItems(store);
@@ -1786,12 +1846,22 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var mine = shopCanTouch(s);
       var tag = null;
       if (withTag && shopOwner(s) !== SHOP_EARLIER) tag = el('span', 'name-tag', shopOwner(s) === shopMe() ? 'You' : shopOwner(s));
+      var buyer = shopIsBuyer();
       var r = makeRow({
         title: s.item, meta: meta.join(' \u00b7 '), done: s.checked, saving: s._saving, plain: !mine, tag: tag,
-        onTap: mine ? function () { toggleGrocery(s); } : null,
+        onTap: mine && !buyer ? function () { toggleGrocery(s); } : null,
         onDelete: mine ? function () { deleteGrocery(s); } : null
       });
       if (!mine) r.classList.add('row--ro');
+      if (buyer) {                                   // Roni: circle = in cart, text = edit (name, store, qty, note, who)
+        var ck = r.querySelector('.row__check');
+        if (ck) ck.addEventListener('click', function (ev) { ev.stopPropagation(); toggleGrocery(s); });
+        var bd = r.querySelector('.row__body');
+        bd.classList.add('is-edit'); bd.setAttribute('role', 'button'); bd.tabIndex = 0;
+        bd.setAttribute('aria-label', 'Edit ' + s.item);
+        bd.addEventListener('click', function () { openItemEdit(s); });
+        bd.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') openItemEdit(s); });
+      }
       return r;
     }
     function toggleGrocery(s) {
@@ -1816,14 +1886,15 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       clearTimeout(undoState.timer);
       $('undoBar').hidden = true;
     }
-    function showUndo(text) {
+    function showUndo(text, label, ms) {
       clearTimeout(undoState.timer);
       undoState = { token: '', pending: true, wantUndo: false, timer: null };
       var my = undoState;
       $('undoText').textContent = text;
+      $('undoBtn').textContent = label || 'Undo';
       $('toast').classList.remove('is-show');
       $('undoBar').hidden = false;
-      my.timer = setTimeout(hideUndo, 4000);
+      my.timer = setTimeout(hideUndo, ms || 4000);
       return my;
     }
     function doRestore(my) {
@@ -3607,17 +3678,277 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     };
 
     /* ---------- Actions ---------- */
+    /*SHOPSPLIT-START*/
+    /* ---------- One line, several items? (Oct 11 2026) ----------
+       shopSplit(text) -> { mode: 'one' | 'split' | 'review', groups: [[word, ...], ...], items: ['...'], why }
+       'split'  = clear separators (comma, new line, +, ;, "and"/"&" between short items): add them all, offer "Keep as one".
+       'review' = not sure (e.g. "X and Y chips", or a long line with no separators): show the tap-to-split chips first.
+       Known names (SHOP_KEEP) never split; typos one letter off still match ("sale and pepper"). */
+    var SHOP_KEEP = ['salt and pepper', 'salt and vinegar', 'sour cream and onion', 'mac and cheese', 'macaroni and cheese',
+      'mac n cheese', 'peanut butter and jelly', 'pb and j', 'pb&j', 'half and half', 'cookies and cream', 'sweet and sour',
+      'black and white', 'rice and beans', 'bread and butter', 'oil and vinegar', 'spinach and artichoke', 'garlic and herb',
+      'tomato and basil', 'ben and jerry', 'ben and jerrys', "ben and jerry's", 'i&d', 'i and d', 'm&m', 'm&ms', "m&m's",
+      'a&w', 'b&j', 'trader joe', 'stop and shop', 'stop&shop', 'h&m'];
+    var SHOP_JOIN = /^(and|&|n|'n'|plus|\+)$/i;
+    var SHOP_NOUN = /^(chips|crisps|sauce|dip|dressing|soup|cookies?|crackers|cereal|bars?|seasoning|spices?|spread|mix|pasta|popcorn|pretzels|cream|yogurt|salad|pickles|jam|jelly|cake|pie|muffins?|bagels?|wraps?|noodles|ramen|kugel|hummus|salsa|pizza|sandwich(es)?|tea|juice|candy|gum|bread|flavor|flavour)$/i;
+    function shopNear(a, b) {                      // equal, or one letter off for words of 4+ letters
+      if (a === b) return true;
+      if (a.length < 4 || b.length < 4 || Math.abs(a.length - b.length) > 1) return false;
+      var i = 0, j = 0, e = 0;
+      while (i < a.length && j < b.length) {
+        if (a[i] === b[j]) { i++; j++; continue; }
+        if (++e > 1) return false;
+        if (a.length > b.length) i++; else if (b.length > a.length) j++; else { i++; j++; }
+      }
+      return e + (a.length - i) + (b.length - j) <= 1;
+    }
+    function shopWords(s) {                       // "chips&dip" -> chips & dip, but "I&D" / "pb&j" stay one word
+      var out = [];
+      String(s).split(/\s+/).forEach(function (w) {
+        if (!w) return;
+        var low = w.toLowerCase().replace(/[.!?]+$/, '');
+        if (/&/.test(w) && w.length > 1 && SHOP_KEEP.indexOf(low) < 0) {
+          w.split(/(&)/).forEach(function (p) { if (p) out.push(p); });
+        } else out.push(w);
+      });
+      return out;
+    }
+    var SHOP_KEEP_W = SHOP_KEEP.map(function (k) { return shopWords(k).map(function (w) { return w.toLowerCase(); }); });
+    function shopProtected(words, j) {            // is the joiner at j inside a known name?
+      var low = words.map(function (w) { return w.toLowerCase().replace(/[^a-z0-9&']/g, ''); });
+      for (var k = 0; k < SHOP_KEEP_W.length; k++) {
+        var p = SHOP_KEEP_W[k];
+        for (var off = 0; off < p.length; off++) {
+          var st = j - off;
+          if (st < 0 || st + p.length > words.length) continue;
+          var ok = true;
+          for (var q = 0; q < p.length && ok; q++) {
+            var w = low[st + q], t = p[q];
+            ok = SHOP_JOIN.test(t) ? SHOP_JOIN.test(w) : shopNear(w.replace(/'s$/, ''), t.replace(/'s$/, ''));
+          }
+          if (ok) return true;
+        }
+      }
+      return false;
+    }
+    function shopTrimJoin(g) {
+      g = g.slice();
+      while (g.length && SHOP_JOIN.test(g[0])) g.shift();
+      while (g.length && SHOP_JOIN.test(g[g.length - 1])) g.pop();
+      return g;
+    }
+    function shopGroupText(g) { return shopTrimJoin(g).join(' ').replace(/\s+&\s+/g, ' & ').trim(); }
+    function shopSplit(text) {
+      var raw = String(text || '').trim();
+      var hard = raw.split(/\r?\n|[,;]|\s*\+\s*|\s+plus\s+/i).map(function (p) { return p.trim(); }).filter(Boolean);
+      var groups = [], why = '', unsure = false;
+      hard.forEach(function (part) {
+        var w = shopWords(part), cur = [], cuts = [];
+        for (var j = 0; j < w.length; j++) {
+          if (!SHOP_JOIN.test(w[j]) || j === 0 || j === w.length - 1 || shopProtected(w, j)) continue;
+          var left = w.slice(cuts.length ? cuts[cuts.length - 1] + 1 : 0, j);
+          var rest = w.slice(j + 1), nx = 0;
+          while (nx < rest.length && !(SHOP_JOIN.test(rest[nx]) && !shopProtected(w, j + 1 + nx))) nx++;
+          var right = rest.slice(0, nx);
+          if (left.length <= 3 && right.length >= 2 && right.length <= 3 && SHOP_NOUN.test(right[right.length - 1])) {
+            unsure = true; why = 'pair';                 // "honey and garlic sauce"? or "apples and potato chips"?
+            if (!/s$/i.test(left[left.length - 1] || '')) continue;   // proposal: a flavour word keeps it together
+          }
+          cuts.push(j);
+        }
+        var start = 0;
+        cuts.forEach(function (c) { cur = w.slice(start, c + 1); groups.push(cur); start = c + 1; });
+        groups.push(w.slice(start));
+      });
+      groups = groups.filter(function (g) { return shopTrimJoin(g).length; });
+      var items = groups.map(shopGroupText);
+      var long = groups.some(function (g) {            // a known name ("cookies and cream") counts as one word
+        g = shopTrimJoin(g);
+        var n = g.length;
+        for (var j = 1; j < g.length - 1; j++) if (SHOP_JOIN.test(g[j]) && shopProtected(g, j)) n -= 2;
+        return n > 4;
+      });
+      if (long) { unsure = true; why = why || 'long'; }
+      if (groups.length > 12) { groups = [shopWords(raw)]; items = [raw]; unsure = true; why = 'long'; }
+      var mode = unsure ? 'review' : (groups.length > 1 ? 'split' : 'one');
+      return { mode: mode, groups: groups, items: items, why: why };
+    }
+    /*SHOPSPLIT-END*/
+
+    function openBg(id) { $(id).classList.add('is-open'); $(id).setAttribute('aria-hidden', 'false'); }
+    function closeBg(id) { var b = $(id); if (!b) return; b.classList.remove('is-open'); b.setAttribute('aria-hidden', 'true'); }
+    /* Family for the "For" chips: grown-ups then kids, as the server sends them. */
+    function shopPeople() {
+      var d = state.data || {}, out = [];
+      var par = d.parents || PARENTS;
+      var kids = d.kids || (d.people || []).filter(function (p) { return par.indexOf(p) < 0; });
+      par.concat(kids).forEach(function (p) { if (p && out.indexOf(p) < 0) out.push(p); });
+      return out;
+    }
+    /* Roni only: "For: Roni / Kayla / ..." under the add box (defaults to him; the server re-checks). */
+    function shopAddFor() {
+      if (!shopIsBuyer()) return '';
+      if (shopPeople().indexOf(state.shopFor) < 0) state.shopFor = shopMe();
+      return state.shopFor;
+    }
+    function renderShopFor() {
+      var box = $('shopFor'), store = normalizeStore(state.selectedStore || 'Lidl');
+      var forP = shopAddFor();
+      $('newItem').placeholder = (forP && forP !== shopMe() ? 'Add for ' + forP + ' to ' : 'Add to ') + store + '\u2026';
+      if (!forP) { box.hidden = true; box.innerHTML = ''; return; }
+      box.hidden = false; box.innerHTML = '';
+      box.appendChild(el('span', 'shop-for__lbl', 'For:'));
+      shopPeople().forEach(function (p) {
+        var c = el('button', 'chip' + (p === forP ? ' is-active' : ''), p);
+        c.type = 'button';
+        c.setAttribute('aria-pressed', p === forP ? 'true' : 'false');
+        c.addEventListener('click', function () { state.shopFor = p; renderShopFor(); });
+        box.appendChild(c);
+      });
+    }
+    function shopAddDone(store, forP) { return 'Added to ' + store + (forP && forP !== shopMe() ? ' for ' + forP : ''); }
     function addItem() {
       var input = $('newItem');
-      var name = (input.value || '').trim();
-      if (!name) { input.focus(); return; }
-      var store = normalizeStore(state.selectedStore || 'Lidl');
-      var btn = $('addBtn');
+      var raw = (input.value || '').trim();
+      if (!raw) { input.focus(); return; }
+      var sp = shopSplit(raw);
+      if (sp.mode === 'review') { openSplitReview(raw, sp); return; }
+      if (sp.mode === 'split' && sp.items.length > 1) { addSplit(raw, sp.items); return; }
+      addOne(sp.items[0] || raw);
+    }
+    function addOne(name) {
+      var input = $('newItem'), btn = $('addBtn');
+      var store = normalizeStore(state.selectedStore || 'Lidl'), forP = shopAddFor();
+      var f = { item: name, store: store, qty: 1, unit: 'ea' };
+      if (forP) f.forPerson = forP;
       btn.disabled = true;
-      run('addItem', [{ item: name, store: store, qty: 1, unit: 'ea' }],
-        function () { input.value = ''; btn.disabled = false; toast('Added to ' + store); loadData(false); },
+      run('addItem', [f],
+        function () { input.value = ''; btn.disabled = false; toast(shopAddDone(store, forP)); loadData(false); },
         function () { btn.disabled = false; toast('Couldn\u2019t add \u2014 try again'); });
     }
+    /* Several items from one line: add them all, then "Added 3 items · Keep as one" for a few seconds. */
+    function addSplit(raw, items) {
+      var input = $('newItem'), btn = $('addBtn');
+      var store = normalizeStore(state.selectedStore || 'Lidl'), forP = shopAddFor();
+      var whole = raw.replace(/\s*\r?\n\s*/g, ', ');
+      var f = { store: store, items: items };
+      if (forP) f.forPerson = forP;
+      btn.disabled = true;
+      run('addItemsBulk', [f],
+        function (res) {
+          input.value = ''; btn.disabled = false;
+          var ids = (res && res.ids) || [];
+          var my = showUndo('Added ' + ids.length + ' items' + (forP && forP !== shopMe() ? ' for ' + forP : ''), 'Keep as one', 6000);
+          my.pending = false;
+          my.restore = function () {
+            run('joinItems', [{ ids: ids, item: whole }],
+              function () { toast('Kept as one item'); loadData(false); },
+              function () { toast('Couldn\u2019t change it \u2014 try again'); loadData(false); });
+          };
+          loadData(false);
+        },
+        function () { btn.disabled = false; toast('Couldn\u2019t add \u2014 try again'); });
+    }
+    /* Not sure how to split: show the words as big buttons. Tap a word = the next item starts there;
+       tap the first word of a box = join it back. No dragging. */
+    var ssr = null;
+    function openSplitReview(raw, sp) {
+      ssr = { raw: raw, groups: sp.groups.map(function (g) { return g.slice(); }) };
+      $('ssrTitle').textContent = sp.why === 'pair' ? 'One thing or two?' : 'Looks like a few things. One item per line?';
+      renderSsr();
+      openBg('ssrBg');
+    }
+    function renderSsr() {
+      var box = $('ssrGroups');
+      box.innerHTML = '';
+      ssr.groups.forEach(function (g, gi) {
+        var card = el('div', 'ssr__g');
+        card.appendChild(el('span', 'ssr__n', String(gi + 1)));
+        g.forEach(function (w, wi) {
+          var b = el('button', 'ssr__w' + (SHOP_JOIN.test(w) ? ' is-join' : ''), w);
+          b.type = 'button';
+          if (wi === 0 && gi === 0) { b.setAttribute('aria-disabled', 'true'); b.tabIndex = -1; }
+          else b.setAttribute('aria-label', wi === 0 ? 'Join \u201c' + w + '\u201d back to item ' + gi : 'New item starts at \u201c' + w + '\u201d');
+          b.addEventListener('click', function () {
+            if (wi === 0) {
+              if (gi === 0) return;
+              ssr.groups[gi - 1] = ssr.groups[gi - 1].concat(g);
+              ssr.groups.splice(gi, 1);
+            } else ssr.groups.splice(gi, 1, g.slice(0, wi), g.slice(wi));
+            renderSsr();
+          });
+          card.appendChild(b);
+        });
+        box.appendChild(card);
+      });
+      var n = ssr.groups.map(shopGroupText).filter(Boolean).length;
+      $('ssrAdd').textContent = n > 1 ? 'Add ' + n + ' items' : 'Add as one item';
+      $('ssrOne').hidden = n < 2;
+      $('ssrHint').textContent = n > 1 ? 'Tap a word to split more. Tap the first word in a box to join it back.' : 'Tap the word where the next thing starts.';
+    }
+    $('ssrAdd').addEventListener('click', function () {
+      var items = ssr.groups.map(shopGroupText).filter(Boolean), raw = ssr.raw;
+      closeBg('ssrBg');
+      if (items.length > 1) addSplit(raw, items); else addOne(items[0] || raw);
+    });
+    $('ssrOne').addEventListener('click', function () { closeBg('ssrBg'); addOne(ssr.raw.replace(/\s*\r?\n\s*/g, ', ')); });
+    $('ssrBg').addEventListener('click', function (e) { if (e.target === $('ssrBg')) closeBg('ssrBg'); });
+
+    /* Roni only: edit any item (the server refuses everyone else). */
+    var ied = null;
+    function openItemEdit(s) {
+      ied = { s: s, qty: Math.max(1, Math.round(Number(s.qty)) || 1), who: shopOwner(s), store: normalizeStore(s.store) };
+      $('iedName').value = s.item;
+      $('iedNotes').value = s.notes || '';
+      var sel = $('iedStore');
+      sel.innerHTML = '';
+      var opts = STORE_ORDER.slice();
+      if (opts.indexOf(ied.store) < 0 && ied.store !== 'Other') opts.push(ied.store);
+      opts.push('Other');
+      opts.forEach(function (o) { var op = el('option', '', o); op.value = o; if (o === ied.store) op.selected = true; sel.appendChild(op); });
+      renderIed();
+      openBg('iedBg');
+    }
+    function renderIed() {
+      $('iedQty').textContent = String(ied.qty);
+      var box = $('iedFor');
+      box.innerHTML = '';
+      shopPeople().forEach(function (p) {
+        var c = el('button', 'chip' + (p === ied.who ? ' is-active' : ''), p);
+        c.type = 'button';
+        c.setAttribute('aria-pressed', p === ied.who ? 'true' : 'false');
+        c.addEventListener('click', function () { ied.who = p; renderIed(); });
+        box.appendChild(c);
+      });
+    }
+    $('iedMinus').addEventListener('click', function () { if (ied.qty > 1) { ied.qty--; renderIed(); } });
+    $('iedPlus').addEventListener('click', function () { if (ied.qty < 99) { ied.qty++; renderIed(); } });
+    $('iedCancel').addEventListener('click', function () { closeBg('iedBg'); });
+    $('iedBg').addEventListener('click', function (e) { if (e.target === $('iedBg')) closeBg('iedBg'); });
+    $('iedDel').addEventListener('click', function () { var s = ied.s; closeBg('iedBg'); deleteGrocery(s); });
+    $('iedSave').addEventListener('click', function () {
+      var s = ied.s, name = ($('iedName').value || '').trim();
+      if (!name) { $('iedName').focus(); return; }
+      var store = $('iedStore').value, notes = ($('iedNotes').value || '').trim();
+      var f = { id: s.id }, moved = '';
+      if (name !== s.item) f.item = name;
+      if (store !== ied.store) { f.store = store === 'Other' ? '' : store; moved = store; }
+      if (ied.qty !== (Math.round(Number(s.qty)) || 1)) f.qty = ied.qty;
+      if (notes !== (s.notes || '')) f.notes = notes;
+      if (ied.who !== shopOwner(s)) f.addedBy = ied.who;
+      closeBg('iedBg');
+      if (Object.keys(f).length === 1) return;
+      var prev = { item: s.item, store: s.store, qty: s.qty, notes: s.notes, addedBy: s.addedBy };
+      if (f.item) s.item = f.item;
+      if (f.store !== undefined) s.store = f.store || 'other';
+      if (f.qty) s.qty = f.qty;
+      if (f.notes !== undefined) s.notes = f.notes;
+      if (f.addedBy) s.addedBy = f.addedBy;
+      renderGrocery();
+      run('editItem', [f],
+        function () { toast(moved ? 'Moved to ' + moved : (f.addedBy ? 'Now on ' + f.addedBy + '\u2019s list' : 'Saved')); loadData(false); },
+        function () { Object.keys(prev).forEach(function (k) { s[k] = prev[k]; }); renderGrocery(); toast('Couldn\u2019t save \u2014 try again'); });
+    });
     function autoUploadList() {
       closeAllMore();
       var store = normalizeStore(state.selectedStore || 'Lidl');
