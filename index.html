@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-nXRkU8t3PFW+Y0oti4zAUo7sEx+lJiBwmqF6mSkOw/k=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-3tHyuoHN1N+DoukWNWZEt3zij/cZD0MYy5WNWw+nZtM=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -507,6 +507,8 @@ svg.i.i--sm { width: 16px; height: 16px; stroke-width: 2.25; }
 .amz-goal__r { display: flex; justify-content: space-between; align-items: center; gap: var(--s2); min-height: 32px; }
 .amz-goal__r b { font-size: var(--fs-item); }
 .amz-goal__s { font-size: var(--fs-meta); color: var(--muted); }
+.goal__note, .amz-rule { font-size: var(--fs-meta); color: var(--muted); margin: var(--s2) 0 0; line-height: 1.35; }
+.amz-mo__amt small { display: block; font-size: 11px; font-weight: 700; color: #2E9E6B; }
 .money { position: relative; flex: 1; min-width: 0; }
 .money::before { content: "$"; position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
   font-size: var(--fs-item); font-weight: 700; color: var(--muted); }
@@ -4980,14 +4982,14 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         if (!G) {
           if (state.goals.err) {   // goals didn't load: still show this week's spend, plus a quiet note
             var pe = el('div', 'card');
-            [['Food', wt.food], ['Amazon (logged)', wt.amazon]].forEach(function (x) { var o = el('div', 'tot__r'); o.appendChild(el('span', '', x[0] + ' this week')); o.appendChild(el('b', '', money2(x[1] || 0))); pe.appendChild(o); });
+            [['Food', wt.food], ['Amazon non-food (logged)', wt.amazon]].forEach(function (x) { var o = el('div', 'tot__r'); o.appendChild(el('span', '', x[0] + ' this week')); o.appendChild(el('b', '', money2(x[1] || 0))); pe.appendChild(o); });
             root.appendChild(pe); root.appendChild(el('p', 'amz-goal__s', 'Goals didn\u2019t load \u2014 tap refresh to try again.'));
           } else root.appendChild(skel(2));
         }
-        else { root.appendChild(goalCard('Food', 'food', G.thisWeek.food, G)); root.appendChild(goalCard('Amazon', 'amazon', G.thisWeek.amazon, G)); }
+        else { root.appendChild(goalCard('Food', 'food', G.thisWeek.food, G)); root.appendChild(goalCard('Amazon (non-food)', 'amazon', G.thisWeek.amazon, G)); }
       } else {
         var pl = el('div', 'card');
-        [['Food', wt.food], ['Amazon', wt.amazon]].forEach(function (x) { var o = el('div', 'tot__r'); o.appendChild(el('span', '', x[0] + ' this week')); o.appendChild(el('b', '', money2(x[1] || 0))); pl.appendChild(o); });
+        [['Food', wt.food], ['Amazon non-food', wt.amazon]].forEach(function (x) { var o = el('div', 'tot__r'); o.appendChild(el('span', '', x[0] + ' this week')); o.appendChild(el('b', '', money2(x[1] || 0))); pl.appendChild(o); });
         root.appendChild(pl);
       }
       if (wt.other) { var o = el('div', 'bud-other'); o.appendChild(el('span', '', 'Everything else this week')); o.appendChild(el('b', '', money2(wt.other))); root.appendChild(o); }
@@ -5045,11 +5047,11 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         var GW = goalViewer() && state.goals.data ? state.goals.data.weeks.filter(function (x) { return x.week === b.openWeek; })[0] : null;
         if (GW) {
           var gp = el('div', 'gwk__p'); gp.style.marginBottom = 'var(--s3)';
-          [['Food', GW.food], ['Amazon', GW.amazon]].forEach(function (x) { gp.appendChild(pill(x[0] + ' ' + money0(x[1].spent) + ' of ' + money0(x[1].goal) + ' \u00b7 ' + (x[1].state === 'over' ? 'over by ' + money0(x[1].over) : money0(x[1].left) + ' left'), 'pill--' + x[1].state)); });
+          [['Food', GW.food], ['Amazon non-food', GW.amazon]].forEach(function (x) { gp.appendChild(pill(x[0] + ' ' + money0(x[1].spent) + ' of ' + money0(x[1].goal) + ' \u00b7 ' + (x[1].state === 'over' ? 'over by ' + money0(x[1].over) : money0(x[1].left) + ' left'), 'pill--' + x[1].state)); });
           root.appendChild(gp);
         }
         var split = el('div', 'bud-split');
-        [['Food', W.weekTotals.food], ['Amazon', W.weekTotals.amazon], ['Other', W.weekTotals.other]].forEach(function (x) {
+        [['Food', W.weekTotals.food], ['Amazon non-food', W.weekTotals.amazon], ['Other', W.weekTotals.other]].forEach(function (x) {
           var t = el('div', 'bud-split__i'); t.appendChild(el('span', '', x[0])); t.appendChild(el('b', '', money0(x[1]))); split.appendChild(t);
         });
         root.appendChild(split);
@@ -5187,8 +5189,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
 
 
     /* ====================== Weekly goals (Roni + Kayla; Roni edits) ======================
-       Server: getGoals / setGoals (Goals.gs), stored in the sheet's Settings tab. Food = Purchases (food bucket);
-       Amazon = the Amazon tab by order date. Green under 80%, amber 80-100%, red over. */
+       Server: getGoals / setGoals (Goals.gs), stored in the sheet's Settings tab. Food = Purchases food from other stores
+       + food orders in the Amazon tab; Amazon = NON-FOOD Amazon orders only (never both). Green under 80%, amber 80-100%, red over. */
     var GOAL_VIEWERS = ['Roni', 'Kayla'], GOAL_EDITORS = ['Roni'];
     state.goals = { data: null, loading: false, err: false, edit: '' };
     function goalViewer() { return GOAL_VIEWERS.indexOf(state.viewer) >= 0; }
@@ -5199,7 +5201,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       ledRun('getGoals', [{}]).then(function (d) { g.loading = false; var good = d && d.thisWeek && d.goals && Array.isArray(d.weeks); g.err = !good; g.data = good ? d : null; renderBudget(); },
         function () { g.loading = false; g.err = true; renderBudget(); });
     }
-    var GOAL_WORD = { under: 'Under goal', near: 'Close to goal', over: 'Over goal', none: 'Nothing logged' };
+    var GOAL_WORD = { under: 'Under goal', near: 'Close to goal', over: 'Over goal', none: 'Nothing logged', partial: 'Only Amazon food on record' };
     function goalCard(label, key, P, G) {
       var c = el('div', 'card budget goal is-' + P.state); c.setAttribute('data-goal', key);
       var head = el('div', 'budget__head');
@@ -5218,6 +5220,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (P.state === 'over') right.appendChild(el('b', 'is-over', 'Over by ' + money0(P.over)));
       else { right.appendChild(el('b', '', money0(P.left))); right.appendChild(document.createTextNode(' left')); }
       meta.appendChild(right); c.appendChild(meta);
+      if (key === 'food' && P.amazonFood) c.appendChild(el('p', 'goal__note', 'Includes ' + money2(P.amazonFood) + ' of food bought on Amazon.'));
+      if (key === 'amazon') c.appendChild(el('p', 'goal__note', 'Non-food Amazon orders only. Food from Amazon counts toward Food.'));
       if (goalEditor()) {
         if (state.goals.edit === key) {
           var f = el('form', 'goal-form'); f.setAttribute('novalidate', '');
@@ -5251,12 +5255,13 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     function renderGoalWeeks(root, L) {
       var G = state.goals.data, ws = G.weeks;
       var past = ws.filter(function (w) { return !w.current; });
-      function cnt(k, ok) { return past.filter(function (w) { return w[k].state !== 'none' && (w[k].state === 'over') !== ok; }).length; }
+      function cnt(k, ok) { return past.filter(function (w) { return w[k].state !== 'none' && w[k].state !== 'partial' && (w[k].state === 'over') !== ok; }).length; }
       var nf = cnt('food', true), na = cnt('amazon', true), of = cnt('food', false), oa = cnt('amazon', false);
-      root.appendChild(makeSec('Week by week', 'goals ' + money0(G.goals.food) + ' food \u00b7 ' + money0(G.goals.amazon) + ' Amazon'));
+      root.appendChild(makeSec('Week by week', 'goals ' + money0(G.goals.food) + ' food \u00b7 ' + money0(G.goals.amazon) + ' Amazon non-food'));
       var sum = el('div', 'gsum');
-      sum.appendChild(el('span', '', 'Last ' + past.length + ' weeks \u00b7 Food: ' + nf + ' under, ' + of + ' over \u00b7 Amazon: ' + na + ' under, ' + oa + ' over'));
+      sum.appendChild(el('span', '', 'Last ' + past.length + ' weeks \u00b7 Food: ' + nf + ' under, ' + of + ' over \u00b7 Amazon non-food: ' + na + ' under, ' + oa + ' over'));
       root.appendChild(sum);
+      root.appendChild(el('p', 'amz-rule', 'Food bought on Amazon (Whole Foods, Amazon Fresh, snacks, tea) counts toward Food only. Weeks before the purchase log show Amazon food only.'));
       var c = el('div', 'card');
       ws.forEach(function (w) {
         var r = el('button', 'gwk'); r.type = 'button'; r.setAttribute('data-week', w.week);
@@ -5266,11 +5271,12 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         [['Food', w.food], ['Amazon', w.amazon]].forEach(function (x) {
           var st = x[1].state, word = st === 'over' ? 'over' : (w.current ? (st === 'near' ? 'close' : 'on track') : 'under');
           if (st === 'none') pp.appendChild(pill(x[0] + ' \u00b7 nothing logged', ''));
+          else if (st === 'partial') pp.appendChild(pill('Food ' + money0(x[1].spent) + ' \u00b7 Amazon food only', ''));
           else pp.appendChild(pill(x[0] + ' ' + money0(x[1].spent) + ' \u00b7 ' + word, 'pill--' + st));
         });
         body.appendChild(pp); r.appendChild(body);
         var ch = el('span', 'gwk__ch'); ch.innerHTML = svg('chev'); r.appendChild(ch);
-        r.setAttribute('aria-label', weekRange(w.week) + '. Food ' + money0(w.food.spent) + ' ' + GOAL_WORD[w.food.state] + '. Amazon ' + money0(w.amazon.spent) + ' ' + GOAL_WORD[w.amazon.state]);
+        r.setAttribute('aria-label', weekRange(w.week) + '. Food ' + money0(w.food.spent) + ' ' + GOAL_WORD[w.food.state] + '. Amazon non-food ' + money0(w.amazon.spent) + ' ' + GOAL_WORD[w.amazon.state]);
         r.addEventListener('click', function () {
           var b = state.bud; b.openWeek = w.week; b.weekLed = null; loadLedger('week'); window.scrollTo(0, 0);
           if (!navHas('budWeek')) navPush('budWeek', function () { b.openWeek = ''; renderBudget(); window.scrollTo(0, 0); });
@@ -5307,6 +5313,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var body = el('div', 'pur__body');
       body.appendChild(el('div', 'pur__t', o.short));
       var m = el('div', 'pur__m'); m.appendChild(document.createTextNode(shortDay(o.date) + ' \u00b7 ' + (o.food === 'unknown' ? 'Unknown' : o.category)));
+      if (o.food === 'food') m.appendChild(pill('Food goal', 'pill--under'));
       if (o.status === 'returned') m.appendChild(pill('Returned', 'pill--over'));
       if (o.status === 'arriving') m.appendChild(pill('Arriving', 'pill--person'));
       body.appendChild(m); row.appendChild(body);
@@ -5321,15 +5328,15 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       [['f', S.food], ['n', S.nonfood], ['u', S.unknown]].forEach(function (x) { var b = el('span', 'amz-mo__' + x[0]); b.style.width = (x[1] / T * 100).toFixed(1) + '%'; bar.appendChild(b); });
       w.appendChild(bar);
       var nums = el('div', 'amz-split__nums');
-      [['Food', S.food], ['Non-food', S.nonfood], ['Unknown', S.unknown]].forEach(function (x) {
+      [['Food (Food goal)', S.food], ['Non-food', S.nonfood], ['Unknown', S.unknown]].forEach(function (x) {
         var sp = el('span'); sp.appendChild(document.createTextNode(x[0] + ' ')); sp.appendChild(el('b', '', money0(x[1]) + (S.total ? ' \u00b7 ' + Math.round(x[1] / S.total * 100) + '%' : ''))); nums.appendChild(sp);
       });
       w.appendChild(nums);
       return w;
     }
-    function amzLegend() {
+    function amzLegend(nfOnly) {
       var l = el('div', 'amz-legend');
-      [['#2E9E6B', 'Food'], ['var(--accent)', 'Non-food'], ['#B8C0CC', 'Unknown']].forEach(function (x) { var s = el('span'), i = el('i'); i.style.background = x[0]; s.appendChild(i); s.appendChild(document.createTextNode(x[1])); l.appendChild(s); });
+      (nfOnly ? [['var(--accent)', 'Non-food'], ['#B8C0CC', 'Unknown (counted as non-food)']] : [['#2E9E6B', 'Food (counts as Food)'], ['var(--accent)', 'Non-food'], ['#B8C0CC', 'Unknown (counted as non-food)']]).forEach(function (x) { var s = el('span'), i = el('i'); i.style.background = x[0]; s.appendChild(i); s.appendChild(document.createTextNode(x[1])); l.appendChild(s); });
       return l;
     }
     function amzOpenMonth(m) {
@@ -5359,7 +5366,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         back.addEventListener('click', function () { A.open = ''; navDrop('amzMonth'); renderAmazon(); window.scrollTo(0, 0); });
         var bar = el('div', 'sec sec--bar'); bar.appendChild(back); root.appendChild(bar);
         root.appendChild(makeSec(amzMonthLong(mo.month) + (mo.month === D.month ? ' so far' : ''), plural(mo.n, 'order')));
-        var sc = el('div', 'card amz-split'); sc.appendChild(amzSplitBlock('Total', { total: mo.total, food: mo.food, nonfood: mo.nonfood, unknown: mo.unknown })); root.appendChild(sc);
+        var sc = el('div', 'card amz-split'); sc.appendChild(amzSplitBlock('All orders', { total: mo.total, food: mo.food, nonfood: mo.nonfood, unknown: mo.unknown })); root.appendChild(sc);
+        root.appendChild(el('p', 'amz-rule', 'Amazon goal: ' + money0(mo.amazon != null ? mo.amazon : mo.nonfood + mo.unknown) + ' non-food. Food (' + money0(mo.food) + ') counts toward Food.'));
         var list = D.orders.filter(function (o) { return o.date.slice(0, 7) === mo.month; });
         if (!list.length) { var ec = el('div', 'card'); ec.appendChild(okLine('No Amazon orders that month.')); root.appendChild(ec); return; }
         root.appendChild(makeSec('Orders', 'biggest first'));
@@ -5367,17 +5375,19 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         return;
       }
       var H = D.headline, grid = el('div', 'kpis amz-kpis');
-      [['This month', money0(H.thisMonth), plural(H.thisMonthN, 'order') + ' so far'], ['Last month', money0(H.lastMonth), plural(H.lastMonthN, 'order')],
-       ['Monthly average', money0(H.avg12), (H.avgMonths >= 12 ? 'last 12 months' : 'last ' + plural(H.avgMonths, 'month')) + (state.goals.data ? ' \u00b7 goal \u2248 ' + money0(state.goals.data.monthly.amazon) : '')], ['Year to date', money0(H.ytd), plural(H.ytdN, 'order')]].forEach(function (k) {
+      function pf(v) { return v ? ' \u00b7 + ' + money0(v) + ' food' : ''; }
+      [['This month (non-food)', money0(H.thisMonth), plural(H.thisMonthN, 'order') + ' so far' + pf(H.thisMonthFood)], ['Last month (non-food)', money0(H.lastMonth), plural(H.lastMonthN, 'order') + pf(H.lastMonthFood)],
+       ['Monthly average (non-food)', money0(H.avg12), (H.avgMonths >= 12 ? 'last 12 months' : 'last ' + plural(H.avgMonths, 'month')) + (state.goals.data ? ' \u00b7 goal \u2248 ' + money0(state.goals.data.monthly.amazon) : '')], ['Year to date (non-food)', money0(H.ytd), plural(H.ytdN, 'order') + pf(H.ytdFood)]].forEach(function (k) {
         var t = el('div', 'kpi'); t.appendChild(el('div', 'kpi__lbl', k[0])); t.appendChild(el('div', 'kpi__v', k[1])); t.appendChild(el('div', 'kpi__s', k[2])); grid.appendChild(t);
       });
       root.appendChild(grid);
+      root.appendChild(el('p', 'amz-rule', 'Amazon totals and the Amazon goal count non-food orders only. Food bought on Amazon (' + money0(H.avg12Food || 0) + '/mo on average) counts toward the Food goal.'));
       var GG = state.goals.data;
       if (!GG && !state.goals.loading && !state.goals.err) loadGoals();
       if (GG) {
         var gc = el('div', 'card amz-goal');
         gc.appendChild(el('div', 'amz-goal__s', 'Goals as a month (weekly goal \u00d7 52 \u00f7 12)'));
-        [['Amazon', GG.monthly.amazon, GG.goals.amazon, H.avg12], ['Food', GG.monthly.food, GG.goals.food, null]].forEach(function (x) {
+        [['Amazon non-food', GG.monthly.amazon, GG.goals.amazon, H.avg12], ['Food', GG.monthly.food, GG.goals.food, null]].forEach(function (x) {
           var r = el('div', 'amz-goal__r'), l = el('span'); l.appendChild(el('b', '', x[0] + ' \u2248 ' + money0(x[1]) + '/mo'));
           l.appendChild(el('span', 'amz-goal__s', ' \u00b7 ' + money0(x[2]) + '/week')); r.appendChild(l);
           if (x[3] != null) { var d = x[3] - x[1]; r.appendChild(pill(d > 0 ? 'avg ' + money0(d) + ' over' : 'avg ' + money0(-d) + ' under', d > 0 ? 'pill--over' : 'pill--under')); }
@@ -5386,25 +5396,26 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         root.appendChild(gc);
       }
       // Month by month: big tappable bars, newest first
-      root.appendChild(makeSec('Month by month', 'tap a month'));
-      root.appendChild(amzLegend());
-      var max = Math.max.apply(null, D.months.map(function (x) { return x.total; }).concat([1]));
+      root.appendChild(makeSec('Month by month', 'non-food total \u00b7 tap a month'));
+      root.appendChild(amzLegend(true));
+      function nfOf(x) { return x.amazon != null ? x.amazon : x.nonfood + x.unknown; }
+      var max = Math.max.apply(null, D.months.map(nfOf).concat([1]));
       var mc = el('div', 'card amz-months');
       D.months.slice().reverse().forEach(function (x) {
         var b = el('button', 'amz-mo' + (x.month === D.month ? ' is-cur' : '')); b.type = 'button'; b.setAttribute('data-month', x.month);
         b.appendChild(el('span', 'amz-mo__t', amzMonthShort(x.month)));
-        var tr = el('span', 'amz-mo__bar'), wrap = el('span'); wrap.style.cssText = 'display:flex;height:100%;width:' + (x.total / max * 100).toFixed(1) + '%';
-        [['f', x.food], ['n', x.nonfood], ['u', x.unknown]].forEach(function (y) { if (!y[1]) return; var s2 = el('span', 'amz-mo__' + y[0]); s2.style.width = (y[1] / Math.max(x.total, .01) * 100).toFixed(1) + '%'; wrap.appendChild(s2); });
+        var tr = el('span', 'amz-mo__bar'), wrap = el('span'); wrap.style.cssText = 'display:flex;height:100%;width:' + (nfOf(x) / max * 100).toFixed(1) + '%';
+        [['n', x.nonfood], ['u', x.unknown]].forEach(function (y) { if (!y[1]) return; var s2 = el('span', 'amz-mo__' + y[0]); s2.style.width = (y[1] / Math.max(nfOf(x), .01) * 100).toFixed(1) + '%'; wrap.appendChild(s2); });
         tr.appendChild(wrap); b.appendChild(tr);
-        b.appendChild(el('span', 'amz-mo__amt', money0(x.total)));
+        var am = el('span', 'amz-mo__amt', money0(x.amazon != null ? x.amazon : x.total)); if (x.food) am.appendChild(el('small', '', '+' + money0(x.food) + ' food')); b.appendChild(am);
         var ch = el('span', 'amz-mo__ch'); ch.innerHTML = svg('chev'); b.appendChild(ch);
-        b.setAttribute('aria-label', amzMonthLong(x.month) + ', ' + money0(x.total) + ', ' + plural(x.n, 'order'));
+        b.setAttribute('aria-label', amzMonthLong(x.month) + ', non-food ' + money0(x.amazon != null ? x.amazon : x.total) + (x.food ? ', plus ' + money0(x.food) + ' food' : '') + ', ' + plural(x.n, 'order'));
         b.addEventListener('click', function () { amzOpenMonth(x.month); });
         mc.appendChild(b);
       });
       root.appendChild(mc);
       // Food vs non-food
-      root.appendChild(makeSec('Food vs non-food'));
+      root.appendChild(makeSec('Food vs non-food', 'all Amazon orders'));
       var sp = el('div', 'card amz-split');
       sp.appendChild(amzSplitBlock('This month', D.split.thisMonth)); sp.appendChild(amzSplitBlock('Last 12 months', D.split.last12));
       root.appendChild(sp);
