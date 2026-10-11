@@ -129,7 +129,7 @@
       'In Chrome, tap <b>Install app</b>. Or copy the link below and paste it in Chrome.'];
     if (IOS && !IOS_SAFARI) return ['Open this page in <b>Safari</b> (tap ' + I.dots + ' or the compass, then <b>Open in Safari</b>).',
       'In Safari, tap Share ' + I.share + ' then <b>Add to Home Screen</b>.'];
-    if (IOS) return ['Tap Share ' + I.share + ' at the bottom of Safari.', 'Tap <b>Add to Home Screen</b>, then <b>Add</b>.'];
+    if (IOS) return ['Open your link in <b>Safari</b>, then tap Share ' + I.share + ' at the bottom.', 'Tap <b>Add to Home Screen</b>, then <b>Add</b>. Open it from the new icon.'];
     if (ANDROID) return ['Tap ' + I.dots + ' at the top right of Chrome.', 'Tap <b>Add to Home screen</b>, then <b>Install</b>.'];
     return ['Open the browser menu ' + I.dots + '.', 'Choose <b>Install app</b> (or <b>Add to Home screen</b>).'];
   }
