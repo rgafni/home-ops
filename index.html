@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-WtrsKJIJ1a/UWBvmxctDSxJFE+JmPNr4w8iXiEnLNh8=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-EL0fkJFhZcBOQh2Km8xlgy4J9ypkdn+JvyMpftGCU6c=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -635,6 +635,20 @@ svg.i.i--sm { width: 16px; height: 16px; stroke-width: 2.25; }
 .shop-cur__del { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; border: 1.5px solid var(--line); border-radius: var(--r-pill);
   background: none; color: var(--danger, #c0392b); font: inherit; font-size: var(--fs-label); font-weight: 700; cursor: pointer; }
 .shop-cur__del svg.i { width: 18px; height: 18px; }
+.shop-cur { flex-wrap: wrap; row-gap: var(--s2); }
+.shop-cur .shop-cur__name { min-width: auto; max-width: 100%; }
+.shop-cur__acts { margin-left: auto; flex: none; display: flex; align-items: center; gap: 8px; }
+.shop-cur__acts .shop-cur__del { margin-left: 0; background: #FDF0F2; border-color: #F2C4CE; color: #B41E44; }
+.shop-cur__x { flex: none; display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 14px 0 10px; border: 0; border-radius: var(--r-pill);
+  background: var(--surface); color: var(--ink); font: inherit; font-size: var(--fs-label); font-weight: 800; cursor: pointer; }
+.shop-cur__x svg.i { width: 20px; height: 20px; }
+.shop-cur__x:active { background: var(--line); }
+.shop-del { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.shop-del svg.i { width: 18px; height: 18px; }
+.shop-hint { display: flex; align-items: center; gap: var(--s3); margin: var(--s2) 0 var(--s4); padding: var(--s4); border: 1.5px dashed var(--line); border-radius: var(--r-lg); color: var(--muted); }
+.shop-hint > svg.i { flex: none; width: 26px; height: 26px; color: var(--faint); }
+.shop-hint__t { margin: 0; font-weight: 800; color: var(--ink); font-size: var(--fs-body); }
+.shop-hint__s { margin: 2px 0 0; font-size: var(--fs-meta); }
 .opt-wrap { display: flex; align-items: stretch; border-top: 1px solid var(--line); }
 .opt-wrap:first-child { border-top: 0; }
 .opt-wrap .opt-row { flex: 1; min-width: 0; border-top: 0; }
@@ -1053,6 +1067,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
 .chip.is-active { background: var(--accent); border-color: var(--accent); color: #fff; }
 /* Budget */
 .bud-seg { margin-bottom: var(--s5); }
+.bud-seg .seg__btn { padding-left: 4px; padding-right: 4px; white-space: nowrap; }
 .pill--over { background: #FCE8EE; color: #B41E44; }
 .bud-other { display: flex; justify-content: space-between; align-items: center; min-height: 52px; margin-top: var(--s3); padding: 0 var(--s4);
   border-radius: var(--r-md); background: var(--surface); font-weight: 700; color: var(--muted); }
@@ -1119,6 +1134,36 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
 .tot__r + .tot__r { border-top: 1px solid var(--line); }
 .tot__r b { font-weight: 800; }
 .tot__r--y { background: var(--surface); }
+/* Budget -> Amazon (Roni + Kayla only) */
+.amz-upd { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin: calc(-1 * var(--s2)) 0 var(--s3); font-size: var(--fs-meta); color: var(--muted); }
+.amz-upd .link { min-height: 44px; display: inline-flex; align-items: center; gap: 6px; }
+.amz-upd .link svg.i { width: 18px; height: 18px; }
+.amz-kpis { margin-top: 0; }
+.amz-kpis .kpi__v { font-size: 1.375rem; }
+.amz-mo { width: 100%; display: grid; grid-template-columns: 64px 1fr auto 20px; align-items: center; gap: var(--s3); min-height: 52px;
+  padding: 4px 8px 4px var(--s4); border: 0; background: transparent; text-align: left; font: inherit; color: inherit; }
+.amz-mo + .amz-mo { border-top: 1px solid var(--line); }
+.amz-mo:active { background: var(--wash); }
+.amz-mo__t { font-weight: 800; font-size: var(--fs-meta); }
+.amz-mo__bar { height: 22px; border-radius: 8px; background: var(--surface); overflow: hidden; display: flex; }
+.amz-mo__f { display: block; height: 100%; background: #2E9E6B; }
+.amz-mo__n { display: block; height: 100%; background: var(--accent); }
+.amz-mo__u { display: block; height: 100%; background: #B8C0CC; }
+.amz-mo__amt { font-weight: 800; min-width: 64px; text-align: right; }
+.amz-mo.is-cur .amz-mo__t::after { content: ' \00b7 so far'; font-weight: 600; color: var(--muted); }
+.amz-mo__ch { color: var(--faint); display: grid; }
+.amz-legend { display: flex; flex-wrap: wrap; gap: var(--s3); margin: 0 0 var(--s2); font-size: var(--fs-meta); color: var(--muted); font-weight: 700; }
+.amz-legend i { display: inline-block; width: 12px; height: 12px; border-radius: 4px; margin-right: 6px; vertical-align: -1px; }
+.amz-split { padding: var(--s4); display: grid; gap: var(--s4); }
+.amz-split__h { display: flex; justify-content: space-between; font-weight: 800; margin-bottom: 6px; }
+.amz-split__bar { height: 14px; border-radius: 999px; overflow: hidden; display: flex; background: var(--surface); }
+.amz-split__nums { display: flex; flex-wrap: wrap; gap: 4px var(--s3); margin-top: 6px; font-size: var(--fs-meta); color: var(--muted); }
+.amz-split__nums b { color: var(--ink); }
+.amz-ord .pur__t { font-weight: 700; }
+.amz-ord .pur__ic { background: #FFF3E0; color: #B26A00; }
+.amz-ord .pur__ic.is-food { background: #E5F5EC; color: #1F7A4D; }
+.amz-ord .pur__ic.is-unknown { background: var(--surface); color: var(--muted); }
+
 .bud-all { display: flex; justify-content: space-between; align-items: center; gap: var(--s3); margin-top: var(--s4); padding: var(--s4) var(--s5);
   border-radius: var(--r-lg); background: var(--accent); color: #fff; font-weight: 700; }
 .bud-all b { font-size: var(--fs-h2); font-weight: 800; }
@@ -1294,7 +1339,9 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         <button type="button" class="bw__toggle" id="bwToggle" aria-expanded="false" aria-controls="bwBody"><span class="bw__l"><span class="bw__title" id="bwTitle">Bought this week</span><span class="bw__sum" id="bwSum"></span></span><span class="bw__money" id="bwMoney" hidden></span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
         <div class="bw__body" id="bwBody" hidden></div>
       </section>
-      <div class="shop-cur" id="shopCur"><h2 class="shop-cur__name" id="storePickerName">Lidl</h2><span class="picker__count" id="storePickerCount" hidden></span><button type="button" class="shop-cur__del" id="delListBtn" hidden><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/></svg>Delete list</button></div>
+      <div class="shop-hint" id="shopHint"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h12"/></svg><div><p class="shop-hint__t">Tap a store to open its list</p><p class="shop-hint__s">New store or an empty list? Use <b>All stores</b>.</p></div></div>
+      <div id="shopOpen" hidden>
+      <div class="shop-cur" id="shopCur"><h2 class="shop-cur__name" id="storePickerName">Lidl</h2><span class="picker__count" id="storePickerCount" hidden></span><span class="shop-cur__acts"><button type="button" class="shop-cur__del" id="delListBtn" hidden><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/></svg><span id="delListLbl">Delete list</span></button><button type="button" class="shop-cur__x" id="closeListBtn" aria-label="Close list"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>Close</button></span></div>
       <div class="add">
         <input class="field" id="newItem" type="text" placeholder="Add to Lidl…" aria-label="Add item" autocomplete="off" enterkeyhint="done">
         <button type="button" class="btn" id="addBtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Add</button>
@@ -1311,6 +1358,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           <button type="button" class="btn btn--quiet btn--block" id="autoUploadBtn">Copy list to share</button>
           <button type="button" class="btn btn--outline-danger btn--block" id="clearStoreBtn">Clear Lidl list</button>
         </div>
+      </div>
       </div>
       <div class="upl-recent" data-upl="shopping"></div>
     </section>
@@ -1360,6 +1408,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         <button type="button" class="seg__btn is-active" data-bud="week" role="tab" aria-selected="true">This week</button>
         <button type="button" class="seg__btn" data-bud="history" role="tab" aria-selected="false">History</button>
         <button type="button" class="seg__btn" data-bud="trends" role="tab" aria-selected="false">Trends</button>
+        <button type="button" class="seg__btn" data-bud="amazon" role="tab" aria-selected="false" id="budAmzTab" hidden>Amazon</button>
       </div>
       <div id="budPane-week">
         <div class="sec"><h2 class="sec__title">This week</h2><span class="sec__meta" id="budgetWeek"></span></div>
@@ -1379,6 +1428,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       </div>
       <div id="budPane-history" hidden><div id="budHistory"></div></div>
       <div id="budPane-trends" hidden><div id="budTrends"></div></div>
+      <div id="budPane-amazon" hidden><div id="budAmazon"></div></div>
       <div class="upl-recent" data-upl="budget"></div>
     </section>
   </main>
@@ -1496,6 +1546,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       Thu: 'Thursday', Fri: 'Friday', Sat: 'Saturday'
     };
     var DAY_KEYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    var MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     var FALLBACK_PEOPLE = ['Roni', 'Kayla', 'Moshe', 'Maya', 'Ashira'];
     var PARENTS = ['Roni', 'Kayla'];
@@ -1574,6 +1625,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       msg: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
       mail: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>',
       chev: '<path d="m9 18 6-6-6-6"/>',
+      refresh: '<path d="M21 12a9 9 0 1 1-2.64-6.36L21 8"/><path d="M21 3v5h-5"/>',
       person: '<circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/>',
       tag: '<path d="M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z"/><circle cx="7.5" cy="7.5" r="1"/>'
     };
@@ -1583,7 +1635,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
 
     var state = {
       data: null, screen: 'grocery', person: 'Roni', viewer: 'Roni',
-      dinnerDay: 'Sun', spendKind: 'food', selectedStore: 'Lidl', closetCat: null
+      dinnerDay: 'Sun', spendKind: 'food', selectedStore: 'Lidl', closetCat: null, listOpen: false
     };
 
     function $(id) { return document.getElementById(id); }
@@ -1802,6 +1854,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     function applyRoleNav() {
       var parent = isParent(state.viewer);
       $('budgetNavBtn').hidden = !parent;
+      $('budAmzTab').hidden = !amazonViewer();
+      if (!amazonViewer() && state.bud && state.bud.pane === 'amazon') setBudPane('week');
       if (!parent && state.screen === 'budget') showScreen('grocery');
       $('meNavBtn').hidden = !portalOn();
       if (!portalOn() && state.screen === 'me') showScreen('grocery');
@@ -1883,7 +1937,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var del = $('delListBtn');
       if (del) {
         del.hidden = !shopIsBuyer() || state.selectedStore === 'Other';
-        del.setAttribute('aria-label', 'Delete the ' + state.selectedStore + ' list');
+        del.setAttribute('aria-label', 'Delete the ' + state.selectedStore + ' list for everyone');
+        $('closeListBtn').setAttribute('aria-label', 'Close the ' + state.selectedStore + ' list');
       }
       if (sc.order.indexOf(state.selectedStore) < 0) state.selectedStore = sc.order[0] || 'Lidl';
       var n = sc.counts[state.selectedStore] || 0;
@@ -1906,10 +1961,11 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         var items = storeItems(st).filter(function (x) { return !x.checked; });
         var who = [];
         items.forEach(function (x) { var o = shopOwner(x); o = o === SHOP_EARLIER ? 'earlier' : (o === shopMe() ? 'you' : o); if (who.indexOf(o) < 0) who.push(o); });
-        var t = el('button', 'dash__t' + (st === state.selectedStore ? ' is-current' : ''));
+        var cur = state.listOpen && st === state.selectedStore;
+        var t = el('button', 'dash__t' + (cur ? ' is-current' : ''));
         t.type = 'button';
-        t.setAttribute('aria-label', st + ', ' + plural(items.length, 'item') + ' to buy' + (st === state.selectedStore ? ', open now' : '') + '. Added by ' + who.join(', '));
-        if (st === state.selectedStore) t.setAttribute('aria-current', 'true');
+        t.setAttribute('aria-label', st + ', ' + plural(items.length, 'item') + ' to buy' + (cur ? ', open now' : '') + '. Added by ' + who.join(', '));
+        if (cur) t.setAttribute('aria-current', 'true');
         var r = el('div', 'dash__r');
         r.appendChild(el('span', 'dash__name', st));
         r.appendChild(el('span', 'dash__n', String(items.length)));
@@ -1917,9 +1973,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         t.title = items.slice(0, 3).map(function (x) { return x.item; }).join(', ');
         t.addEventListener('click', function () {
           if (st !== state.selectedStore) shopForReset();
-          state.selectedStore = st;
-          state._storeChosen = true;
-          renderGrocery();
+          openList(st);
           try { t.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch (e) {}
         });
         grid.appendChild(t);
@@ -2111,6 +2165,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         var sc = storeCounts();
         state.selectedStore = sc.order.filter(function (x) { return sc.counts[x]; })[0] || sc.order[0] || 'Lidl';
         shopForReset();
+        if (state.listOpen) { closeList(true); }
       }
       renderGrocery();
       var my = showUndo('Deleted ' + store + (items.length ? ' \u00b7 ' + plural(items.length, 'item') : ''), 'Undo', 7000);
@@ -2133,9 +2188,9 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var store = normalizeStore(name);
       if (store === 'Other') { toast('Pick another name'); return; }
       storeListSet(store, true);
-      state.selectedStore = store; state._storeChosen = true; shopForReset();
+      shopForReset();
       closeStoreSheet();
-      renderGrocery();
+      openList(store);
       run('restoreStore', [{ store: store }],
         function () { toast(store + ' is on the list'); loadData(false); },
         function () { storeListSet(store, false); renderGrocery(); toast('Couldn\u2019t add \u2014 try again'); loadData(false); });
@@ -2233,11 +2288,9 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         }
         r.addEventListener('click', function () {
           state._forStore = state.selectedStore;
-          state.selectedStore = store;
-          state._storeChosen = true;
           if (store !== state._forStore) shopForReset();
           closeStoreSheet();
-          renderGrocery();
+          openList(store);
         });
         list.appendChild(rowEl);
         if (on) current = r;
@@ -2264,8 +2317,26 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && $('storeSheetBg').classList.contains('is-open')) closeStoreSheet();
     });
+    /* Grocery opens with NO list (Oct 11 2026): chips + Bought this week + a hint. A chip (or All stores) opens a list;
+       the X next to its title only closes it (never deletes). Android back / iOS swipe close it first. Not remembered. */
+    function openList(st) {
+      state.selectedStore = normalizeStore(st); state._storeChosen = true;
+      var was = state.listOpen; state.listOpen = true;
+      if (!navHas('shopList')) navPush('shopList', function () { state.listOpen = false; renderGrocery(); });
+      renderGrocery();
+      if (!was) { var c = $('shopCur'); try { var y = c.getBoundingClientRect().top; if (y < 0 || y > window.innerHeight - 160) c.scrollIntoView({ block: 'start' }); } catch (e) {} }
+    }
+    function closeList(quiet) {
+      state.listOpen = false; shopForReset();
+      var mp = $('morePanel'); if (mp && !mp.hidden) { var mt = document.querySelector('[data-more="morePanel"]'); if (mt) mt.click(); }
+      navDrop('shopList');
+      if (!quiet) { renderGrocery(); window.scrollTo(0, 0); }
+    }
+    $('closeListBtn').addEventListener('click', function () { closeList(); });
     function renderGrocery() {
       state.selectedStore = normalizeStore(state.selectedStore || 'Lidl');
+      $('shopOpen').hidden = !state.listOpen;
+      $('shopHint').hidden = !!state.listOpen;
       renderStorePicker();
       var store = state.selectedStore;
       renderShopFor();
@@ -4812,7 +4883,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     }
     function setBudPane(p) {
       state.bud.pane = p;
-      ['week', 'history', 'trends'].forEach(function (k) { $('budPane-' + k).hidden = k !== p; });
+      ['week', 'history', 'trends', 'amazon'].forEach(function (k) { $('budPane-' + k).hidden = k !== p; });
+      if (p !== 'amazon') { state.amz.open = ''; navDrop('amzMonth'); } else if (!state.amz.data && !state.amz.loading) loadAmazon();
       $('budSeg').querySelectorAll('.seg__btn').forEach(function (x) { var on = x.getAttribute('data-bud') === p; x.classList.toggle('is-active', on); x.setAttribute('aria-selected', on ? 'true' : 'false'); });
       if (p !== 'history') { state.bud.openWeek = ''; navDrop('budWeek'); }
       renderBudget();
@@ -4893,7 +4965,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         if (!L.purchases.length) { var ec = el('div', 'card'); ec.appendChild(okLine('Nothing logged yet this week.')); wl.appendChild(ec); }
         else { var pc = el('div', 'card'); L.purchases.forEach(function (p) { pc.appendChild(purchaseRow(p, deletePurchase)); }); wl.appendChild(pc); }
       }
-      renderBudHistory(); renderBudTrends();
+      renderBudHistory(); renderBudTrends(); renderAmazon();
     }
     function syncCats() {
       $('spendCats').querySelectorAll('.chip').forEach(function (x) { var on = x.getAttribute('data-cat') === state.bud.cat; x.classList.toggle('is-active', on); x.setAttribute('aria-checked', on ? 'true' : 'false'); });
@@ -5061,6 +5133,142 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       root.appendChild(a);
     }
 
+
+    /* ====================== Budget -> Amazon (Roni + Kayla only) ======================
+       The server answers getAmazon only for AMAZON_PEOPLE (person from the link token); everyone else gets 403 and never
+       sees the tab. Data lives in memory only (never localStorage). */
+    var AMAZON_VIEWERS = ['Roni', 'Kayla'];
+    state.amz = { data: null, loading: false, err: false, open: '' };
+    function amazonViewer() { return AMAZON_VIEWERS.indexOf(state.viewer) >= 0; }
+    function loadAmazon() {
+      if (!amazonViewer()) return;
+      var A = state.amz; A.loading = true; A.err = false; renderAmazon();
+      ledRun('getAmazon', [{}]).then(function (d) { A.loading = false; A.data = d; renderAmazon(); },
+        function () { A.loading = false; A.err = true; renderAmazon(); });
+    }
+    function amzMonthLong(ym) { var p = String(ym).split('-'); return MONTHS_LONG[+p[1] - 1] + ' ' + p[0]; }
+    function amzMonthShort(ym) { var p = String(ym).split('-'); return MONTHS[+p[1] - 1] + ' \u2019' + p[0].slice(2); }
+    function amzUpdated(s) {
+      if (!s) return '';
+      var d = parseYmd(s.slice(0, 10)); if (!d) return s;
+      var t = s.slice(11, 16), h = +t.slice(0, 2), m = t.slice(3, 5);
+      var today = ymdLocalStr(new Date()) === s.slice(0, 10);
+      return (today ? 'today' : MONTHS[d.getMonth()] + ' ' + d.getDate()) + (t ? ' ' + ((h % 12) || 12) + ':' + m + (h < 12 ? ' AM' : ' PM') : '');
+    }
+    function amzOrderRow(o) {
+      var row = el('div', 'pur amz-ord');
+      var ic = el('span', 'pur__ic' + (o.food === 'food' ? ' is-food' : o.food === 'unknown' ? ' is-unknown' : ''));
+      ic.innerHTML = svg(o.food === 'food' ? 'cart' : 'tag'); row.appendChild(ic);
+      var body = el('div', 'pur__body');
+      body.appendChild(el('div', 'pur__t', o.short));
+      var m = el('div', 'pur__m'); m.appendChild(document.createTextNode(shortDay(o.date) + ' \u00b7 ' + (o.food === 'unknown' ? 'Unknown' : o.category)));
+      if (o.status === 'returned') m.appendChild(pill('Returned', 'pill--over'));
+      if (o.status === 'arriving') m.appendChild(pill('Arriving', 'pill--person'));
+      body.appendChild(m); row.appendChild(body);
+      row.appendChild(el('span', 'pur__amt', money2(o.total)));
+      row.setAttribute('aria-label', o.short + ', ' + money2(o.total) + ', ' + shortDay(o.date));
+      return row;
+    }
+    function amzSplitBlock(title, S) {
+      var w = el('div');
+      var h = el('div', 'amz-split__h'); h.appendChild(el('span', '', title)); h.appendChild(el('span', '', money0(S.total))); w.appendChild(h);
+      var bar = el('div', 'amz-split__bar'), T = Math.max(S.total, 0.01);
+      [['f', S.food], ['n', S.nonfood], ['u', S.unknown]].forEach(function (x) { var b = el('span', 'amz-mo__' + x[0]); b.style.width = (x[1] / T * 100).toFixed(1) + '%'; bar.appendChild(b); });
+      w.appendChild(bar);
+      var nums = el('div', 'amz-split__nums');
+      [['Food', S.food], ['Non-food', S.nonfood], ['Unknown', S.unknown]].forEach(function (x) {
+        var sp = el('span'); sp.appendChild(document.createTextNode(x[0] + ' ')); sp.appendChild(el('b', '', money0(x[1]) + (S.total ? ' \u00b7 ' + Math.round(x[1] / S.total * 100) + '%' : ''))); nums.appendChild(sp);
+      });
+      w.appendChild(nums);
+      return w;
+    }
+    function amzLegend() {
+      var l = el('div', 'amz-legend');
+      [['#2E9E6B', 'Food'], ['var(--accent)', 'Non-food'], ['#B8C0CC', 'Unknown']].forEach(function (x) { var s = el('span'), i = el('i'); i.style.background = x[0]; s.appendChild(i); s.appendChild(document.createTextNode(x[1])); l.appendChild(s); });
+      return l;
+    }
+    function amzOpenMonth(m) {
+      state.amz.open = m; renderAmazon(); window.scrollTo(0, 0);
+      if (!navHas('amzMonth')) navPush('amzMonth', function () { state.amz.open = ''; renderAmazon(); window.scrollTo(0, 0); });
+    }
+    function renderAmazon() {
+      var root = $('budAmazon'); if (!root) return;
+      root.innerHTML = '';
+      if (!amazonViewer()) return;
+      var A = state.amz, D = A.data;
+      var upd = el('div', 'amz-upd');
+      upd.appendChild(el('span', 'amz-upd__t', D ? 'Last updated ' + amzUpdated(D.updated) + (D.through ? ' \u00b7 orders through ' + shortDay(D.through) : '') : (A.loading ? 'Loading\u2026' : '')));
+      var rb = el('button', 'link'); rb.type = 'button'; rb.id = 'amzRefresh'; rb.innerHTML = svg('refresh'); rb.appendChild(document.createTextNode(A.loading ? 'Loading' : 'Refresh'));
+      rb.disabled = A.loading; rb.setAttribute('aria-label', 'Refresh Amazon orders');
+      rb.addEventListener('click', loadAmazon); upd.appendChild(rb);
+      root.appendChild(upd);
+      if (!D) {
+        if (A.err) root.appendChild(makeEmpty('tag', 'Couldn\u2019t load Amazon orders', 'Check your connection, then tap Refresh.'));
+        else root.appendChild(skel(4, true));
+        return;
+      }
+      if (A.open) {
+        var mo = D.months.filter(function (x) { return x.month === A.open; })[0] || { month: A.open, total: 0, n: 0, food: 0, nonfood: 0, unknown: 0 };
+        var back = el('button', 'back'); back.type = 'button'; back.id = 'amzBack'; back.innerHTML = svg('back') + 'All months';
+        back.setAttribute('aria-label', 'Back to all months');
+        back.addEventListener('click', function () { A.open = ''; navDrop('amzMonth'); renderAmazon(); window.scrollTo(0, 0); });
+        var bar = el('div', 'sec sec--bar'); bar.appendChild(back); root.appendChild(bar);
+        root.appendChild(makeSec(amzMonthLong(mo.month) + (mo.month === D.month ? ' so far' : ''), plural(mo.n, 'order')));
+        var sc = el('div', 'card amz-split'); sc.appendChild(amzSplitBlock('Total', { total: mo.total, food: mo.food, nonfood: mo.nonfood, unknown: mo.unknown })); root.appendChild(sc);
+        var list = D.orders.filter(function (o) { return o.date.slice(0, 7) === mo.month; });
+        if (!list.length) { var ec = el('div', 'card'); ec.appendChild(okLine('No Amazon orders that month.')); root.appendChild(ec); return; }
+        root.appendChild(makeSec('Orders', 'biggest first'));
+        var c = el('div', 'card'); list.slice().sort(function (a, b) { return b.total - a.total; }).forEach(function (o) { c.appendChild(amzOrderRow(o)); }); root.appendChild(c);
+        return;
+      }
+      var H = D.headline, grid = el('div', 'kpis amz-kpis');
+      [['This month', money0(H.thisMonth), plural(H.thisMonthN, 'order') + ' so far'], ['Last month', money0(H.lastMonth), plural(H.lastMonthN, 'order')],
+       ['Monthly average', money0(H.avg12), H.avgMonths >= 12 ? 'last 12 months' : 'last ' + plural(H.avgMonths, 'month')], ['Year to date', money0(H.ytd), plural(H.ytdN, 'order')]].forEach(function (k) {
+        var t = el('div', 'kpi'); t.appendChild(el('div', 'kpi__lbl', k[0])); t.appendChild(el('div', 'kpi__v', k[1])); t.appendChild(el('div', 'kpi__s', k[2])); grid.appendChild(t);
+      });
+      root.appendChild(grid);
+      // Month by month: big tappable bars, newest first
+      root.appendChild(makeSec('Month by month', 'tap a month'));
+      root.appendChild(amzLegend());
+      var max = Math.max.apply(null, D.months.map(function (x) { return x.total; }).concat([1]));
+      var mc = el('div', 'card amz-months');
+      D.months.slice().reverse().forEach(function (x) {
+        var b = el('button', 'amz-mo' + (x.month === D.month ? ' is-cur' : '')); b.type = 'button'; b.setAttribute('data-month', x.month);
+        b.appendChild(el('span', 'amz-mo__t', amzMonthShort(x.month)));
+        var tr = el('span', 'amz-mo__bar'), wrap = el('span'); wrap.style.cssText = 'display:flex;height:100%;width:' + (x.total / max * 100).toFixed(1) + '%';
+        [['f', x.food], ['n', x.nonfood], ['u', x.unknown]].forEach(function (y) { if (!y[1]) return; var s2 = el('span', 'amz-mo__' + y[0]); s2.style.width = (y[1] / Math.max(x.total, .01) * 100).toFixed(1) + '%'; wrap.appendChild(s2); });
+        tr.appendChild(wrap); b.appendChild(tr);
+        b.appendChild(el('span', 'amz-mo__amt', money0(x.total)));
+        var ch = el('span', 'amz-mo__ch'); ch.innerHTML = svg('chev'); b.appendChild(ch);
+        b.setAttribute('aria-label', amzMonthLong(x.month) + ', ' + money0(x.total) + ', ' + plural(x.n, 'order'));
+        b.addEventListener('click', function () { amzOpenMonth(x.month); });
+        mc.appendChild(b);
+      });
+      root.appendChild(mc);
+      // Food vs non-food
+      root.appendChild(makeSec('Food vs non-food'));
+      var sp = el('div', 'card amz-split');
+      sp.appendChild(amzSplitBlock('This month', D.split.thisMonth)); sp.appendChild(amzSplitBlock('Last 12 months', D.split.last12));
+      root.appendChild(sp);
+      // This month: categories + biggest orders
+      if (D.categories.length) {
+        root.appendChild(makeSec('Top categories this month'));
+        var cc = el('div', 'card card--pad cats-bars'), cmax = D.categories[0].total || 1;
+        D.categories.slice(0, 6).forEach(function (c) {
+          var r = el('div', 'cbar'), top = el('div', 'cbar__top');
+          top.appendChild(el('span', '', c.category)); top.appendChild(el('b', '', money0(c.total) + ' \u00b7 ' + plural(c.n, 'order'))); r.appendChild(top);
+          var t2 = el('div', 'cbar__tr'), fl = el('div', 'cbar__fill'); fl.style.width = Math.max(2, Math.round(c.total / cmax * 100)) + '%'; t2.appendChild(fl); r.appendChild(t2);
+          cc.appendChild(r);
+        });
+        root.appendChild(cc);
+        root.appendChild(makeSec('Biggest orders this month'));
+        var bc = el('div', 'card'); D.biggest.forEach(function (o) { bc.appendChild(amzOrderRow(o)); }); root.appendChild(bc);
+      }
+      root.appendChild(makeSec('Recent orders'));
+      var rc = el('div', 'card'); D.recent.forEach(function (o) { rc.appendChild(amzOrderRow(o)); });
+      if (!D.recent.length) rc.appendChild(okLine('No Amazon orders yet.'));
+      root.appendChild(rc);
+    }
     /* ---------- Wiring ---------- */
     $('mainNav').addEventListener('click', function (e) {
       var b = e.target.closest('.nav__item[data-screen]');
@@ -5069,7 +5277,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       state._navTouched = true;
       showScreen(b.getAttribute('data-screen'));
     });
-    $('refreshBtn').addEventListener('click', function () { loadData(true); if (state.screen === 'budget') { loadLedger(); if (state.bud.range && state.bud.pane === 'trends') loadLedger('range'); } state.uploads = {}; Object.keys(state).forEach(function (k) { if (k.indexOf('_uplAsk_') === 0) state[k] = false; }); syncUpload(); if (portalOn()) { loadPortal(true); loadInbox(); if (state._provAsked) loadProviders(true); if (state.billing || state._billErr) loadBilling(state.billMonth); } });
+    $('refreshBtn').addEventListener('click', function () { loadData(true); if (state.screen === 'budget') { loadLedger(); if (state.bud.pane === 'amazon') loadAmazon(); if (state.bud.range && state.bud.pane === 'trends') loadLedger('range'); } state.uploads = {}; Object.keys(state).forEach(function (k) { if (k.indexOf('_uplAsk_') === 0) state[k] = false; }); syncUpload(); if (portalOn()) { loadPortal(true); loadInbox(); if (state._provAsked) loadProviders(true); if (state.billing || state._billErr) loadBilling(state.billMonth); } });
     $('addBtn').addEventListener('click', addItem);
     $('newItem').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); addItem(); } });
     $('autoUploadBtn').addEventListener('click', autoUploadList);
