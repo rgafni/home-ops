@@ -7,18 +7,35 @@
   var DKEY = 'homeops.dev';    // random id for this phone/browser (for the private device log)
   var token = null, session = null, device = '';
 
-  // 1) Read the link token once (?k=… or #k=…; a #k= link never reaches any server), save it on this phone,
-  //    and strip it from the address bar and the history entry. The page sends no Referer (meta referrer).
+  // 1) Read the link token once (?k=… or #k=…; a #k= link never reaches any server) and save it on this phone.
+  //    iPhone/iPad Safari (not yet installed): the token STAYS in the address bar as #k=… and the page links a
+  //    manifest without start_url, so "Add to Home Screen" saves this exact URL and the icon opens with the token
+  //    (Home Screen apps get their own storage on iOS, so the icon can't read what Safari saved).
+  //    Everywhere else (Android, desktop, the installed app itself) it is stripped from the address bar.
+  var UA = navigator.userAgent || '';
+  var IOS = /iPhone|iPad|iPod/i.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var STANDALONE = navigator.standalone === true || !!(window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+  var KEEP_IN_HASH = IOS && !STANDALONE;
   try {
     var u = new URL(location.href);
     var k = u.searchParams.get('k');
     var hk = /(?:^#|&)k=([A-Za-z0-9_-]{16,128})/.exec(u.hash || '');
     if (!k && hk) k = hk[1];
-    if (k || hk) {
-      localStorage.setItem(KEY, k);
-      u.searchParams.delete('k');
-      var h = (u.hash || '').replace(/(^#|&)k=[^&]*/, '$1').replace(/^#&/, '#').replace(/^#$/, '');
-      history.replaceState(null, '', u.pathname + (u.search || '') + h);
+    if (k && !/^[A-Za-z0-9_-]{16,128}$/.test(k)) k = null;
+    if (k) localStorage.setItem(KEY, k);
+    var saved = localStorage.getItem(KEY);
+    var rest = (u.hash || '').replace(/(^#|&)k=[^&]*/, '$1').replace(/^#&/, '#').replace(/^#$/, '');
+    u.searchParams.delete('k');
+    if (KEEP_IN_HASH && saved) {
+      // #k=<token>[&rest]: never sent to any server (fragments stay on the phone), saved by Add to Home Screen.
+      var want = u.pathname + (u.search || '') + '#k=' + saved + (rest ? '&' + rest.slice(1) : '');
+      if (want !== location.pathname + location.search + location.hash) history.replaceState(null, '', want);
+    } else if (k || hk || /[?&]k=/.test(location.search)) {
+      history.replaceState(null, '', u.pathname + (u.search || '') + rest);
+    }
+    if (KEEP_IN_HASH) {
+      var ml = document.querySelector('link[rel="manifest"]');
+      if (ml) ml.setAttribute('href', 'manifest-ios.json');   // no start_url → the Home Screen icon opens the URL above
     }
     token = localStorage.getItem(KEY);
     session = localStorage.getItem(SKEY);
@@ -67,6 +84,45 @@
     g.hidden = false;
     var m = $('gateMsg');
     if (m) { m.textContent = msg || ''; m.hidden = !msg; }
+    wirePaste();
+  }
+  /* "Paste your link": fixes an installed icon that has no link (e.g. an iPhone icon added before this fix) without
+     reinstalling. Accepts the whole link or just the k=… part. Checked with the server before it's saved; a wrong
+     link shows nothing but an error. */
+  function linkToken(text) {
+    var t = String(text || '').trim();
+    var m = /[?#&]k=([A-Za-z0-9_-]{16,128})/.exec(t);
+    if (m) return m[1];
+    m = /^k=([A-Za-z0-9_-]{16,128})$/.exec(t) || /^([A-Za-z0-9_-]{16,128})$/.exec(t);
+    return m ? m[1] : '';
+  }
+  var pasteWired = false;
+  function wirePaste() {
+    var f = $('gateForm'); if (!f || pasteWired) return;
+    pasteWired = true;
+    var inp = $('gateLink'), btn = $('gateGo'), m = $('gateMsg');
+    function say(t) { m.textContent = t; m.hidden = !t; }
+    f.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var tk = linkToken(inp.value);
+      if (!tk) { say('That doesn\u2019t look like your link. Paste the whole link Roni sent you.'); return; }
+      if (!C.API_URL || C.API_URL.indexOf('__') === 0) { say('Setup isn\u2019t finished.'); return; }
+      btn.disabled = true; say('');
+      fetch(C.API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, redirect: 'follow',
+        body: JSON.stringify({ k: tk, d: device || undefined, dl: deviceLabel(), action: 'ping', args: [] }) })
+        .then(function (r) { return r.json(); })
+        .then(function (res) {
+          btn.disabled = false;
+          if (res && (res.ok || res.status === 428)) {           // 428 = right link, Google sign-in comes next
+            try { localStorage.setItem(KEY, tk); localStorage.removeItem(SKEY); } catch (e) {}
+            inp.value = '';
+            if (KEEP_IN_HASH) location.replace(location.pathname + '#k=' + tk); else location.reload();
+            return;
+          }
+          say(res && res.status === 429 ? 'Too many tries. Wait a minute and try again.' : 'That link didn\u2019t work. Ask Roni to send it again.');
+        })
+        .catch(function () { btn.disabled = false; say('No connection. Try again.'); });
+    });
   }
   window.__homeopsForget = function () { try { localStorage.removeItem(KEY); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp'); } catch (e) {} clearDataCache(); location.reload(); };
 
