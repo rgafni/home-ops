@@ -16,12 +16,23 @@
   var IOS = /iPhone|iPad|iPod/i.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   var STANDALONE = navigator.standalone === true || !!(window.matchMedia && matchMedia('(display-mode: standalone)').matches);
   var KEEP_IN_HASH = IOS && !STANDALONE;
+  function fnvq(str) { var h = 0x811c9dc5; for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(36); }
+  var launchK = '';
   try {
     var u = new URL(location.href);
     var k = u.searchParams.get('k');
     var hk = /(?:^#|&)k=([A-Za-z0-9_-]{16,128})/.exec(u.hash || '');
     if (!k && hk) k = hk[1];
+    if (hk) launchK = hk[1];
     if (k && !/^[A-Za-z0-9_-]{16,128}$/.test(k)) k = null;
+    // An iPhone Home Screen icon re-opens with the #k= it was saved with. If someone pasted their own link in the app
+    // ("Not you?"), that old icon link is skipped from then on (only a one-way hash of it is kept).
+    if (k && hk && STANDALONE && localStorage.getItem('homeops.kskip') === fnvq('homeops:' + k)) k = null;
+    if (k && k !== localStorage.getItem(KEY)) {
+      // A different person's link: it replaces the saved one; the old person's sign-in session and data cache go too.
+      localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp');
+      localStorage.setItem('homeops.switched', '1');
+    }
     if (k) localStorage.setItem(KEY, k);
     var saved = localStorage.getItem(KEY);
     var rest = (u.hash || '').replace(/(^#|&)k=[^&]*/, '$1').replace(/^#&/, '#').replace(/^#$/, '');
@@ -124,6 +135,52 @@
         .catch(function () { btn.disabled = false; say('No connection. Try again.'); });
     });
   }
+  /* "Not you? Paste your link" (profile sheet): checks the pasted link with the server, then swaps it in.
+     Never shows any saved link. Resolves { ok, person } or { ok: false, error }. */
+  window.__homeopsUseLink = function (text) {
+    var tk = linkToken(text);
+    if (!tk) return Promise.resolve({ ok: false, error: 'That doesn\u2019t look like a link. Paste the whole link Roni sent you.' });
+    if (tk === token) return Promise.resolve({ ok: false, error: 'That\u2019s the link you\u2019re already using.' });
+    return fetch(C.API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, redirect: 'follow',
+      body: JSON.stringify({ k: tk, d: device || undefined, dl: deviceLabel(), action: 'ping', args: [] }) })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!(res && (res.ok || res.status === 428))) return { ok: false, error: res && res.status === 429 ? 'Too many tries. Wait a minute and try again.' : 'That link didn\u2019t work. Ask Roni to send it again.' };
+        try {
+          if (STANDALONE && launchK && launchK !== tk) localStorage.setItem('homeops.kskip', fnvq('homeops:' + launchK));
+          localStorage.setItem(KEY, tk); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp');
+          localStorage.setItem('homeops.switched', '1');
+        } catch (e) {}
+        clearDataCache();
+        var who = (res.user && res.user.person) || '';
+        setTimeout(function () { if (KEEP_IN_HASH) location.replace(location.pathname + '#k=' + tk); else location.reload(); }, 50);
+        return { ok: true, person: who };
+      })
+      .catch(function () { return { ok: false, error: 'No connection. Try again.' }; });
+  };
+  // A new #k= link opened in a tab that already shows the app only changes the hash (no reload): pick it up here.
+  window.addEventListener('hashchange', function () {
+    var m = /(?:^#|&)k=([A-Za-z0-9_-]{16,128})/.exec(location.hash || '');
+    if (!m || m[1] === token) return;
+    try {
+      if (localStorage.getItem(KEY) === m[1]) { location.reload(); return; }
+      localStorage.setItem(KEY, m[1]); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp');
+      localStorage.setItem('homeops.switched', '1'); localStorage.removeItem('homeops.kskip');
+    } catch (e) {}
+    location.reload();
+  });
+  // Chrome and the installed Android app share this storage: if a link was opened in another window, follow it here too.
+  // (iPhone Safari keeps the link in the address bar, so the old link there is swapped first; otherwise the reload
+  // would save it again and two tabs would flip back and forth.)
+  function followLink(cur) {
+    if (KEEP_IN_HASH) location.replace(location.pathname + location.search + '#k=' + cur);   // hash-only: hashchange reloads
+    else location.reload();
+  }
+  window.addEventListener('storage', function (e) { if (e.key === KEY && e.newValue && e.newValue !== token) followLink(e.newValue); });
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState !== 'visible') return;
+    try { var cur = localStorage.getItem(KEY); if (cur && token && cur !== token) followLink(cur); } catch (e) {}
+  });
   window.__homeopsForget = function () { try { localStorage.removeItem(KEY); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp'); } catch (e) {} clearDataCache(); location.reload(); };
 
   // Read-only calls are retried (twice, with a short pause) when Google's redirect hiccups and hands back the
@@ -296,7 +353,29 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startBanner); else startBanner();
 
+  /* Updates: the service worker is re-checked on every open and whenever the app comes back to the front; when a
+     new version takes over (or the page was answered from the offline copy and a newer one arrived), a small
+     "Updated · tap to refresh" pill shows. */
+  function showUpdated() {
+    if (!document.body || document.getElementById('updBar')) return;
+    var b = document.createElement('button');
+    b.id = 'updBar'; b.type = 'button'; b.textContent = 'Updated \u00b7 tap to refresh';
+    b.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top, 0px));z-index:95;' +
+      'min-height:44px;padding:0 18px;border:0;border-radius:999px;background:#1D2B4F;color:#fff;font:700 15px/1 Manrope,system-ui,sans-serif;' +
+      'box-shadow:0 6px 20px rgba(0,0,0,.25)';
+    b.addEventListener('click', function () { location.reload(); });
+    document.body.appendChild(b);
+  }
+  window.__homeopsShowUpdated = showUpdated;
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+    var hadCtl = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange', function () { if (hadCtl) showUpdated(); hadCtl = true; });
+    navigator.serviceWorker.addEventListener('message', function (e) { if (e.data && e.data.type === 'homeops-updated') showUpdated(); });
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(function (reg) {
+        try { reg.update(); } catch (e) {}
+        document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') { try { reg.update(); } catch (e) {} } });
+      }).catch(function () {});
+    });
   }
 })();
