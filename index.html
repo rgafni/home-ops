@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-3tHyuoHN1N+DoukWNWZEt3zij/cZD0MYy5WNWw+nZtM=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-JNsB5d2pyepPTq2Eecd9bpMYAfGi0L/Qo9iw8ko3EH8=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -652,11 +652,32 @@ svg.i.i--sm { width: 16px; height: 16px; stroke-width: 2.25; }
 .bw__sn { flex: 1; min-width: 0; font-weight: 800; }
 .bw__sc { font-size: var(--fs-label); font-weight: 700; color: var(--muted); }
 .bw__st { font-weight: 800; font-variant-numeric: tabular-nums; }
-.bw__it { display: flex; align-items: center; gap: var(--s2); min-height: 40px; padding: 4px 0; }
+.bw__it { display: flex; align-items: flex-start; gap: var(--s2); min-height: 40px; padding: 6px 0; }
+.bw__it .bw__ic { margin-top: 1px; }
+.bw__it .bw__a { padding-top: 1px; }
 .bw__ic { flex: none; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; background: var(--ok-soft, #e6f6ec); color: var(--ok, #1a7f45); }
 .bw__ic svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 3; }
 .bw__m { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-.bw__n { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bw__n { font-weight: 600; line-height: 1.3; }
+/* Expandable rows (Oct 11): names wrap to 2 lines, only very long ones clamp; tap the row (or its name area) to see it all. */
+.xp-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; }
+.is-xopen .xp-name:not(.xp-keep) { display: block; -webkit-line-clamp: unset; overflow: visible; }
+.xp-line { display: flex; align-items: flex-start; gap: 2px; min-width: 0; }
+.xp-line .xp-name { flex: 1; min-width: 0; }
+.xp-line .xp-cue { flex: none; margin: 2px 0 0 4px; }
+.xp-hit { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.xp-hit:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
+.xp-cue { display: inline-flex; vertical-align: -2px; margin-left: 4px; color: var(--faint); }
+.xp-cue svg.i { width: 14px; height: 14px; transform: rotate(90deg); transition: transform .18s ease; }
+.is-xopen .xp-cue svg.i { transform: rotate(-90deg); }
+.xp-more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .2s ease; }
+.xp-more > div { overflow: hidden; min-height: 0; }
+.is-xopen .xp-more { grid-template-rows: 1fr; }
+.xp-dl { margin: 6px 0 2px; display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; font-size: var(--fs-meta); line-height: 1.35; }
+.xp-dl dt { color: var(--faint); font-weight: 700; }
+.xp-dl dd { margin: 0; color: var(--ink, inherit); font-weight: 600; overflow-wrap: anywhere; }
+.xp-dl ul { margin: 0; padding-left: 16px; }
+@media (prefers-reduced-motion: reduce) { .xp-more, .xp-cue svg.i { transition: none; } }
 .bw__w { font-size: 12px; font-weight: 700; color: var(--faint); }
 .bw__a { flex: none; font-size: var(--fs-label); font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
 .bw__empty { margin: 0; padding: 12px 0; color: var(--muted); }
@@ -1115,7 +1136,11 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
 .pur__ic { width: 40px; height: 40px; flex: none; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
 .pur__ic svg.i { width: 20px; height: 20px; }
 .pur__body { flex: 1; min-width: 0; }
-.pur__t { font-weight: 800; font-size: var(--fs-item); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pur__t { font-weight: 800; font-size: var(--fs-item); line-height: 1.3; }
+.pur.xp-row { align-items: flex-start; }
+.pur.xp-row .pur__ic { margin-top: 2px; }
+.pur.xp-row .pur__amt { padding-top: 2px; }
+.pur.xp-row .row__x { align-self: flex-start; min-height: 48px; }
 .pur__m { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: var(--fs-meta); color: var(--muted); }
 .pur__m .pill { height: 22px; font-size: .8125rem; padding: 0 8px; }
 .pur__amt { flex: none; font-weight: 800; font-size: var(--fs-item); }
@@ -2011,6 +2036,34 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       });
     }
 
+    /* ---------- Expandable rows (Oct 11 2026) ----------
+       Names wrap to 2 lines; tap shows the full name + details in place (no modal). Open state survives re-renders.
+       hit = the element that toggles: the whole row when it has no other tap action, else just the name area. */
+    var xpOpen = {};
+    function xpDetails(pairs) {
+      var dl = el('dl', 'xp-dl');
+      pairs.forEach(function (x) { if (x[1] == null || x[1] === '') return; dl.appendChild(el('dt', '', x[0])); var dd = el('dd'); if (typeof x[1] === 'string') dd.textContent = x[1]; else dd.appendChild(x[1]); dl.appendChild(dd); });
+      return dl;
+    }
+    function xpWire(row, hit, key, label, nameEl, pairsFn) {
+      row.classList.add('xp-row');
+      if (nameEl) { nameEl.classList.add('xp-name'); var cue = el('span', 'xp-cue'); cue.innerHTML = svg('chev'); (nameEl.parentNode || row).insertBefore(cue, nameEl.nextSibling); cue.setAttribute('aria-hidden', 'true'); }
+      var more = el('div', 'xp-more'), inner = el('div'); more.appendChild(inner);
+      (nameEl && nameEl.parentNode ? nameEl.parentNode : row).appendChild(more);
+      if (nameEl && cue) { var line = el('span', 'xp-line'); nameEl.parentNode.insertBefore(line, nameEl); line.appendChild(nameEl); line.appendChild(cue); }
+      hit.classList.add('xp-hit'); hit.setAttribute('role', 'button'); hit.tabIndex = 0;
+      function set(open, anim) {
+        row.classList.toggle('is-xopen', open); hit.setAttribute('aria-expanded', open ? 'true' : 'false');
+        hit.setAttribute('aria-label', (open ? 'Hide details: ' : 'Show details: ') + label);
+        if (open && !inner.firstChild) inner.appendChild(xpDetails(pairsFn()));
+        if (open) xpOpen[key] = 1; else delete xpOpen[key];
+      }
+      set(!!xpOpen[key]);
+      hit.addEventListener('click', function (ev) { if (ev.target.closest && ev.target.closest('button, a, input') && ev.target.closest('button, a, input') !== hit) return; set(!row.classList.contains('is-xopen')); });
+      hit.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); set(!row.classList.contains('is-xopen')); } });
+      return row;
+    }
+
     /* ---------- Bought this week (Oct 11 2026) ----------
        Roni's tick = bought: the item leaves the open list and shows here (Undo puts it back). Receipt lines land here too.
        Everyone sees items, stores, who asked and the day; $ only when the server says money (Roni / Kayla). */
@@ -2032,7 +2085,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         st.items.forEach(function (it) {
           var r = el('div', 'bw__it'), ic = el('span', 'bw__ic'), m = el('div', 'bw__m');
           ic.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
-          m.appendChild(el('span', 'bw__n', (Number(it.qty) > 1 ? it.qty + ' \u00d7 ' : '') + it.item));
+          var nm = el('span', 'bw__n', (Number(it.qty) > 1 ? it.qty + ' \u00d7 ' : '') + it.item); m.appendChild(nm);
           var w = [];
           if (it.askedBy) w.push('for ' + (it.askedBy === shopMe() ? 'you' : it.askedBy));
           else if (it.source === 'receipt') w.push('receipt');
@@ -2040,6 +2093,13 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           m.appendChild(el('span', 'bw__w', w.join(' \u00b7 ')));
           r.appendChild(ic); r.appendChild(m);
           if (b.money && it.amount != null) r.appendChild(el('span', 'bw__a', bwMoney(it.amount)));
+          xpWire(r, r, 'bw:' + (it.id || st.store + it.item), it.item, nm, function () {
+            var q = Number(it.qty) || 1, pr = null;
+            if (b.money && it.amount != null) pr = bwMoney(it.amount) + (q > 1 ? ' (' + bwMoney(it.amount / q) + ' each)' : '');   // parents only: the server sends no amount to kids
+            return [['Store', st.store], ['For', it.askedBy ? (it.askedBy === shopMe() ? 'you' : it.askedBy) : ''],
+              ['From', it.source === 'receipt' ? 'Receipt' : it.source === 'list' ? 'Shopping list' : ''], ['Date', bwDay(it.date) + ' ' + bwShort(it.date)],
+              ['Qty', q > 1 ? String(q) : '1'], ['Price', pr]];
+          });
           sec.appendChild(r);
         });
         box.appendChild(sec);
@@ -4943,7 +5003,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var row = el('div', 'pur');
       var ic = el('span', 'pur__ic'); ic.innerHTML = svg(CAT_ICON[p.category] || 'tag'); row.appendChild(ic);
       var body = el('div', 'pur__body');
-      body.appendChild(el('div', 'pur__t', p.store || p.category));
+      var pt = el('div', 'pur__t', p.store || p.category); body.appendChild(pt);
       var m = el('div', 'pur__m');
       var bits = [shortDay(p.date)]; if (p.store) bits.push(p.category); if (p.who && p.who !== state.viewer) bits.push(p.who);
       m.appendChild(document.createTextNode(bits.join(' \u00b7 ')));
@@ -4951,6 +5011,10 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (p.source === 'migrated') m.appendChild(pill('Earlier total', ''));
       body.appendChild(m); row.appendChild(body);
       row.appendChild(el('span', 'pur__amt', money2(p.amount)));
+      xpWire(row, body, 'pur:' + p.id, p.store || p.category, pt, function () {
+        return [['Store', p.store], ['Category', p.category], ['Who', p.who], ['Date', shortDay(p.date)], ['Amount', money2(p.amount)],
+          ['Source', p.source === 'receipt' ? 'Receipt' : p.source === 'migrated' ? 'Earlier total' : 'Typed in'], ['Note', p.note]];
+      });
       if (onDelete) {
         var x = el('button', 'row__x'); x.type = 'button'; x.setAttribute('aria-label', 'Remove ' + money2(p.amount) + ' ' + (p.store || p.category)); x.innerHTML = svg('x');
         x.addEventListener('click', function () { onDelete(p); }); row.appendChild(x);
@@ -5311,14 +5375,20 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var ic = el('span', 'pur__ic' + (o.food === 'food' ? ' is-food' : o.food === 'unknown' ? ' is-unknown' : ''));
       ic.innerHTML = svg(o.food === 'food' ? 'cart' : 'tag'); row.appendChild(ic);
       var body = el('div', 'pur__body');
-      body.appendChild(el('div', 'pur__t', o.short));
+      var aparts = String(o.title || o.short || '').split(' | ').filter(Boolean);
+      var at = el('div', 'pur__t' + (aparts.length > 1 ? ' xp-keep' : ''), aparts.length ? aparts.join(' \u00b7 ') : o.short); body.appendChild(at);
       var m = el('div', 'pur__m'); m.appendChild(document.createTextNode(shortDay(o.date) + ' \u00b7 ' + (o.food === 'unknown' ? 'Unknown' : o.category)));
       if (o.food === 'food') m.appendChild(pill('Food goal', 'pill--under'));
       if (o.status === 'returned') m.appendChild(pill('Returned', 'pill--over'));
       if (o.status === 'arriving') m.appendChild(pill('Arriving', 'pill--person'));
       body.appendChild(m); row.appendChild(body);
       row.appendChild(el('span', 'pur__amt', money2(o.total)));
-      row.setAttribute('aria-label', o.short + ', ' + money2(o.total) + ', ' + shortDay(o.date));
+      xpWire(row, row, 'amz:' + o.id, (o.short || '') + ', ' + money2(o.total) + ', ' + shortDay(o.date), at, function () {
+        var parts = String(o.title || o.short || '').split(' | ').filter(Boolean), items;
+        if (parts.length > 1) { items = el('ul'); parts.forEach(function (x) { items.appendChild(el('li', '', x)); }); } else items = parts[0] || '';
+        return [['Items', parts.length > 1 ? items : ''], ['Date', shortDay(o.date)], ['Category', o.food === 'unknown' ? 'Unknown' : o.category],
+          ['Goal', o.food === 'food' ? 'Food' : 'Amazon (non-food)'], ['Status', o.status ? o.status.charAt(0).toUpperCase() + o.status.slice(1) : ''], ['Total', money2(o.total)]];
+      });
       return row;
     }
     function amzSplitBlock(title, S) {
