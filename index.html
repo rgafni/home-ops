@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-JNsB5d2pyepPTq2Eecd9bpMYAfGi0L/Qo9iw8ko3EH8=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-meHkGOdJIZ42eJTd8M4IM4tfL7b7GFslzvJV4yeMjyM=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -659,6 +659,12 @@ svg.i.i--sm { width: 16px; height: 16px; stroke-width: 2.25; }
 .bw__ic svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 3; }
 .bw__m { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .bw__n { font-weight: 600; line-height: 1.3; }
+.amz-tag { display: inline-block; align-self: flex-start; margin: 2px 0; padding: 1px 6px; border-radius: 6px; font-size: 11px; font-weight: 800; letter-spacing: .02em; background: #FFF3DC; color: #8A5300; }
+.amz-wk__h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 12px 14px 4px; }
+.amz-wk__h b { font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+.amz-wk__list { padding: 0 14px 8px; }
+.amz-wk .bw__n { overflow-wrap: anywhere; }
+.amz-fresh { font-size: 12px; font-weight: 600; color: var(--muted); margin: 4px 2px 10px; }
 /* Expandable rows (Oct 11): names wrap to 2 lines, only very long ones clamp; tap the row (or its name area) to see it all. */
 .xp-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; }
 .is-xopen .xp-name:not(.xp-keep) { display: block; -webkit-line-clamp: unset; overflow: visible; }
@@ -1934,6 +1940,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       $('title').textContent = TITLES[name];
       window.scrollTo(0, 0);
       if (name === 'budget' && state.data && isParent(state.viewer) && !state.bud.led && !state.bud._loading) loadLedger();
+      if (name === 'budget' && state.amz && amazonViewer() && !state.amz.loading && (!state.amz.data || Date.now() - (state.amz.at || 0) > 60000)) loadAmazon();   // Amazon spend is never older than a minute when Budget opens
       syncUpload();
     }
     function updateHeader() {
@@ -2087,17 +2094,19 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           ic.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
           var nm = el('span', 'bw__n', (Number(it.qty) > 1 ? it.qty + ' \u00d7 ' : '') + it.item); m.appendChild(nm);
           var w = [];
+          if (it.amazon) w.push('Amazon order' + (it.status === 'returned' ? ' (returned)' : it.status === 'arriving' ? ' (arriving)' : ''));
           if (it.askedBy) w.push('for ' + (it.askedBy === shopMe() ? 'you' : it.askedBy));
           else if (it.source === 'receipt') w.push('receipt');
           w.push(pastWeek ? bwDay(it.date) + ' ' + bwShort(it.date) : bwDay(it.date));
           m.appendChild(el('span', 'bw__w', w.join(' \u00b7 ')));
+          if (it.amazon) { var tg = el('span', 'amz-tag', 'Amazon'); m.insertBefore(tg, m.lastChild); }
           r.appendChild(ic); r.appendChild(m);
           if (b.money && it.amount != null) r.appendChild(el('span', 'bw__a', bwMoney(it.amount)));
           xpWire(r, r, 'bw:' + (it.id || st.store + it.item), it.item, nm, function () {
             var q = Number(it.qty) || 1, pr = null;
             if (b.money && it.amount != null) pr = bwMoney(it.amount) + (q > 1 ? ' (' + bwMoney(it.amount / q) + ' each)' : '');   // parents only: the server sends no amount to kids
             return [['Store', st.store], ['For', it.askedBy ? (it.askedBy === shopMe() ? 'you' : it.askedBy) : ''],
-              ['From', it.source === 'receipt' ? 'Receipt' : it.source === 'list' ? 'Shopping list' : ''], ['Date', bwDay(it.date) + ' ' + bwShort(it.date)],
+              ['From', it.amazon ? 'Amazon order (counts toward Food only)' : it.source === 'receipt' ? 'Receipt' : it.source === 'list' ? 'Shopping list' : ''], ['Date', bwDay(it.date) + ' ' + bwShort(it.date)],
               ['Qty', q > 1 ? String(q) : '1'], ['Price', pr]];
           });
           sec.appendChild(r);
@@ -4293,7 +4302,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         window.__bootShow('Couldn\u2019t load', msg, true);
       }
       try {
-        run('getData', toastOk ? [{ fresh: true }] : [],
+        var wantFresh = toastOk || !window.__freshDone; window.__freshDone = true;   // a page load / reload always skips the server's 5-min cache
+        run('getData', wantFresh ? [{ fresh: true }] : [],
           function (data) {
             clearTimeout(slowTimer);
             if (seq !== loadSeq && window.__booted) return;
@@ -5358,7 +5368,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     function loadAmazon() {
       if (!amazonViewer()) return;
       var A = state.amz; A.loading = true; A.err = false; renderAmazon();
-      ledRun('getAmazon', [{}]).then(function (d) { A.loading = false; A.data = d; renderAmazon(); },
+      ledRun('getAmazon', [{ t: Date.now() }]).then(function (d) { A.loading = false; A.data = d; A.at = Date.now(); renderAmazon(); },
         function () { A.loading = false; A.err = true; renderAmazon(); });
     }
     function amzMonthLong(ym) { var p = String(ym).split('-'); return MONTHS_LONG[+p[1] - 1] + ' ' + p[0]; }
@@ -5413,6 +5423,35 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       state.amz.open = m; renderAmazon(); window.scrollTo(0, 0);
       if (!navHas('amzMonth')) navPush('amzMonth', function () { state.amz.open = ''; renderAmazon(); window.scrollTo(0, 0); });
     }
+    /* Bought this week on Amazon (Sun-Sat): every non-food order, same row as Food's "Bought this week" (wraps, tap to expand).
+       Food bought on Amazon is listed under Food (Grocery > Bought this week, tagged Amazon) and counts toward Food only. */
+    function amzWeekEl(D) {
+      var W = D.week, box = document.createDocumentFragment(), goal = Number(D.goal) || 250;
+      box.appendChild(makeSec('Bought this week', bwShort(W.start) + ' \u2013 ' + bwShort(W.end)));
+      var c = el('div', 'card amz-wk'), h = el('div', 'amz-wk__h');
+      h.appendChild(el('span', 'budget__label', plural(W.nonfood.length, 'non-food order')));
+      var tot = el('b', '', money2(W.nonfoodTotal) + ' of ' + money0(goal)); h.appendChild(tot); c.appendChild(h);
+      var st = W.nonfoodTotal > goal ? 'over' : W.nonfoodTotal >= goal * 0.8 ? 'near' : 'under';
+      var pp = el('div', 'amz-wk__list');
+      pp.appendChild(pill(st === 'over' ? 'Over by ' + money0(W.nonfoodTotal - goal) : money0(goal - W.nonfoodTotal) + ' left', 'pill--' + st));
+      if (!W.nonfood.length) pp.appendChild(el('p', 'bw__empty', 'No non-food Amazon orders yet this week.'));
+      W.nonfood.forEach(function (o) {
+        var r = el('div', 'bw__it'), ic = el('span', 'bw__ic'), m = el('div', 'bw__m');
+        ic.innerHTML = svg('tag');
+        var name = String(o.title || o.short || 'Amazon order').split(' | ').filter(Boolean).join(' \u00b7 ');
+        var nm = el('span', 'bw__n', name); m.appendChild(nm);
+        m.appendChild(el('span', 'bw__w', bwDay(o.date) + ' ' + bwShort(o.date) + (o.status === 'arriving' ? ' \u00b7 Arriving' : o.status === 'returned' ? ' \u00b7 Returned' : '') + (o.food === 'unknown' ? ' \u00b7 not sorted' : '')));
+        r.appendChild(ic); r.appendChild(m); r.appendChild(el('span', 'bw__a', money2(o.total)));
+        xpWire(r, r, 'amzwk:' + o.id, name, nm, function () {
+          return [['Store', 'Amazon'], ['Category', o.food === 'unknown' ? 'Unknown' : o.category], ['Date', bwDay(o.date) + ' ' + bwShort(o.date)],
+            ['Status', o.status ? o.status.charAt(0).toUpperCase() + o.status.slice(1) : ''], ['Price', money2(o.total)], ['Goal', 'Amazon (non-food)']];
+        });
+        pp.appendChild(r);
+      });
+      c.appendChild(pp); box.appendChild(c);
+      if (W.food.length) box.appendChild(el('p', 'amz-rule', 'Plus ' + money2(W.foodTotal) + ' of food from Amazon this week (' + plural(W.food.length, 'order') + ') \u2014 listed under Grocery \u203a Bought this week and counted toward Food only.'));
+      return box;
+    }
     function renderAmazon() {
       var root = $('budAmazon'); if (!root) return;
       root.innerHTML = '';
@@ -5424,6 +5463,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       rb.disabled = A.loading; rb.setAttribute('aria-label', 'Refresh Amazon orders');
       rb.addEventListener('click', loadAmazon); upd.appendChild(rb);
       root.appendChild(upd);
+      if (D && D.fetchedAt) root.appendChild(el('p', 'amz-fresh', 'Read from the sheet ' + amzUpdated(D.fetchedAt) + '. Newest order on file: ' + (D.through ? shortDay(D.through) : 'none') + '.'));
       if (!D) {
         if (A.err) root.appendChild(makeEmpty('tag', 'Couldn\u2019t load Amazon orders', 'Check your connection, then tap Refresh.'));
         else root.appendChild(skel(4, true));
@@ -5444,6 +5484,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         var c = el('div', 'card'); list.slice().sort(function (a, b) { return b.total - a.total; }).forEach(function (o) { c.appendChild(amzOrderRow(o)); }); root.appendChild(c);
         return;
       }
+      if (D.week) root.appendChild(amzWeekEl(D));
       var H = D.headline, grid = el('div', 'kpis amz-kpis');
       function pf(v) { return v ? ' \u00b7 + ' + money0(v) + ' food' : ''; }
       [['This month (non-food)', money0(H.thisMonth), plural(H.thisMonthN, 'order') + ' so far' + pf(H.thisMonthFood)], ['Last month (non-food)', money0(H.lastMonth), plural(H.lastMonthN, 'order') + pf(H.lastMonthFood)],
@@ -5508,6 +5549,14 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (!D.recent.length) rc.appendChild(okLine('No Amazon orders yet.'));
       root.appendChild(rc);
     }
+    /* Home-screen apps (Android Chrome / iPhone Safari) often resume instead of reloading: treat a return after 2+ min,
+       or a back-forward-cache restore, like a reload so spend numbers are never stale. */
+    (function () {
+      var hidAt = 0;
+      function resume() { if (!window.__booted) return; loadData(false); if (state.screen === 'budget' && isParent(state.viewer)) { loadLedger(); loadGoals(); if (amazonViewer()) loadAmazon(); } }
+      document.addEventListener('visibilitychange', function () { if (document.hidden) hidAt = Date.now(); else if (hidAt && Date.now() - hidAt > 120000) { window.__freshDone = false; resume(); } });
+      window.addEventListener('pageshow', function (e) { if (e.persisted) { window.__freshDone = false; resume(); } });
+    })();
     /* ---------- Wiring ---------- */
     $('mainNav').addEventListener('click', function (e) {
       var b = e.target.closest('.nav__item[data-screen]');
