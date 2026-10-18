@@ -18,12 +18,8 @@
   var KEEP_IN_HASH = IOS && !STANDALONE;
   function fnvq(str) { var h = 0x811c9dc5; for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(36); }
   var launchK = '';
-  // Backup copy of the saved link in a first-party cookie (only this app's own path), in case the phone clears
-  // localStorage. Read back only when localStorage has no link. Never set by anything but this file.
-  var CK = 'homeops_k', CKPATH = (location.pathname || '/').replace(/[^\/]*$/, '') || '/';
-  function ckGet() { try { var m = /(?:^|;\s*)homeops_k=([A-Za-z0-9_-]{16,128})(?:;|$)/.exec(document.cookie || ''); return m ? m[1] : ''; } catch (e) { return ''; } }
-  function ckSet(v) { try { document.cookie = CK + '=' + v + '; Max-Age=34560000; Path=' + CKPATH + '; SameSite=Strict; Secure'; } catch (e) {} }
-  function ckDel() { try { document.cookie = CK + '=; Max-Age=0; Path=' + CKPATH + '; SameSite=Strict; Secure'; } catch (e) {} }
+  // No cookie copy of the link (it would ride along on every request). Clear any left by an earlier build or test.
+  try { var CKP = (location.pathname || '/').replace(/[^\/]*$/, '') || '/'; ['/', CKP].forEach(function (pp) { document.cookie = 'homeops_k=; Max-Age=0; Path=' + pp + '; SameSite=Strict; Secure'; }); } catch (e) {}
   function skip(tk) { try { if (tk) localStorage.setItem('homeops.kskip', fnvq('homeops:' + tk)); } catch (e) {} }
   try {
     var u = new URL(location.href);
@@ -36,7 +32,6 @@
     // ("Not you?"), that old icon link is skipped from then on (only a one-way hash of it is kept).
     // The same goes for an old link the server turned down, and for one replaced on the paste-your-link screen.
     if (k && localStorage.getItem('homeops.kskip') === fnvq('homeops:' + k)) k = null;
-    if (!localStorage.getItem(KEY) && ckGet()) localStorage.setItem(KEY, ckGet());   // localStorage was cleared: use the backup
     var prevK = localStorage.getItem(KEY);
     if (k && prevK && k !== prevK) localStorage.setItem('homeops.kprev', prevK);   // kept until the new link is confirmed
     if (k && k !== prevK) {
@@ -46,7 +41,6 @@
     }
     if (k) localStorage.setItem(KEY, k);
     var saved = localStorage.getItem(KEY);
-    if (saved) ckSet(saved);
     var rest = (u.hash || '').replace(/(^#|&)k=[^&]*/, '$1').replace(/^#&/, '#').replace(/^#$/, '');
     u.searchParams.delete('k');
     if (KEEP_IN_HASH && saved) {
@@ -139,7 +133,6 @@
           if (res && (res.ok || res.status === 428)) {           // 428 = right link, Google sign-in comes next
             try { localStorage.setItem(KEY, tk); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.kprev'); } catch (e) {}
             if (launchK && launchK !== tk) skip(launchK);   // an old link on the Home Screen icon no longer overrides this one
-            ckSet(tk);
             inp.value = '';
             if (KEEP_IN_HASH) location.replace(location.pathname + '#k=' + tk); else location.reload();
             return;
@@ -166,7 +159,6 @@
           localStorage.setItem(KEY, tk); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp');
           localStorage.setItem('homeops.switched', '1');
         } catch (e) {}
-        ckSet(tk);
         clearDataCache();
         var who = (res.user && res.user.person) || '';
         setTimeout(function () { if (KEEP_IN_HASH) location.replace(location.pathname + '#k=' + tk); else location.reload(); }, 50);
@@ -179,7 +171,10 @@
     var m = /(?:^#|&)k=([A-Za-z0-9_-]{16,128})/.exec(location.hash || '');
     if (!m || m[1] === token) return;
     try {
-      if (localStorage.getItem('homeops.kskip') === fnvq('homeops:' + m[1])) return;   // a link already turned down or replaced
+      if (localStorage.getItem('homeops.kskip') === fnvq('homeops:' + m[1])) {   // a link already turned down or replaced
+        history.replaceState(null, '', location.pathname + location.search + (KEEP_IN_HASH && token ? '#k=' + token : ''));
+        return;
+      }
       if (localStorage.getItem(KEY) === m[1]) { location.reload(); return; }
       if (localStorage.getItem(KEY)) localStorage.setItem('homeops.kprev', localStorage.getItem(KEY));   // kept until the new link is confirmed
       localStorage.setItem(KEY, m[1]); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp');
@@ -199,7 +194,7 @@
     if (document.visibilityState !== 'visible') return;
     try { var cur = localStorage.getItem(KEY); if (cur && token && cur !== token) followLink(cur); } catch (e) {}
   });
-  window.__homeopsForget = function () { ckDel(); try { localStorage.removeItem('homeops.kprev'); localStorage.removeItem(KEY); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp'); } catch (e) {} clearDataCache(); location.reload(); };
+  window.__homeopsForget = function () { try { localStorage.removeItem('homeops.kprev'); localStorage.removeItem(KEY); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp'); } catch (e) {} clearDataCache(); location.reload(); };
 
   // Read-only calls are retried (twice, with a short pause) when Google's redirect hiccups and hands back the
   // plain "Home Ops API" page instead of JSON. Writes are never retried, so nothing is saved twice.
@@ -240,11 +235,10 @@
         var prev = null; try { prev = localStorage.getItem('homeops.kprev'); localStorage.removeItem('homeops.kprev'); } catch (e) {}
         if (prev && prev !== token) {
           try { localStorage.setItem(KEY, prev); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp'); } catch (e) {}
-          ckSet(prev); clearDataCache();
+          clearDataCache();
           if (KEEP_IN_HASH) location.replace(location.pathname + '#k=' + prev); else location.reload();
           return;
         }
-        ckDel();
         try { localStorage.removeItem(KEY); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp'); } catch (e) {}
         clearDataCache();
         token = null;
