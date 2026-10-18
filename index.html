@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-zKDULb4WMG2HCxo2+EdZg/1PYmBhGXfQ+nrzyQrScjg='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-+i0jPwCTpEXcrQUUcytf9vXbpRgTuKZfsE4ZVVDrt9Q='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -1874,8 +1874,9 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         var sh = (d && d.shopping) || [];
         var ids = e.meta.ids || [];
         if (ids.length && ids.every(function (id) { return sh.some(function (x) { return x.id === id; }); })) { cb(true); return; }
+        if (d && d.clientIds && ids.length) { cb(false); return; }        // this server keeps the phone's id: the id alone decides
         var ok = e.meta.adds.every(function (a) { return sqCount(sh, a[0], a[1]) > a[2]; }), sid = '';
-        if (ok && e.fn === 'addItem') {
+        if (ok && e.fn === 'addItem' && !(d && d.clientIds)) {             // older server only: borrow the matching row's id
           var a0 = e.meta.adds[0], m = sh.filter(function (x) { return String(x.item).trim().toLowerCase() === String(a0[0]).trim().toLowerCase() && normalizeStore(x.store) === normalizeStore(a0[1]); });
           sid = m.length ? m[m.length - 1].id : '';
         }
@@ -1912,6 +1913,12 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       function finish(res, err, quiet) {
         sq.busy = false; sq.cur = null;
         var i = sq.list.indexOf(e); if (i >= 0) sq.list.splice(i, 1);
+        if (!err && !quiet && i > 0) {                                     // a set-aside older save of the same row must not overwrite this one later
+          var eids = sqIds(e);
+          sq.list = sq.list.filter(function (x, j) {
+            return !(j < i && x.parked && x.fn === e.fn && sqIds(x).some(function (y) { return eids.indexOf(y) >= 0; }));
+          });
+        }
         if (!err && res && e.args && e.args[0]) {
           if (e.fn === 'addItem' && res.id) sqRemap(e.args[0].id, res.id);
           if (e.fn === 'addItemsBulk' && e.meta && e.meta.tmp && res.ids) e.meta.tmp.forEach(function (t, k) { if (res.ids[k]) sqRemap(t, res.ids[k]); });
@@ -5767,7 +5774,9 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (!L || b._rloading) { root.appendChild(skel(4, true)); return; }
       var R = L.range;
       // This week vs usual
-      var cmp = el('div', 'card bud-cmp'), C = L.compare;
+      var C = L.compare;
+      if (C) {                                         // a partial answer without compare skips this card instead of failing
+      var cmp = el('div', 'card bud-cmp');
       cmp.appendChild(el('div', 'bud-cmp__lbl', 'This week so far'));
       var big = el('div', 'bud-cmp__big', money0(C.thisWeek)); cmp.appendChild(big);
       var line = el('div', 'bud-cmp__line');
@@ -5778,6 +5787,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         line.appendChild(tag); line.appendChild(document.createTextNode(' than your usual week (' + money0(C.avgWeek) + ')'));
       }
       cmp.appendChild(line); root.appendChild(cmp);
+      }
+      if (!R) return;
       if (!R.n) { root.appendChild(makeEmpty('tag', 'No purchases in this range', 'Pick a longer range, or log a purchase on This week.')); appendAllTime(root, L); return; }
       // KPI tiles
       var grid = el('div', 'kpis');
