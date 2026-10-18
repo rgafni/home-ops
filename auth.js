@@ -161,7 +161,7 @@
           localStorage.setItem(KEY, tk); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp');
           localStorage.setItem('homeops.switched', '1');
         } catch (e) {}
-        clearOutbox(); clearDataCache();
+        clearDataCache();                     // the queue stays with its own link (keyed by link) and replays when it is used again
         var who = (res.user && res.user.person) || '';
         setTimeout(function () { if (KEEP_IN_HASH) location.replace(location.pathname + '#k=' + tk); else location.reload(); }, 50);
         return { ok: true, person: who };
