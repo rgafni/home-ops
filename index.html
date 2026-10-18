@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-8tlWlX1SfUvCaLyzRFCgQ1xn2PjPyJH6xr+SEcHjULE=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-yrZXHcgb5vZdvKqKneOj67qHFwH6TQ3IvfQKyozt80I=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -5480,7 +5480,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         pp.appendChild(r);
       });
       c.appendChild(pp); box.appendChild(c);
-      if (W.food.length) box.appendChild(el('p', 'amz-rule', 'Plus ' + money2(W.foodTotal) + ' of food from Amazon this week (' + plural(W.food.length, 'order') + ', listed under Grocery \u203a Bought this week and counted toward Food only.'));
+      if (W.food.length) box.appendChild(el('p', 'amz-rule', 'Plus ' + money2(W.foodTotal) + ' of food from Amazon this week (' + plural(W.food.length, 'order') + '), listed under Grocery \u203a Bought this week and counted toward Food only.'));
       return box;
     }
     function renderAmazon() {
