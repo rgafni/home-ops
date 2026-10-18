@@ -1,4 +1,4 @@
-/* install.css: the "Install app" help sheet (shared by Roni's web apps). Accent comes from --ai-accent. */
+/* install.css: the "Install app" help sheet (shared by the owner's web apps). Accent comes from --ai-accent. */
 .ai-bg { position: fixed; inset: 0; z-index: 2147483000; display: flex; align-items: flex-end; justify-content: center;
   background: rgba(16, 24, 40, .45); animation: aiFade .18s ease both; }
 .ai-sheet { width: 100%; max-width: 520px; box-sizing: border-box; padding: 10px 20px calc(18px + env(safe-area-inset-bottom));

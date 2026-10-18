@@ -1,4 +1,4 @@
-/* install.js: one "Install app" flow shared by Roni's web apps (same file in every repo).
+/* install.js: one "Install app" flow shared by the owner's web apps (same file in every repo).
    Load it in <head> (after any link-token script):
      <script src="install.js" data-name="Gafni House" data-ns="homeops" data-token-key="homeops.k"></script>
    API: AppInstall.mode() -> 'standalone' | 'prompt' | 'chrome' | 'handoff' | 'steps'

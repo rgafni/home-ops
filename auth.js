@@ -122,7 +122,7 @@
     f.addEventListener('submit', function (ev) {
       ev.preventDefault();
       var tk = linkToken(inp.value);
-      if (!tk) { say('That doesn\u2019t look like your link. Paste the whole link Roni sent you.'); return; }
+      if (!tk) { say('That doesn\u2019t look like your link. Paste your whole personal link.'); return; }
       if (!C.API_URL || C.API_URL.indexOf('__') === 0) { say('Setup isn\u2019t finished.'); return; }
       btn.disabled = true; say('');
       fetch(C.API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, redirect: 'follow',
@@ -137,7 +137,7 @@
             if (KEEP_IN_HASH) location.replace(location.pathname + '#k=' + tk); else location.reload();
             return;
           }
-          say(res && res.status === 429 ? 'Too many tries. Wait a minute and try again.' : 'That link didn\u2019t work. Ask Roni to send it again.');
+          say(res && res.status === 429 ? 'Too many tries. Wait a minute and try again.' : 'That link didn\u2019t work. Ask for a new link.');
         })
         .catch(function () { btn.disabled = false; say('No connection. Try again.'); });
     });
@@ -146,13 +146,13 @@
      Never shows any saved link. Resolves { ok, person } or { ok: false, error }. */
   window.__homeopsUseLink = function (text) {
     var tk = linkToken(text);
-    if (!tk) return Promise.resolve({ ok: false, error: 'That doesn\u2019t look like a link. Paste the whole link Roni sent you.' });
+    if (!tk) return Promise.resolve({ ok: false, error: 'That doesn\u2019t look like a link. Paste your whole personal link.' });
     if (tk === token) return Promise.resolve({ ok: false, error: 'That\u2019s the link you\u2019re already using.' });
     return fetch(C.API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, redirect: 'follow',
       body: JSON.stringify({ k: tk, d: device || undefined, dl: deviceLabel(), action: 'ping', args: [] }) })
       .then(function (r) { return r.json(); })
       .then(function (res) {
-        if (!(res && (res.ok || res.status === 428))) return { ok: false, error: res && res.status === 429 ? 'Too many tries. Wait a minute and try again.' : 'That link didn\u2019t work. Ask Roni to send it again.' };
+        if (!(res && (res.ok || res.status === 428))) return { ok: false, error: res && res.status === 429 ? 'Too many tries. Wait a minute and try again.' : 'That link didn\u2019t work. Ask for a new link.' };
         try {
           if (launchK && launchK !== tk) skip(launchK);
           localStorage.removeItem('homeops.kprev');
@@ -221,7 +221,7 @@
         throw new Error('The server answered oddly. Try again.');
       }
       if (res && res.ok) { window.__homeopsUser = res.user; try { localStorage.removeItem('homeops.kprev'); } catch (e) {} return ok(res.result); }
-      if (res && res.status === 428) {        // Google sign-in needed (Roni's link only)
+      if (res && res.status === 428) {        // Google sign-in needed (the owner's link only)
         try { localStorage.removeItem(SKEY); localStorage.setItem('homeops.si', '1'); } catch (e) {}
         session = null;
         clearDataCache();

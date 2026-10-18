@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-yrZXHcgb5vZdvKqKneOj67qHFwH6TQ3IvfQKyozt80I=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-3+17y5/Fs57IQyiu1EaDpndIrp7VPg3m7rTZS9S4FcA=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -367,7 +367,7 @@ svg.i.i--sm { width: 16px; height: 16px; stroke-width: 2.25; }
 .td-done__toggle[aria-expanded="true"] svg.i { transform: rotate(90deg); }
 .td-done__clear { flex: none; height: var(--tap); padding: 0 8px; border: 0; background: none; font-size: var(--fs-meta);
   font-weight: 700; color: var(--accent); }
-/* Inbox card (My day, Roni only) */
+/* Inbox card (My day, owner only) */
 #meWorkInbox:not(:empty) { margin-bottom: var(--s6); }
 .ib-row { display: flex; align-items: center; min-height: 64px; border-bottom: 1px solid var(--line); }
 .ib-row:last-child { border-bottom: 0; }
@@ -385,7 +385,7 @@ svg.i.i--sm { width: 16px; height: 16px; stroke-width: 2.25; }
   font-weight: 800; text-decoration: none; background: var(--paper); }
 .ib-open:active { background: var(--wash); }
 
-/* Billing review (My day > Work, Roni only) */
+/* Billing review (My day > Work, owner only) */
 .bl-entry { width: 100%; display: flex; align-items: center; gap: var(--s3); min-height: 72px; margin-bottom: var(--s5); padding: 12px var(--s4);
   border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper); box-shadow: var(--sh-card); text-align: left; color: var(--ink); }
 .bl-entry:active { background: var(--wash); }
@@ -478,7 +478,7 @@ svg.i.i--sm { width: 16px; height: 16px; stroke-width: 2.25; }
 .bar.is-over .bar__fill { width: 100% !important; background: var(--accent-dark); }
 .budget__meta { display: flex; justify-content: space-between; font-size: var(--fs-meta); font-weight: 600; color: var(--muted); }
 .budget__meta b { color: var(--ink); font-weight: 800; }
-/* Weekly goals (Roni + Kayla) */
+/* Weekly goals (parents) */
 .goal + .goal { margin-top: var(--s3); }
 .goal .bar { height: 14px; }
 .goal.is-under .bar__fill { background: #2E9E6B; }
@@ -727,7 +727,7 @@ svg.i.i--sm { width: 16px; height: 16px; stroke-width: 2.25; }
 .dash__empty { margin: 0; padding: var(--s3) 0; font-size: var(--fs-body); color: var(--muted); }
 .shop-cur { display: flex; align-items: center; gap: var(--s2); margin: 0 0 var(--s3); scroll-margin-top: 12px; }
 .shop-cur__name { margin: 0; font-size: var(--fs-h2); font-weight: 800; letter-spacing: -.015em; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-/* ---------- Shopping: For (Roni), split review, edit sheet (Oct 11 2026) ---------- */
+/* ---------- Shopping: For (owner), split review, edit sheet (Oct 11 2026) ---------- */
 .shop-for { display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap; margin: calc(-1 * var(--s3)) 0 var(--s5); }
 .btn.is-for { background: var(--ink); }
 .shop-for__lbl { font-size: var(--fs-meta); font-weight: 800; color: var(--muted); margin-right: 2px; }
@@ -757,7 +757,7 @@ select.field { background: var(--paper) url("data:image/svg+xml,%3Csvg xmlns='ht
 .row__body.is-edit { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
-/* ---------- Home Ops app extras (on top of Maya's tokens) ---------- */
+/* ---------- Home Ops app extras (on top of the design tokens) ---------- */
 html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
 [hidden] { display: none !important; }
 #boot { min-height: 70vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -871,7 +871,7 @@ html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
 .sent__icon { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #fff; }
 .sent__title { font-size: var(--fs-item); font-weight: 800; line-height: 1.2; }
 .sent__text { font-size: var(--fs-meta); font-weight: 600; color: var(--ink); }
-/* ---------- Today (My day → Today, formerly "Stay on top"; Roni only, server-gated) ---------- */
+/* ---------- Today (My day → Today, formerly "Stay on top"; owner only, server-gated) ---------- */
 .me-seg { gap: 2px; }
 .me-seg .seg__btn { flex: 1 1 auto; min-width: 0; padding: 0 7px; white-space: nowrap; font-size: var(--fs-meta); }
 .me-seg .chip__count { min-width: 20px; height: 20px; padding: 0 5px; }
@@ -1196,7 +1196,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
 .tot__r + .tot__r { border-top: 1px solid var(--line); }
 .tot__r b { font-weight: 800; }
 .tot__r--y { background: var(--surface); }
-/* Budget -> Amazon (Roni + Kayla only) */
+/* Budget -> Amazon (parents only) */
 .amz-upd { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin: calc(-1 * var(--s2)) 0 var(--s3); font-size: var(--fs-meta); color: var(--muted); }
 .amz-upd .link { min-height: 44px; display: inline-flex; align-items: center; gap: 6px; }
 .amz-upd .link svg.i { width: 18px; height: 18px; }
@@ -1257,13 +1257,13 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
   color: var(--muted); font-size: var(--fs-nav); font-weight: 700; }
 .name-tag:has(+ .row__x) { margin-right: 0; }
 </style>
-<style id="v10-skin">.hm-prog{margin:16px 0 0;font-weight:700}.hm-h{font-size:var(--fs-h3);font-weight:800;margin:20px 0 8px}.hm-card{padding:0;overflow:hidden}.hm-row{display:flex;align-items:center;gap:12px;width:100%;min-height:var(--tap);padding:12px 16px;background:none;border:0;border-top:1px solid var(--line);text-align:left;font:inherit;color:var(--ink)}.hm-row:first-child{border-top:0}.hm-row__t{flex:1;min-width:0;display:flex;flex-direction:column}.hm-row__title{font-weight:700;font-size:var(--fs-item);overflow-wrap:anywhere}.hm-row__sub{color:var(--muted);font-size:var(--fs-meta)}.hm-row__go{color:var(--muted);font-size:22px}.hm-empty{color:var(--muted);margin:8px 0}:root{--bg:#F5F6F8}.card{box-shadow:0 1px 2px rgba(28,52,90,.06),0 4px 16px rgba(28,52,90,.06)}</style>
+<style id="v10-skin">.nav__item{min-width:0}.nav__pill{width:100%;max-width:56px}.nav:has(#meNavBtn:not([hidden])) .nav__item{font-size:.6875rem;letter-spacing:-.01em}.md-head{margin:16px 0 4px}.md-prog{margin:0;font-weight:800;font-size:var(--fs-h3)}.md-next{margin:2px 0 0;color:var(--muted);font-weight:700;font-size:var(--fs-meta)}.md-seg{margin:12px 0 4px}.md-seg .seg__btn{font-size:.8125rem;padding:0 4px}.md-gh{display:flex;align-items:baseline;gap:8px;margin:20px 0 8px}.md-gh__t{font-size:var(--fs-h3);font-weight:800;margin:0}.md-gh__m{color:var(--muted);font-size:var(--fs-meta);font-weight:700}.md-gh__n{margin-left:auto;color:var(--muted);font-size:var(--fs-meta);font-weight:800}.md-card{padding:0;overflow:hidden}.md-row{display:flex;align-items:center;gap:12px;width:100%;min-height:var(--tap);padding:12px 16px;background:none;border:0;border-top:1px solid var(--line);text-align:left;font:inherit;color:var(--ink)}.md-row:first-child{border-top:0}.md-row:disabled{opacity:1;cursor:default}.md-row__time{flex:0 0 52px;display:flex;flex-direction:column;line-height:1.15}.md-row__t{font-weight:800}.md-row__ap,.md-row__any{color:var(--muted);font-size:.75rem;font-weight:700}.md-row__body{flex:1;min-width:0;display:flex;flex-direction:column}.md-row__title{font-weight:700;font-size:var(--fs-item);overflow-wrap:anywhere}.md-row__sub{color:var(--muted);font-size:var(--fs-meta);overflow-wrap:anywhere}.md-row.is-done .md-row__title{text-decoration:line-through;color:var(--muted)}.md-row__chk{flex:0 0 24px;height:24px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}.md-row__chk.is-on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}.md-empty{color:var(--muted);margin:16px 0}:root{--bg:#F5F6F8}.card{box-shadow:0 1px 2px rgba(28,52,90,.06),0 4px 16px rgba(28,52,90,.06)}</style>
 </head>
 <body>
 <div id="gate" hidden>
   <img src="icons/icon-192.png" alt="">
   <h1>Gafni House</h1>
-  <p>Open the link Roni sent you, or paste it here.</p>
+  <p>Open your personal link, or paste it here.</p>
   <form id="gateForm" class="gate__form" autocomplete="off" novalidate>
     <label class="gate__lbl" for="gateLink">Your link</label>
     <input id="gateLink" class="gate__input" type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Paste your link">
@@ -1342,7 +1342,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     <div class="hdr__text"><div class="hdr__eyebrow"><span id="eyebrow"></span><span class="upd" id="updDot" hidden role="status" aria-label="Updating"></span><span class="net-pill" id="netPill" role="status" hidden>Offline</span></div><h1 class="hdr__title" id="title">Grocery</h1></div>
     <button type="button" class="icon-btn icon-btn--upl" id="uplBtn" aria-label="Upload a photo or PDF" title="Upload a photo or PDF" hidden><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
     <button type="button" class="icon-btn" id="refreshBtn" aria-label="Refresh"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36L21 8"/><path d="M21 3v5h-5"/></svg></button>
-    <button type="button" class="viewer" id="viewerBadge" aria-haspopup="dialog" aria-controls="meBg"><span class="viewer__avatar" id="viewerAvatar" aria-hidden="true">R</span><span id="viewerName">Roni</span></button>
+    <button type="button" class="viewer" id="viewerBadge" aria-haspopup="dialog" aria-controls="meBg"><span class="viewer__avatar" id="viewerAvatar" aria-hidden="true"></span><span id="viewerName"></span></button>
   </header>
 
   <main id="app" hidden>
@@ -1498,8 +1498,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
   </main>
 
   <nav class="nav" aria-label="Main" id="mainNav" hidden>
-    <button type="button" class="nav__item" data-screen="me" id="meNavBtn" hidden><span class="nav__pill"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></span>My day</button>
-    <button type="button" class="nav__item" data-screen="home"><span class="nav__pill"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg></span>Today</button>
+    <button type="button" class="nav__item" data-screen="home"><span class="nav__pill"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg></span>My day</button>
+    <button type="button" class="nav__item" data-screen="me" id="meNavBtn" hidden><span class="nav__pill"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></span>Work</button>
     <button type="button" class="nav__item" data-screen="grocery"><span class="nav__pill"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span>Grocery<span class="nav__badge" id="openBadge" hidden></span></button>
     <button type="button" class="nav__item" data-screen="dinners"><span class="nav__pill"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg></span>Dinners</button>
     <button type="button" class="nav__item" data-screen="closet"><span class="nav__pill"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg></span>Closet</button>
@@ -1552,11 +1552,11 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
   </div>
   <div class="sheet-bg" id="meBg" aria-hidden="true">
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="meTitle">
-      <div class="sheet__top"><button type="button" class="navback" id="meBack" aria-label="Back"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><h3 class="sheet__title" id="meTitle">Signed in as Roni</h3></div>
-      <p class="me__line" id="meLine">This phone uses Roni&rsquo;s personal link. Everything you add is saved as Roni.</p>
+      <div class="sheet__top"><button type="button" class="navback" id="meBack" aria-label="Back"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><h3 class="sheet__title" id="meTitle">Signed in</h3></div>
+      <p class="me__line" id="meLine"></p>
       <button type="button" class="btn btn--quiet btn--block" id="meNotYou">Not you? Paste your link</button>
       <form class="me__form" id="meForm" hidden autocomplete="off">
-        <label class="me__lbl" for="meLink">Paste the link Roni sent you</label>
+        <label class="me__lbl" for="meLink">Paste your personal link</label>
         <input class="field" id="meLink" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://…#k=…">
         <p class="me__msg" id="meMsg" role="alert" hidden></p>
         <button type="submit" class="btn btn--block" id="meGo">Use my link</button>
@@ -1613,8 +1613,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     var DAY_KEYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     var MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    var FALLBACK_PEOPLE = ['Roni', 'Kayla', 'Moshe', 'Maya', 'Ashira'];
-    var PARENTS = ['Roni', 'Kayla'];
+    var FALLBACK_PEOPLE = [];   // names come only from the server, after the link is checked
+    var PARENTS = [];
     var STORE_ORDER = [
       'Lidl', 'I&D', 'Western Beef', 'Stop & Shop', "Trader Joe's", 'Bingo',
       'Meat Maven', 'Gourmet Glatt', 'Whole Foods', 'Costco', 'Amazon'
@@ -1626,7 +1626,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     /* ---- Closet config (edit here) ----
        CLOSET_GROUPS: category tiles + the clothing types (rows) inside each.
        CLOSET_PROFILES: which tiles each profile gets, in order.
-       PERSON_PROFILE: which profile each person uses (unknown names get 'default'). */
+       personProfile(): which profile each person uses, sent by the server (unknown names get 'default'). */
     var CLOSET_GROUPS = {
       topsM:    { id: 'tops', title: 'Tops', icon: 'shirt', items: ['Polos', 'T-shirts', 'Hoodies', 'Sweaters', 'Shabbos shirts'] },
       bottomsM: { id: 'bottoms', title: 'Bottoms', icon: 'pants', items: ['Shorts', 'Pants', 'Sweatpants', 'Pajama pants', 'Dress pants'] },
@@ -1639,7 +1639,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       outer:    { id: 'outer', title: 'Outer', icon: 'umbrella', items: ['Coats / jackets', 'Rain gear', 'Hats'] },
       shoes:    { id: 'shoes', title: 'Shoes', icon: 'shoe', items: ['Shoes'] },
       basics:   { id: 'basics', title: 'Basics', icon: 'layers', items: ['Underwear', 'Socks'] },
-      /* legacy (pre-v13) groups, used for anyone not in PERSON_PROFILE */
+      /* legacy (pre-v13) groups, used for anyone without a profile */
       topsOld:    { id: 'tops', title: 'Tops', icon: 'shirt', items: ['Shirts'] },
       bottomsOld: { id: 'bottoms', title: 'Bottoms', icon: 'pants', items: ['Pants', 'Dresses / skirts', 'Belts'] },
       sleepOld:   { id: 'sleep', title: 'Sleep & school', icon: 'moon', items: ['Pajamas', 'School clothes'] }
@@ -1650,7 +1650,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       toddler: ['topsT', 'bottomsT', 'dresses', 'pajamas', 'outer', 'shoes', 'basics'],
       'default': ['topsOld', 'bottomsOld', 'shoes', 'outer', 'sleepOld', 'basics']
     };
-    var PERSON_PROFILE = { Roni: 'male', Moshe: 'male', Kayla: 'female', Maya: 'female', Ashira: 'toddler' };
+    function personProfile(person) { var pr = state.data && state.data.profiles; return (pr && pr[person]) || 'default'; }   // from the server (getData.profiles)
     /* Old generic items already in the sheet → which tile they show under (kept as their own row, never renamed/deleted).
        Listed in preference order; the first category the person has wins. */
     var LEGACY_ITEM_CATS = {
@@ -1660,12 +1660,12 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     };
     var LEGACY_CAT_TITLES = { 'sleep & school': ['pajamas', 'tops'], 'sleep': ['pajamas', 'tops'] };
     function closetCats(person) {
-      var prof = CLOSET_PROFILES[PERSON_PROFILE[person] || 'default'] || CLOSET_PROFILES['default'];
+      var prof = CLOSET_PROFILES[personProfile(person)] || CLOSET_PROFILES['default'];
       return prof.map(function (k) { return CLOSET_GROUPS[k]; });
     }
-    var TITLES = { home: 'Today', me: 'My day', grocery: 'Grocery', dinners: 'Dinners', closet: 'Closet', todo: 'To-do', budget: 'Budget' };
+    var TITLES = { home: 'My day', me: 'Work', grocery: 'Grocery', dinners: 'Dinners', closet: 'Closet', todo: 'To-do', budget: 'Budget' };
 
-    /* Inline SVG icons (from Maya's mocks) */
+    /* Inline SVG icons (from the design mocks) */
     var P = {
       x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
       plus: '<path d="M12 5v14"/><path d="M5 12h14"/>',
@@ -1699,7 +1699,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     }
 
     var state = {
-      data: null, screen: 'home', person: 'Roni', viewer: 'Roni',
+      data: null, screen: 'home', person: '', viewer: '',
       dinnerDay: 'Sun', spendKind: 'food', selectedStore: 'Lidl', closetCat: null, listOpen: false
     };
 
@@ -1933,7 +1933,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       closeAllMore();
       navCloseAll();
       closeBg('ssrBg'); closeBg('iedBg');
-      if (state.data && name !== 'grocery') state.shopFor = '';      // back to Roni next time
+      if (state.data && name !== 'grocery') state.shopFor = '';      // back to the default next time
       SCREENS.forEach(function (id) { $('screen-' + id).hidden = id !== name; });
       document.querySelectorAll('#mainNav .nav__item').forEach(function (b) {
         var on = b.getAttribute('data-screen') === name;
@@ -1957,10 +1957,10 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (d && d.closet) return Object.keys(d.closet);
       return FALLBACK_PEOPLE;
     }
-    /* Who is using the app: the API says (from the personal link); the private Apps Script app is Roni's. No switcher. */
+    /* Who is using the app: the API says (from the personal link); the private Apps Script app is the owner's. No switcher. */
     function fillViewerSelect() {
       var d0 = state.data;
-      var me = (d0 && d0.signedInAs) || state.viewer || 'Roni';
+      var me = (d0 && d0.signedInAs) || state.viewer || '';
       if (state.viewer !== me || !state._viewerSeeded) {
         state.viewer = me;
         if (!state._viewerSeeded) state.person = me;
@@ -1993,7 +1993,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       Object.keys(counts).forEach(function (k) { if (order.indexOf(k) < 0) order.push(k); });
       return { counts: counts, order: order };
     }
-    /* The store list comes from the server (tab "Stores"; Roni can delete / bring back / add). Built-in list = fallback. */
+    /* The store list comes from the server (tab "Stores"; the owner can delete / bring back / add). Built-in list = fallback. */
     function storeListNow() {
       var d = state.data;
       return d && Array.isArray(d.storeList) && d.storeList.length ? d.storeList.slice() : STORE_ORDER.slice();
@@ -2075,8 +2075,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     }
 
     /* ---------- Bought this week (Oct 11 2026) ----------
-       Roni's tick = bought: the item leaves the open list and shows here (Undo puts it back). Receipt lines land here too.
-       Everyone sees items, stores, who asked and the day; $ only when the server says money (Roni / Kayla). */
+       The buyer's tick = bought: the item leaves the open list and shows here (Undo puts it back). Receipt lines land here too.
+       Everyone sees items, stores, who asked and the day; $ only when the server says money (parents). */
     var BW_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], BW_MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     function bwDate(ymd) { var p = String(ymd).split('-'); return new Date(+p[0], +p[1] - 1, +p[2], 12); }
     function bwDay(ymd) { return BW_DAYS[bwDate(ymd).getDay()]; }
@@ -2134,7 +2134,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       body.hidden = !open;
       body.innerHTML = '';
       if (!open) return;
-      if (!n) body.appendChild(el('p', 'bw__empty', 'When Roni ticks an item it moves here.'));
+      if (!n) body.appendChild(el('p', 'bw__empty', (shopBuyers()[0] ? 'When ' + shopBuyers()[0] + ' ticks an item it moves here.' : 'Ticked items move here.')));
       else body.appendChild(bwStoresEl(b, false));
       if ((b.weeks || []).some(function (w) { return w.week !== b.week; })) {
         var past = el('button', 'bw__past', 'Past weeks');
@@ -2248,7 +2248,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     });
     $('bwkBg').addEventListener('click', function (e) { if (e.target === $('bwkBg')) bwkClose(); });
 
-    /* ---------- Lists: delete / bring back / add (Roni only; the server refuses everyone else) ---------- */
+    /* ---------- Lists: delete / bring back / add (owner only; the server refuses everyone else) ---------- */
     function askDeleteList(store) {
       var items = state.data.shopping.filter(function (s) { return normalizeStore(s.store) === store; });
       askSheet('Delete ' + store + (items.length ? ' and its ' + plural(items.length, 'item') + '?' : ' list?'),
@@ -2481,9 +2481,12 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       }
     }
     /* ---------- Who added what (the server decides; this only hides buttons that would be refused) ---------- */
-    var SHOP_BUYERS = ['Roni'], SHOP_EARLIER = 'Earlier';
+    var SHOP_EARLIER = 'Earlier';
+    function acc(key, dflt) { var a = state.data && state.data.access; return a && typeof a[key] === 'boolean' ? a[key] : dflt(); }
+    function firstParent() { var p = (state.data && state.data.parents) || []; return p[0] || ''; }
+    function shopBuyers() { var a = state.data && state.data.access; return (a && a.buyers) || (firstParent() ? [firstParent()] : []); }
     function shopMe() { return (state.data && state.data.signedInAs) || ''; }
-    function shopIsBuyer() { return SHOP_BUYERS.indexOf(shopMe()) >= 0; }
+    function shopIsBuyer() { var me = shopMe(); return !!me && (me === state.viewer ? acc('buyer', function () { return shopBuyers().indexOf(me) >= 0; }) : shopBuyers().indexOf(me) >= 0); }
     function shopOwner(s) { return s.addedBy || SHOP_EARLIER; }
     function shopCanTouch(s) { return shopIsBuyer() || (!!shopMe() && shopOwner(s) === shopMe()); }
     /** One section per person: you first, then everyone else A-Z, items from before names were kept last. */
@@ -2509,7 +2512,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         onDelete: mine ? function () { deleteGrocery(s); } : null
       });
       if (!mine) r.classList.add('row--ro');
-      if (buyer) {                                   // Roni: circle = in cart, text = edit (name, store, qty, note, who)
+      if (buyer) {                                   // Buyer: circle = in cart, text = edit (name, store, qty, note, who)
         var ck = r.querySelector('.row__check');
         if (ck) { ck.addEventListener('click', function (ev) { ev.stopPropagation(); buyGroceries([s]); }); ck.setAttribute('aria-label', 'Bought ' + s.item); }
         var bd = r.querySelector('.row__body');
@@ -2655,33 +2658,142 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     }
 
 
-    /* ---------- Today (home): built only from data already loaded for this viewer ---------- */
+    /* ---------- My day (home): this person's day from data already on the phone ----------
+       Sources: getData (to-dos, dinner, grocery), getPortal when the server allows it (calendar, learning, work),
+       and getMyDay when the server offers it (routines, family calendar). Nothing shows without data. */
+    var MD_BLOCKS = [
+      { key: 'morning', name: 'Morning', range: 'Until 12 PM', to: 720 },
+      { key: 'afternoon', name: 'Afternoon', range: '12 to 5 PM', to: 1020 },
+      { key: 'evening', name: 'Evening', range: '5 to 9 PM', to: 1260 },
+      { key: 'night', name: 'Night', range: 'After 9 PM', to: 1e9 }
+    ];
+    var MD_VIEWS = [['day', 'Day'], ['topic', 'By topic'], ['full', 'Full day'], ['soon', 'Coming up']];
+    function mdYmd(d) { return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+    function mdToday() {
+      var d = state.data, ws = d && d.weekStart ? parseYmd(d.weekStart) : null, di = d ? DAY_KEYS.indexOf(d.today) : -1;
+      return ws && di >= 0 ? new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + di) : new Date();
+    }
+    function mdMins(hm) { var x = hmParts(hm); return x ? x.mins : -1; }
+    function mdItemsFor(date, isToday) {
+      var d = state.data, me = state.viewer, ymd = mdYmd(date), dow = date.getDay(), out = [], seen = {};
+      var P = state.portal || null, M = state.myday || null;
+      function add(it) { var k = it.kind + '|' + it.time + '|' + it.title; if (seen[k]) return; seen[k] = 1; out.push(it); }
+      [].concat((P && P.events) || [], (M && M.events) || []).forEach(function (e) {
+        if (e.date !== ymd) return;
+        add({ kind: 'ev', time: e.allDay ? '' : e.start, title: e.title, sub: [e.end && !e.allDay ? 'until ' + hmLabel(e.end) : '', e.where].filter(Boolean).join(', '),
+          topic: /^family$/i.test(e.cal || '') ? 'Family' : 'Calendar', screen: P ? 'me' : '' });
+      });
+      ((P && P.learning) || []).forEach(function (l) {
+        if ((l.days || []).indexOf(dow) < 0 || (l.starts && l.starts > ymd)) return;
+        add({ kind: 'ln', time: l.time, title: l.title, sub: l.where || '', topic: 'Learning', screen: 'me', recurring: true });
+      });
+      ((M && M.routines) || []).forEach(function (r) {
+        if ((r.days || []).indexOf(dow) < 0) return;
+        add({ kind: 'rt', time: r.time, title: r.title, sub: r.where || '', topic: r.topic || 'Routines', screen: '', recurring: true });
+      });
+      ((P && P.work) || []).forEach(function (w) {
+        if (w.done || !w.due) return;
+        if (isToday ? w.due > ymd : w.due !== ymd) return;
+        add({ kind: 'wk', time: w.time || '', title: w.title, sub: w.due < ymd ? 'Was due ' + dayTitle(w.due) : '', topic: 'Work', screen: 'me', doable: true, done: false });
+      });
+      if (d) {
+        visibleTodos().forEach(function (t) {
+          if (t.who && t.who !== me) return;
+          var due = /^\d{4}-\d{2}-\d{2}$/.test(t.due || '') ? t.due : '';
+          if (isToday ? (due && due > ymd) : due !== ymd) return;
+          if (!isToday && t.done) return;
+          add({ kind: 'td', time: '', title: t.title, sub: due && due < ymd && !t.done ? 'Was due ' + dayTitle(due) : '', topic: 'To-dos', screen: 'todo', doable: true, done: !!t.done });
+        });
+        var dk = DAY_KEYS[dow], ws = parseYmd(d.weekStart), inWeek = ws && date >= ws && date < new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + 7);
+        var m = inWeek ? mealForDay(dk) : null;
+        if (m && (m.main || m.dinner)) add({ kind: 'dn', time: m.eatBy || '', title: 'Dinner: ' + (m.main || m.dinner), sub: [m.side, m.salad, m.soup].filter(Boolean).join(', '), topic: 'Dinner', screen: 'dinners' });
+        if (isToday && d.openCount) {
+          var sc = storeCounts(), top = sc.order.filter(function (st) { return sc.counts[st] > 0; }).slice(0, 3).map(function (st) { return st + ' ' + sc.counts[st]; });
+          add({ kind: 'gr', time: '', title: d.openCount + (d.openCount === 1 ? ' item' : ' items') + ' on the grocery lists', sub: top.join(', '), topic: 'Grocery', screen: 'grocery' });
+        }
+      }
+      out.sort(function (a, b) { var x = mdMins(a.time), y = mdMins(b.time); return (x < 0 ? 1e9 : x) - (y < 0 ? 1e9 : y); });
+      return out;
+    }
+    function mdRow(it, showTopic) {
+      var b = el('button', 'md-row' + (it.done ? ' is-done' : '')); b.type = 'button';
+      var x = hmParts(it.time), tm = el('span', 'md-row__time');
+      if (x) { tm.appendChild(el('span', 'md-row__t', x.t)); tm.appendChild(el('span', 'md-row__ap', x.ap)); }
+      else tm.appendChild(el('span', 'md-row__any', 'Any time'));
+      b.appendChild(tm);
+      var tx = el('span', 'md-row__body');
+      tx.appendChild(el('span', 'md-row__title', it.title));
+      var sub = [it.sub, showTopic ? it.topic : ''].filter(Boolean).join(' \u00b7 ');
+      if (sub) tx.appendChild(el('span', 'md-row__sub', sub));
+      b.appendChild(tx);
+      if (it.doable) b.appendChild(el('span', 'md-row__chk' + (it.done ? ' is-on' : ''), it.done ? '\u2713' : ''));
+      if (it.screen) b.addEventListener('click', function () { state._navTouched = true; showScreen(it.screen); });
+      else b.disabled = true;
+      return b;
+    }
+    function mdGroup(root, title, meta, items, showTopic) {
+      if (!items.length) return;
+      var h = el('div', 'md-gh'); h.appendChild(el('h2', 'md-gh__t', title));
+      if (meta) h.appendChild(el('span', 'md-gh__m', meta));
+      var dn = items.filter(function (i) { return i.doable; }), dd = dn.filter(function (i) { return i.done; }).length;
+      if (dn.length) h.appendChild(el('span', 'md-gh__n', dd + '/' + dn.length));
+      root.appendChild(h);
+      var c = el('div', 'card md-card'); items.forEach(function (it) { c.appendChild(mdRow(it, showTopic)); }); root.appendChild(c);
+    }
+    function mdComing(today) {
+      var days = [];
+      for (var i = 1; i <= 7; i++) {
+        var dt = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+        var items = mdItemsFor(dt, false).filter(function (it) { return !it.recurring; });
+        if (items.length) days.push({ date: dt, items: items, label: (i === 1 ? 'Tomorrow, ' : '') + dayTitle(mdYmd(dt)) });
+      }
+      return days;
+    }
     function renderHome() {
       var root = $('homeRoot'); if (!root) return;
       root.textContent = '';
-      var d = state.data; if (!d) return;
-      var me = state.viewer;
-      var go = function (name) { return function () { state._navTouched = true; showScreen(name); }; };
-      var row = function (title, sub, screen) {
-        var b = el('button', 'hm-row'); b.type = 'button';
-        var t = el('span', 'hm-row__t'); t.appendChild(el('span', 'hm-row__title', title)); if (sub) t.appendChild(el('span', 'hm-row__sub', sub));
-        b.appendChild(t); b.appendChild(el('span', 'hm-row__go', '\u203a')); b.addEventListener('click', go(screen)); return b;
-      };
-      var todos = visibleTodos().filter(function (t) { return !t.who || t.who === me; });
-      var done = todos.filter(function (t) { return t.done; }).length;
-      if (todos.length) root.appendChild(el('p', 'hm-prog', done + ' of ' + todos.length + ' done'));
-      root.appendChild(el('h2', 'hm-h', 'Today'));
-      var card = el('div', 'card hm-card'), n = 0;
-      var m = mealForDay(d.today);
-      if (m && (m.main || m.dinner)) { card.appendChild(row('Dinner: ' + (m.main || m.dinner), [m.side, m.salad, m.soup].filter(Boolean).join(', '), 'dinners')); n++; }
-      todos.filter(function (t) { return !t.done; }).slice(0, 6).forEach(function (t) { var ty = String(t.type || '').toLowerCase(); card.appendChild(row(t.title, t.who ? '' : (ty === 'parent' || ty === 'parents' ? 'Parents' : 'Family'), 'todo')); n++; });
-      if (n) root.appendChild(card); else root.appendChild(el('p', 'hm-empty', 'Nothing left for today.'));
-      var open = d.openCount || 0;
-      if (open) {
-        var sc = storeCounts(), top = sc.order.filter(function (st) { return sc.counts[st] > 0; }).slice(0, 3).map(function (st) { return st + ' ' + sc.counts[st]; });
-        root.appendChild(el('h2', 'hm-h', 'Grocery'));
-        var gc = el('div', 'card hm-card'); gc.appendChild(row(open + (open === 1 ? ' item' : ' items') + ' on the lists', top.join(', '), 'grocery')); root.appendChild(gc);
+      if (!state.data) return;
+      var today = mdToday(), items = mdItemsFor(today, true), soon = mdComing(today);
+      var doable = items.filter(function (i) { return i.doable; }), done = doable.filter(function (i) { return i.done; }).length;
+      var now = new Date(), nowM = now.getHours() * 60 + now.getMinutes();
+      var next = items.filter(function (i) { return !i.done && mdMins(i.time) >= nowM; })[0];
+      var head = el('div', 'md-head');
+      if (doable.length) head.appendChild(el('p', 'md-prog', done + ' of ' + doable.length + ' done'));
+      if (next) head.appendChild(el('p', 'md-next', 'Next: ' + next.title + ', ' + hmLabel(next.time)));
+      if (head.childNodes.length) root.appendChild(head);
+      var views = MD_VIEWS.filter(function (v) { return v[0] === 'soon' ? soon.length > 0 : (v[0] === 'day' || items.length > 0); });
+      if (!views.some(function (v) { return v[0] === state.mdView; })) state.mdView = 'day';
+      if (views.length > 1) {
+        var seg = el('div', 'seg md-seg'); seg.setAttribute('role', 'tablist'); seg.setAttribute('aria-label', 'My day views');
+        views.forEach(function (v) {
+          var b = el('button', 'seg__btn' + (state.mdView === v[0] ? ' is-active' : ''), v[1]); b.type = 'button';
+          b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', state.mdView === v[0] ? 'true' : 'false');
+          b.addEventListener('click', function () { state.mdView = v[0]; renderHome(); });
+          seg.appendChild(b);
+        });
+        root.appendChild(seg);
       }
+      var V = state.mdView;
+      if (V === 'soon') { soon.forEach(function (g) { mdGroup(root, g.label, '', g.items, true); }); return; }
+      if (!items.length) { root.appendChild(el('p', 'md-empty', 'Nothing left for today.')); return; }
+      if (V === 'full') { mdGroup(root, 'Today', '', items, true); return; }
+      if (V === 'topic') {
+        var order = [], by = {};
+        items.forEach(function (it) { if (!by[it.topic]) { by[it.topic] = []; order.push(it.topic); } by[it.topic].push(it); });
+        order.forEach(function (t) { mdGroup(root, t, '', by[t], false); });
+        return;
+      }
+      mdGroup(root, 'Any time', '', items.filter(function (i) { return mdMins(i.time) < 0; }), true);
+      var from = 0;
+      MD_BLOCKS.forEach(function (bk) {
+        var lo = from; from = bk.to;
+        mdGroup(root, bk.name, bk.range, items.filter(function (i) { var m = mdMins(i.time); return m >= lo && m < bk.to; }), true);
+      });
+    }
+    function loadMyDay() {
+      if (!state.data || !state.data.mydayApi || state._mdAsked) return;
+      state._mdAsked = true;
+      run('getMyDay', [], function (r) { if (r && typeof r === 'object') { state.myday = r; renderHome(); } }, function () {});
     }
     /* ---------- Dinners ---------- */
     function mealForDay(day) {
@@ -2824,7 +2936,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     }
     function renderCloset() {
       var people = peopleList();
-      if (people.indexOf(state.person) < 0) state.person = people[0] || 'Roni';
+      if (people.indexOf(state.person) < 0) state.person = people[0] || '';
       var chips = $('personChips');
       chips.innerHTML = '';
       people.forEach(function (p) {
@@ -3010,7 +3122,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         return true;
       });
     }
-    /* "@Kayla call the plumber" -> { title: 'call the plumber', who: 'Kayla' } (only real names) */
+    /* "@Name call the plumber" -> { title: 'call the plumber', who: 'Name' } (only real names) */
     function tdParse(text) {
       var who = '', people = peopleList();
       var title = String(text || '').replace(/(^|\s)@([A-Za-z][\w'-]*)/g, function (m, sp, name) {
@@ -3277,7 +3389,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       renderMe();
       if (!state._portalAsked) { state._portalAsked = true; loadPortal(false); loadInbox(); }
     }
-    /* ---------- Inbox (My day → Schedule, Roni's link only; the server answers 403 to anyone else) ---------- */
+    /* ---------- Inbox (My day → Schedule, the owner's link only; the server answers 403 to anyone else) ---------- */
     function loadInbox() {
       var seq = (state._inboxSeq = (state._inboxSeq || 0) + 1);
       try {
@@ -3347,7 +3459,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         },
         function () { it._done = !next; renderInboxes(); toast('Couldn\u2019t save. Try again'); });
     }
-    /* ---------- Billing review (My day > Work; Roni's link only, the server answers 403 to anyone else) ----------
+    /* ---------- Billing review (My day > Work; the owner's link only, the server answers 403 to anyone else) ----------
        Kept in memory only (never cached on the phone). Approve / Flag write back to the private sheet.
        "Send approval to Michal" opens a Gmail compose window with the text; nothing is ever sent by the app. */
     function loadBilling(month) {
@@ -3525,7 +3637,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         function (p) {
           if (seq !== state._portalSeq || !p) return;
           state.portal = p; state._portalErr = false;
-          savePortalCache(); renderMe();
+          savePortalCache(); renderMe(); renderHome();
           if (!state._provAsked) setTimeout(ensureProviders, 1500);
         },
         function () { state._portalErr = true; if (!state.portal) renderMe(); });
@@ -3805,10 +3917,10 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     });
     try { var draft = localStorage.getItem('homeops.data.portal.draft.' + (window.__homeopsKeyId || 'app')); if (draft) $('noteText').value = draft; } catch (e) {}
 
-    /* ---------- Today (My day → Today, formerly "Stay on top"; Roni only) ----------
+    /* ---------- Today (My day → Today, formerly "Stay on top"; owner only) ----------
        One screen: "Needs you" (≤5 plain lines, Done hides one), "Sessions" (sessions from the case schedules),
        tap a name = person view (call / text / email, students, Log check-in). "All providers" = plain list.
-       Data comes from getProviders, which the server refuses (403) for every link but Roni's; the Needs-you list
+       Data comes from getProviders, which the server refuses (403) for every link but the owner's; the Needs-you list
        is built on the server. Phone copy: homeops.data.portal.ontop.<id> (cleared with the portal cache). */
     var PROV_CACHE_KEY = 'homeops.data.portal.ontop.' + (window.__homeopsKeyId || 'app');
     state.ot = { view: 'main' };
@@ -4090,7 +4202,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     }
     function otDraftHref(p, body) {
       if (p.phone) return otSms(p.phone, body);
-      if (p.email) return 'mailto:' + p.email + '?subject=' + encodeURIComponent('Quick check from Roni') + '&body=' + encodeURIComponent(body);
+      if (p.email) return 'mailto:' + p.email + '?subject=' + encodeURIComponent('Quick check from ' + (state.viewer || 'me')) + '&body=' + encodeURIComponent(body);
       return '';
     }
     function otBtn(label, icon, href, onClick) {
@@ -4140,14 +4252,14 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         }
         root.appendChild(tc);
       }
-      // Ready-to-send text in Roni's voice: opens his own Messages / mail app, nothing is sent from here.
+      // Ready-to-send text in the owner's voice: opens his own Messages / mail app, nothing is sent from here.
       if (p.draft) {
         root.appendChild(makeSec('Ready to send', ''));
         var dc = el('div', 'card ot-draft'); dc.id = 'otDraft';
         dc.appendChild(el('p', 'ot-draft__text', p.draft));
         var bx = el('div', 'ot-btns');
         if (p.phone) bx.appendChild(otBtn('Text', 'msg', otSms(p.phone, p.draft)));
-        if (p.email) bx.appendChild(otBtn('Email', 'mail', 'mailto:' + p.email + '?subject=' + encodeURIComponent('Quick check from Roni') + '&body=' + encodeURIComponent(p.draft)));
+        if (p.email) bx.appendChild(otBtn('Email', 'mail', 'mailto:' + p.email + '?subject=' + encodeURIComponent('Quick check from ' + (state.viewer || 'me')) + '&body=' + encodeURIComponent(p.draft)));
         bx.appendChild(otBtn('Copy', 'checksq', null, function () { otCopy(p.draft); }));
         dc.appendChild(bx);
         root.appendChild(dc);
@@ -4300,6 +4412,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       $('boot').hidden = true;
       setAppVisible(true);
       renderAll();
+      loadMyDay();
       window.__booted = true;
     }
     function loadData(toastOk) {
@@ -4474,14 +4587,14 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       par.concat(kids).forEach(function (p) { if (p && out.indexOf(p) < 0) out.push(p); });
       return out;
     }
-    /* Roni only: "For: Roni / Kayla / ..." under the add box (defaults to him; the server re-checks). */
+    /* owner only: "For: parents / ..." under the add box (defaults to the buyer; the server re-checks). */
     function shopAddFor() {
       if (!shopIsBuyer()) return '';
       if (shopPeople().indexOf(state.shopFor) < 0) state.shopFor = shopMe();
       return state.shopFor;
     }
-    /* "For" is one-shot (Oct 11 2026 fix): it goes back to Roni after every add, and on store or screen change.
-       Before, a tap on Maya stuck for the whole session, so later adds by Roni were saved as Maya's. */
+    /* "For" is one-shot (Oct 11 2026 fix): it goes back to the buyer after every add, and on store or screen change.
+       Before, a tap on a kid stuck for the whole session, so later adds were saved as that kid's. */
     function shopForReset() { state.shopFor = shopMe(); }
     function renderShopFor() {
       var box = $('shopFor'), store = normalizeStore(state.selectedStore || 'Lidl');
@@ -4591,7 +4704,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     $('ssrOne').addEventListener('click', function () { sheetHide('ssrBg'); addOne(ssr.raw.replace(/\s*\r?\n\s*/g, ', ')); });
     $('ssrBg').addEventListener('click', function (e) { if (e.target === $('ssrBg')) sheetHide('ssrBg'); });
 
-    /* Roni only: edit any item (the server refuses everyone else). */
+    /* owner only: edit any item (the server refuses everyone else). */
     var ied = null;
     function openItemEdit(s) {
       ied = { s: s, qty: Math.max(1, Math.round(Number(s.qty)) || 1), who: shopOwner(s), store: normalizeStore(s.store) };
@@ -5293,13 +5406,13 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
 
 
 
-    /* ====================== Weekly goals (Roni + Kayla; Roni edits) ======================
+    /* ====================== Weekly goals (parents; owner edits) ======================
        Server: getGoals / setGoals (Goals.gs), stored in the sheet's Settings tab. Food = Purchases food from other stores
        + food orders in the Amazon tab; Amazon = NON-FOOD Amazon orders only (never both). Green under 80%, amber 80-100%, red over. */
-    var GOAL_VIEWERS = ['Roni', 'Kayla'], GOAL_EDITORS = ['Roni'];
+
     state.goals = { data: null, loading: false, err: false, edit: '' };
-    function goalViewer() { return GOAL_VIEWERS.indexOf(state.viewer) >= 0; }
-    function goalEditor() { return GOAL_EDITORS.indexOf(state.viewer) >= 0; }
+    function goalViewer() { return acc('goals', function () { return isParent(state.viewer); }); }
+    function goalEditor() { return acc('goalEdit', function () { return !!state.viewer && state.viewer === firstParent(); }); }
     function loadGoals() {
       if (!goalViewer()) return;
       var g = state.goals; g.loading = true;
@@ -5355,7 +5468,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       btn.disabled = true;
       ledRun('setGoals', [arg]).then(function () {
         state.goals.edit = ''; toast(label + ' goal: ' + money0(v) + ' a week'); loadGoals();
-      }, function (e) { btn.disabled = false; toast((e && e.message && /Roni/.test(e.message)) ? 'Only Roni can change goals' : 'Couldn\u2019t save. Try again'); G.goals[key] = old; });
+      }, function (e) { btn.disabled = false; toast((e && e.message && /^Only /.test(e.message)) ? e.message : 'Couldn\u2019t save. Try again'); G.goals[key] = old; });
     }
     function renderGoalWeeks(root, L) {
       var G = state.goals.data, ws = G.weeks;
@@ -5390,12 +5503,11 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       });
       root.appendChild(c);
     }
-    /* ====================== Budget -> Amazon (Roni + Kayla only) ======================
+    /* ====================== Budget -> Amazon (parents only) ======================
        The server answers getAmazon only for AMAZON_PEOPLE (person from the link token); everyone else gets 403 and never
        sees the tab. Data lives in memory only (never localStorage). */
-    var AMAZON_VIEWERS = ['Roni', 'Kayla'];
     state.amz = { data: null, loading: false, err: false, open: '' };
-    function amazonViewer() { return AMAZON_VIEWERS.indexOf(state.viewer) >= 0; }
+    function amazonViewer() { return acc('amazon', function () { return isParent(state.viewer); }); }
     function loadAmazon() {
       if (!amazonViewer()) return;
       var A = state.amz; A.loading = true; A.err = false; renderAmazon();
