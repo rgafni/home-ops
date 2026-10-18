@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-zAO+dzbfPx4cUrrUZ5f0CzNenArG5VQprAXdC9IusPY='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-yOFD6xAWizD3wDOwTWMGkdof1+Sk599Y7QPzYj+Vajc='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -1787,7 +1787,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
        or a dead connection never loses it. The queue sends one call at a time with the same action and payload,
        retries quietly with backoff, and shows a small "Not saved yet" only after several tries fail. An add the
        server may already have saved is checked against fresh data before it is sent again, so retries add no copies. */
-    var SQ_KEY = 'homeops.outbox.' + (window.__homeopsKeyId || 'app'), SQ_WARN = 3;
+    var SQ_KEY = 'homeops.outbox.' + (window.__homeopsKeyId || 'app'), SQ_WARN = 3, SQ_PARK = 8;
     var sq = { list: [], busy: false, timer: null }, sqCb = {};
     try { sq.list = JSON.parse(localStorage.getItem(SQ_KEY) || '[]') || []; } catch (e) { sq.list = []; }
     function sqSave() { try { if (sq.list.length) localStorage.setItem(SQ_KEY, JSON.stringify(sq.list)); else localStorage.removeItem(SQ_KEY); } catch (e) {} }
@@ -1813,6 +1813,56 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     function sqPending(fn) { return sq.list.filter(function (e) { return !fn || e.fn === fn; }); }
     function sqKick(ms) { clearTimeout(sq.timer); sq.timer = setTimeout(sqNext, ms || 0); }
     function sqRefused(err) { var st = err && err.status; return st === 400 || st === 403 || st === 404 || st === 409 || st === 422; }
+    function sqActive() { return sq.list.filter(function (e) { return !e.parked; }); }
+    /* The server gave a queued add its own id (older server): later queued calls and the screen use that id. */
+    function sqRemap(from, to) {
+      if (!from || !to || from === to) return;
+      sq.list.forEach(function (e) {
+        e.args = JSON.parse(JSON.stringify(e.args), function (k, v) { return v === from ? to : v; });
+      });
+      ((state.data && state.data.shopping) || []).forEach(function (x) { if (x.id === from) { x.id = to; delete x._pending; } });
+      sqSave();
+    }
+    /* A queued add that has not been sent yet (or is parked): returns [entry, index in a bulk add] or null. */
+    function sqFindAdd(id) {
+      for (var i = 0; i < sq.list.length; i++) {
+        var e = sq.list[i];
+        if (e === sq.cur) continue;
+        if (e.fn === 'addItem' && e.args && e.args[0] && e.args[0].id === id) return [e, -1];
+        if (e.fn === 'addItemsBulk' && e.meta && e.meta.tmp) { var j = e.meta.tmp.indexOf(id); if (j >= 0) return [e, j]; }
+      }
+      return null;
+    }
+    /* Delete of an item whose add is still waiting: drop the add instead (nothing reaches the server). Returns a re-queue function. */
+    function sqDropAdd(id) {
+      var h = sqFindAdd(id); if (!h) return null;
+      var e = h[0], j = h[1], saved;
+      if (j < 0) { sq.list.splice(sq.list.indexOf(e), 1); saved = { fn: e.fn, args: e.args, meta: e.meta }; }
+      else {
+        var f = e.args[0], one = f.items[j];
+        saved = { fn: 'addItem', args: [{ item: one, store: f.store, qty: 1, unit: 'ea', id: 's-' + sqRand(4), forPerson: f.forPerson }], meta: { adds: [e.meta.adds[j]] } };
+        if (!saved.args[0].forPerson) delete saved.args[0].forPerson;
+        saved.meta.ids = [saved.args[0].id];
+        f.items.splice(j, 1); e.meta.adds.splice(j, 1); e.meta.tmp.splice(j, 1);
+        if (!f.items.length) sq.list.splice(sq.list.indexOf(e), 1);
+      }
+      delete sqCb[e.id];
+      sqSave(); sqBadge();
+      return function () { var n = sync(saved.fn, saved.args, { meta: saved.meta }); return saved.args[0].id || n.id; };
+    }
+    /* Edit of an item whose single add is still waiting: fold the change into that add. */
+    function sqMergeEdit(f) {
+      var h = sqFindAdd(f.id); if (!h || h[1] >= 0) return false;
+      var a = h[0].args[0];
+      if (f.item) a.item = f.item;
+      if (f.store !== undefined) a.store = f.store || 'other';
+      if (f.qty) a.qty = f.qty;
+      if (f.notes !== undefined) a.notes = f.notes;
+      if (f.addedBy) a.forPerson = f.addedBy;
+      if (h[0].meta && h[0].meta.adds) h[0].meta.adds = [[a.item, a.store, sqCount(state.data && state.data.shopping, a.item, a.store)]];
+      sqSave();
+      return true;
+    }
     function sqCount(shopping, name, store) {
       var n = String(name).trim().toLowerCase(), st = normalizeStore(store);
       return (shopping || []).filter(function (x) { return !x._pending && String(x.item).trim().toLowerCase() === n && normalizeStore(x.store) === st; }).length;
@@ -1824,49 +1874,85 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         var sh = (d && d.shopping) || [];
         var ids = e.meta.ids || [];
         if (ids.length && ids.every(function (id) { return sh.some(function (x) { return x.id === id; }); })) { cb(true); return; }
-        cb(e.meta.adds.every(function (a) { return sqCount(sh, a[0], a[1]) > a[2]; }));
+        var ok = e.meta.adds.every(function (a) { return sqCount(sh, a[0], a[1]) > a[2]; }), sid = '';
+        if (ok && e.fn === 'addItem') {
+          var a0 = e.meta.adds[0], m = sh.filter(function (x) { return String(x.item).trim().toLowerCase() === String(a0[0]).trim().toLowerCase() && normalizeStore(x.store) === normalizeStore(a0[1]); });
+          sid = m.length ? m[m.length - 1].id : '';
+        }
+        cb(ok, sid);
       }, function () { cb(false); });
     }
+    /* Ids a call touches, so a save waiting on a server error only holds back later saves for the same rows. */
+    function sqIds(e) {
+      var a = e.args || [], f = a[0], out = [];
+      if (typeof f === 'string') out.push(f);
+      else if (f && typeof f === 'object') { if (f.id) out.push(String(f.id)); (f.ids || []).forEach(function (x) { out.push(String(x)); }); if (f.person && f.item) out.push('c|' + f.person + '|' + String(f.item).toLowerCase()); }
+      if (e.meta && e.meta.tmp) out = out.concat(e.meta.tmp);
+      return out;
+    }
+    function sqPick() {
+      var act = sqActive(), now = Date.now(), held = [], soon = Infinity;
+      for (var i = 0; i < act.length; i++) {
+        var e = act[i], ids = sqIds(e);
+        var blocked = held.some(function (h) { return h.net || h.ids.some(function (x) { return ids.indexOf(x) >= 0; }); });
+        if (!blocked && !(e.wait > now)) return { e: e };
+        if (e.wait > now) { soon = Math.min(soon, e.wait - now); held.push({ net: !!e.net, ids: ids }); }
+        else held.push({ net: false, ids: ids });                   // waits behind an earlier save of the same row
+      }
+      return { wait: soon };
+    }
     function sqNext() {
-      if (sq.busy || !sq.list.length) { sqBadge(); return; }
-      if (navigator.onLine === false) { sqBadge(); return; }
-      var e = sq.list[0];
-      sq.busy = true;
-      function finish(res, err) {
-        sq.busy = false;
-        if (sq.list[0] === e) sq.list.shift();
+      if (sq.busy) return;
+      if (!sqActive().length || navigator.onLine === false) { sqBadge(); return; }
+      var pk = sqPick();
+      if (!pk.e) { sqBadge(); if (pk.wait < Infinity) { clearTimeout(sq.timer); sq.timer = setTimeout(sqNext, pk.wait + 20); } return; }
+      var e = pk.e;
+      sq.busy = true; sq.cur = e;
+      function finish(res, err, quiet) {
+        sq.busy = false; sq.cur = null;
+        var i = sq.list.indexOf(e); if (i >= 0) sq.list.splice(i, 1);
+        if (!err && res && e.args && e.args[0]) {
+          if (e.fn === 'addItem' && res.id) sqRemap(e.args[0].id, res.id);
+          if (e.fn === 'addItemsBulk' && e.meta && e.meta.tmp && res.ids) e.meta.tmp.forEach(function (t, k) { if (res.ids[k]) sqRemap(t, res.ids[k]); });
+        }
         sqSave();
         var cb = sqCb[e.id]; delete sqCb[e.id];
-        if (err) { if (cb && cb.fail) cb.fail(err); else toast('Couldn\u2019t save. Try again'); loadData(false); }
+        if (quiet) { if (cb && cb.gone) cb.gone(); }                       // 404: the row is gone, nothing left to save
+        else if (err) { if (cb && cb.fail) cb.fail(err); else toast('Couldn\u2019t save. Try again'); loadData(false); }
         else if (cb && cb.ok) cb.ok(res);
         sqBadge();
-        if (!sq.list.length) { clearTimeout(sq.after); sq.after = setTimeout(function () { loadData(false); loadSchool(true); }, 800); }
+        if (!sqActive().length) { clearTimeout(sq.after); sq.after = setTimeout(function () { loadData(false); }, 800); }
         sqKick(0);
       }
-      sqLanded(e, function (landed) {
-        if (landed) { finish({ ok: true, landed: true }); return; }
+      sqLanded(e, function (landed, sid) {
+        if (landed) { finish({ ok: true, landed: true, id: sid || undefined }); return; }
         sqRaw(e.fn, e.args, function (res) { finish(res); }, function (err) {
+          if (err && err.status === 404) { finish(null, null, true); return; }
           if (sqRefused(err)) { finish(null, err); return; }
-          sq.busy = false;
-          e.tries++; e.uncertain = true; sqSave(); sqBadge();
-          sqKick(Math.min(60000, 1500 * Math.pow(2, e.tries - 1)));
+          sq.busy = false; sq.cur = null;
+          e.tries++; e.uncertain = true;
+          e.net = !(err && err.status);                                     // no answer at all: everything waits (all would fail)
+          e.wait = Date.now() + Math.min(60000, 1500 * Math.pow(2, e.tries - 1));
+          if (e.tries >= SQ_PARK) e.parked = true;                          // set aside so later saves still go; the badge retries it
+          sqSave(); sqBadge();
+          sqKick(0);
         });
       });
     }
     function sqBadge() {
-      var stuck = sq.list.some(function (e) { return e.tries >= SQ_WARN; }) || (sq.list.length && navigator.onLine === false);
+      var stuck = sq.list.some(function (e) { return e.parked || e.tries >= SQ_WARN; }) || (sq.list.length && navigator.onLine === false);
       var b = $('sqBadge');
       if (!stuck) { if (b) b.hidden = true; return; }
       if (!b) {
         b = el('button', 'sq-badge'); b.id = 'sqBadge'; b.type = 'button';
-        b.addEventListener('click', function () { sq.list.forEach(function (e) { e.tries = Math.min(e.tries, 1); }); sqKick(0); });
+        b.addEventListener('click', function () { sq.list.forEach(function (e) { e.parked = false; e.wait = 0; e.tries = Math.min(e.tries, SQ_PARK - 1); }); sqSave(); sqKick(0); });
         document.body.appendChild(b);
       }
       b.textContent = 'Not saved yet \u00b7 ' + sq.list.length;
       b.setAttribute('aria-label', 'Not saved yet, ' + sq.list.length + ' waiting. Tap to try now');
       b.hidden = false;
     }
-    window.addEventListener('online', function () { sqKick(0); });
+    window.addEventListener('online', function () { sq.list.forEach(function (e) { if (e.net) e.wait = 0; }); sqKick(0); });
     window.addEventListener('offline', sqBadge);
     /* Fresh data from the server + what is still waiting in the queue = what the screen shows. */
     function sqOverlay(data) {
@@ -1881,8 +1967,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           sh.push({ id: f.id, item: f.item, store: f.store, qty: f.qty || 1, unit: f.unit || 'ea', checked: false, notes: '', addedBy: f.forPerson || state.viewer, _pending: true });
         } else if (e.fn === 'addItemsBulk') {
           ((e.meta && e.meta.adds) || []).forEach(function (ad, i) {
-            if (sqCount(sh, ad[0], ad[1]) > ad[2] || sh.some(function (x) { return x._bulk === e.id + i; })) return;
-            sh.push({ id: 'tmp-' + e.id + i, _bulk: e.id + i, item: ad[0], store: f.store, qty: 1, unit: 'ea', checked: false, notes: '', addedBy: f.forPerson || state.viewer, _pending: true });
+            if (sqCount(sh, ad[0], ad[1]) > ad[2] || sh.some(function (x) { return x._bulk === e.id + i || (e.meta.tmp && x.id === e.meta.tmp[i]); })) return;
+            sh.push({ id: (e.meta.tmp && e.meta.tmp[i]) || ('tmp-' + e.id + i), _bulk: e.id + i, item: ad[0], store: f.store, qty: 1, unit: 'ea', checked: false, notes: '', addedBy: f.forPerson || state.viewer, _pending: true });
           });
         } else if (e.fn === 'setChecked') {
           sh.forEach(function (x) { if (x.id === a[0]) x.checked = !!a[1]; });
@@ -1893,6 +1979,23 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           if (!td.some(function (t) { return t.id === f.id; })) td.push({ id: f.id, title: f.title, who: f.who || '', due: f.due || '', type: f.type || 'family', priority: 'normal', notes: '', done: false });
         } else if (e.fn === 'setTodoDone') {
           td.forEach(function (t) { if (t.id === a[0]) t.done = !!a[1]; });
+        } else if (e.fn === 'deleteItem') {
+          data.shopping = sh = sh.filter(function (x) { return x.id !== a[0]; });
+        } else if (e.fn === 'clearStore') {
+          var cids = f.ids || [];
+          if (cids.length) data.shopping = sh = sh.filter(function (x) { return cids.indexOf(x.id) < 0; });
+        } else if (e.fn === 'editItem') {
+          sh.forEach(function (x) {
+            if (x.id !== f.id) return;
+            if (f.item) x.item = f.item;
+            if (f.store !== undefined) x.store = f.store || 'other';
+            if (f.qty) x.qty = f.qty;
+            if (f.notes !== undefined) x.notes = f.notes;
+            if (f.addedBy) x.addedBy = f.addedBy;
+          });
+        } else if (e.fn === 'deleteClosetItem') {
+          var dc = data.closet && data.closet[f.person], dl = String(f.item || '').toLowerCase();
+          if (dc && dc.items) dc.items = dc.items.filter(function (it) { return String(it.item).toLowerCase() !== dl; });
         } else if (e.fn === 'upsertClosetItem') {
           var c = (data.closet = data.closet || {}), pc = c[f.person] || (c[f.person] = { sizes: '', have: [], need: [], items: [] });
           var low = String(f.item).toLowerCase();
@@ -2301,9 +2404,9 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         d.shopping = d.shopping.concat(items.filter(function (s) { return d.shopping.indexOf(s) < 0; }));
         renderGrocery();
         if (!my.ids || !my.ids.length) { loadData(false); return; }
-        run('unbuyItems', [{ ids: my.ids }],
-          function () { toast('Back on the list'); loadData(false); },
-          function () { toast('Couldn\u2019t undo'); loadData(false); });
+        sync('unbuyItems', [{ ids: my.ids }], {
+          ok: function () { toast('Back on the list'); loadData(false); },
+          fail: function () { toast('Couldn\u2019t undo'); loadData(false); } });
       };
       sync('buyItems', [{ ids: src }], {
         ok: function (res) {
@@ -2683,25 +2786,32 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       my.wantUndo = true;
       if (!my.pending) doRestore(my);
     });
-    function serverDelete(fn, args, my) {
-      run(fn, args,
-        function (res) {
+    function serverDelete(fn, args, my) {          // in the save queue, so a delete never passes the add or edit before it
+      sync(fn, args, {
+        ok: function (res) {
           my.pending = false;
           my.token = (res && res.token) || '';
           if (my.wantUndo) doRestore(my);
         },
-        function () {
+        gone: function () { my.pending = false; if (my.wantUndo) doRestore(my); },
+        fail: function () {
           my.pending = false;
           hideUndo();
           toast('Couldn\u2019t remove. Try again');
           loadData(false);
-        });
+        } });
     }
     function deleteGrocery(s) {
       var d = state.data;
       d.shopping = d.shopping.filter(function (x) { return x !== s; });
       renderGrocery();
       var my = showUndo('Removed ' + s.item);
+      var back = sqDropAdd(s.id);
+      if (back) {                                      // its add never left the phone: just forget it
+        my.pending = false;
+        my.restore = function () { s.id = back(); s._pending = true; d.shopping.push(s); renderGrocery(); };
+        return;
+      }
       serverDelete('deleteItem', [s.id], my);
     }
 
@@ -2764,7 +2874,16 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         d.shopping = d.shopping.filter(function (x) { return items.indexOf(x) < 0; });
         renderGrocery();
         var my = showUndo(onlyChecked ? ('Cleared ' + items.length + ' from cart') : (shopIsBuyer() ? 'Cleared ' + store + ' list' : 'Cleared your ' + store + ' items'));
-        serverDelete('clearStore', [{ store: store, onlyChecked: !!onlyChecked, ids: items.map(function (x) { return x.id; }) }], my);
+        var backs = [], sent = items.filter(function (x) { var b = sqDropAdd(x.id); if (b) backs.push([x, b]); return !b; });
+        if (backs.length) {
+          my.restore = function () {
+            backs.forEach(function (p) { p[0].id = p[1](); p[0]._pending = true; d.shopping.push(p[0]); });
+            renderGrocery();
+            if (my.token) run('restoreDeleted', [my.token], function () { toast('Restored'); loadData(false); }, function () { toast('Couldn\u2019t undo'); loadData(false); });
+          };
+        }
+        if (!sent.length) { my.pending = false; return; }
+        serverDelete('clearStore', [{ store: store, onlyChecked: !!onlyChecked, ids: sent.map(function (x) { return x.id; }) }], my);
       }
       if (onlyChecked) go();
       else askSheet(shopIsBuyer() ? 'Clear ' + store + ' list?' : 'Clear your ' + store + ' items?', 'Removes ' + plural(items.length, 'item') + '.', shopIsBuyer() ? 'Clear list' : 'Clear mine', go);
@@ -4938,19 +5057,20 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (forP) f.forPerson = forP;
       var adds = items.map(function (n) { return [n, store, sqCount(state.data.shopping, n, store)]; });
       if (input.value.trim() === raw.trim()) input.value = '';
-      items.forEach(function (n, i) { state.data.shopping.push({ id: 'tmp-' + sqRand(3) + i, item: n, store: store, qty: 1, unit: 'ea', checked: false, notes: '', addedBy: forP || shopMe(), _pending: true }); });
+      var tmp = items.map(function (n, i) { return 'tmp-' + sqRand(3) + i; });
+      items.forEach(function (n, i) { state.data.shopping.push({ id: tmp[i], item: n, store: store, qty: 1, unit: 'ea', checked: false, notes: '', addedBy: forP || shopMe(), _pending: true }); });
       state.data.openCount = state.data.shopping.filter(function (x) { return !x.checked; }).length;
       shopForReset(); renderShopFor(); renderGrocery(); toast('Adding ' + items.length + ' items');
-      sync('addItemsBulk', [f], { meta: { adds: adds },
+      sync('addItemsBulk', [f], { meta: { adds: adds, tmp: tmp },
         ok: function (res) {
           if (res && res.landed) { toast('Added ' + items.length + ' items'); return; }
           var ids = (res && res.ids) || [];
           var my = showUndo('Added ' + ids.length + ' items' + (forP && forP !== shopMe() ? ' for ' + forP : ''), 'Keep as one', 6000);
           my.pending = false;
           my.restore = function () {
-            run('joinItems', [{ ids: ids, item: whole }],
-              function () { toast('Kept as one item'); loadData(false); },
-              function () { toast('Couldn\u2019t change it. Try again'); loadData(false); });
+            sync('joinItems', [{ ids: ids, item: whole }], {
+              ok: function () { toast('Kept as one item'); loadData(false); },
+              fail: function () { toast('Couldn\u2019t change it. Try again'); loadData(false); } });
           };
           loadData(false);
         } });
@@ -5053,9 +5173,11 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (f.notes !== undefined) s.notes = f.notes;
       if (f.addedBy) s.addedBy = f.addedBy;
       renderGrocery();
-      run('editItem', [f],
-        function () { toast(moved ? 'Moved to ' + moved : (f.addedBy ? 'Now on ' + f.addedBy + '\u2019s list' : 'Saved')); loadData(false); },
-        function () { Object.keys(prev).forEach(function (k) { s[k] = prev[k]; }); renderGrocery(); toast('Couldn\u2019t save. Try again'); });
+      var said = moved ? 'Moved to ' + moved : (f.addedBy ? 'Now on ' + f.addedBy + '\u2019s list' : 'Saved');
+      if (sqMergeEdit(f)) { toast(said); return; }     // its add is still waiting: the add carries the change
+      sync('editItem', [f], {
+        ok: function () { toast(said); loadData(false); },
+        fail: function () { Object.keys(prev).forEach(function (k) { s[k] = prev[k]; }); renderGrocery(); toast('Couldn\u2019t save. Try again'); } });
     });
     function autoUploadList() {
       closeAllMore();
