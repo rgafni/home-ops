@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-b9IQ/VeUp8Nz6PvNrjE67uDL7hQDnWI2+OV3ipRhofQ=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-cgLdgcNEIcGL9EKaShbktacVy6X/xnLwbkX7ou0oL7w=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -1257,6 +1257,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
   color: var(--muted); font-size: var(--fs-nav); font-weight: 700; }
 .name-tag:has(+ .row__x) { margin-right: 0; }
 </style>
+<style id="v10-skin">:root{--bg:#F5F6F8}.card{box-shadow:0 1px 2px rgba(28,52,90,.06),0 4px 16px rgba(28,52,90,.06)}</style>
 </head>
 <body>
 <div id="gate" hidden>
@@ -1774,7 +1775,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       args = args || [];
       var runner = google.script.run
         .withSuccessHandler(onOk || function () {})
-        .withFailureHandler(onFail || function () { toast('Couldn\u2019t save \u2014 try again'); });
+        .withFailureHandler(onFail || function () { toast('Couldn\u2019t save. Try again'); });
       runner[fnName].apply(runner, args);
       if (fnName !== 'getData') setTimeout(saveCache, 0);   // keep the phone copy in step with optimistic edits
     }
@@ -2198,7 +2199,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           bwDropLocal(src);
           d.shopping = d.shopping.concat(items.filter(function (s) { return d.shopping.indexOf(s) < 0; }));
           renderGrocery();
-          toast('Couldn\u2019t save \u2014 try again');
+          toast('Couldn\u2019t save. Try again');
         });
     }
     /* Past weeks: a list of archived weeks; tap one to see it (back arrow / system back steps out one level). */
@@ -2279,7 +2280,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       };
       run('deleteStore', [{ store: store, ids: ids }],
         function (res) { my.pending = false; my.token = (res && res.token) || ''; if (my.wantUndo) doRestore(my); },
-        function () { my.pending = false; hideUndo(); toast('Couldn\u2019t delete \u2014 try again'); loadData(false); });
+        function () { my.pending = false; hideUndo(); toast('Couldn\u2019t delete. Try again'); loadData(false); });
     }
     function bringBackStore(name) {
       name = String(name || '').trim().replace(/\s+/g, ' ');
@@ -2293,7 +2294,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       openList(store);
       run('restoreStore', [{ store: store }],
         function () { toast(store + ' is on the list'); loadData(false); },
-        function () { storeListSet(store, false); renderGrocery(); toast('Couldn\u2019t add \u2014 try again'); loadData(false); });
+        function () { storeListSet(store, false); renderGrocery(); toast('Couldn\u2019t add. Try again'); loadData(false); });
     }
     function renderStoreExtra() {
       var box = $('storeSheetExtra');
@@ -2529,7 +2530,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           s._saving = false;
           s.checked = !next;
           renderGrocery();
-          toast('Couldn\u2019t save \u2014 try again');
+          toast('Couldn\u2019t save. Try again');
         });
     }
 
@@ -2574,7 +2575,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         function () {
           my.pending = false;
           hideUndo();
-          toast('Couldn\u2019t remove \u2014 try again');
+          toast('Couldn\u2019t remove. Try again');
           loadData(false);
         });
     }
@@ -3120,7 +3121,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           var form = { id: t.id, title: p.title };
           if (p.who) form.who = p.who;
           tdRun(t.id, 'editTodo', [form], function () { saveCache(); },
-            function () { t.title = before.title; t.who = before.who; renderTodo(); toast('Couldn\u2019t save \u2014 try again'); });
+            function () { t.title = before.title; t.who = before.who; renderTodo(); toast('Couldn\u2019t save. Try again'); });
         }
         setTimeout(renderTodo, 0);
       }
@@ -3150,7 +3151,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           state.data.todos = state.data.todos.filter(function (x) { return x !== t; });
           if (tdQueue[t.id]) tdQueue[t.id].splice(1);   // nothing else for a to-do that never saved
           renderTodo();
-          toast('Couldn\u2019t add \u201c' + t.title + '\u201d \u2014 try again');
+          toast('Couldn\u2019t add \u201c' + t.title + '\u201d. Try again');
         });
     }
     function todoHint() {   // typing "@" offers the names (tap to fill in); nothing else
@@ -3181,7 +3182,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         setTimeout(renderTodo, next ? 450 : 0);   // let the circle fill, then fold it into Done
       } else renderTodo();
       tdRun(t.id, 'setTodoDone', [t.id, next], function () { saveCache(); },
-        function () { t.done = !next; renderTodo(); toast('Couldn\u2019t save \u2014 try again'); });
+        function () { t.done = !next; renderTodo(); toast('Couldn\u2019t save. Try again'); });
     }
     function deleteTodoRow(t) {
       var d = state.data;
@@ -3200,7 +3201,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           delete tdDeleted[t.id];
           my.pending = false;
           hideUndo();
-          toast('Couldn\u2019t delete \u2014 try again');
+          toast('Couldn\u2019t delete. Try again');
           loadData(false);
         });
     }
@@ -3313,7 +3314,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
             }
           }, 1500);
         },
-        function () { it._done = !next; renderInboxes(); toast('Couldn\u2019t save \u2014 try again'); });
+        function () { it._done = !next; renderInboxes(); toast('Couldn\u2019t save. Try again'); });
     }
     /* ---------- Billing review (My day > Work; Roni's link only, the server answers 403 to anyone else) ----------
        Kept in memory only (never cached on the phone). Approve / Flag write back to the private sheet.
@@ -3485,7 +3486,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       renderBilling();
       run('billingSetStatus', [it.id, status, note],
         function () { loadBilling(state.billMonth); },
-        function () { it.status = prev.status; it.statusNote = prev.note; renderBilling(); toast('Couldn\u2019t save \u2014 try again'); });
+        function () { it.status = prev.status; it.statusNote = prev.note; renderBilling(); toast('Couldn\u2019t save. Try again'); });
     }
     function loadPortal(fresh) {
       var seq = (state._portalSeq = (state._portalSeq || 0) + 1);
@@ -3684,7 +3685,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       w.done = next; w._saving = true; renderMeWork();
       run('portalSetDone', [w.id, next],
         function () { w._saving = false; renderMeWork(); savePortalCache(); toast(next ? 'Marked done' : 'Back on the list'); },
-        function () { w._saving = false; w.done = !next; renderMeWork(); toast('Couldn\u2019t save \u2014 try again'); });
+        function () { w._saving = false; w.done = !next; renderMeWork(); toast('Couldn\u2019t save. Try again'); });
     }
     function addWork() {
       var input = $('newWork'), title = (input.value || '').trim();
@@ -3701,7 +3702,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         function () {
           btn.disabled = false;
           if (state.portal) state.portal.work = state.portal.work.filter(function (x) { return x !== tmp; });
-          renderMeWork(); toast('Couldn\u2019t add \u2014 try again');
+          renderMeWork(); toast('Couldn\u2019t add. Try again');
         });
     }
     function renderMeNotes() {
@@ -3735,7 +3736,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           if (state.portal) { state.portal.notes = [{ at: (res && res.at) || '', note: text, status: 'new' }].concat(state.portal.notes || []).slice(0, 5); renderMeNotes(); savePortalCache(); }
           toast('Note sent');
         },
-        function () { btn.disabled = false; toast('Couldn\u2019t send \u2014 your note is still here'); });
+        function () { btn.disabled = false; toast('Couldn\u2019t send. Your note is still here'); });
     }
     /* Mic: the phone's speech-to-text (Chrome on Android). The keyboard mic works too. */
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition, rec = null, recBase = '';
@@ -4190,7 +4191,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var send = function (id) {
         run('provCheckinNote', [{ id: id, note: text }],
           function () { p.note = text; state.otNote = null; saveProvCache(); renderProviders(); toast('Note saved'); loadProviders(true); },
-          function () { if (btn) btn.disabled = false; toast('Couldn\u2019t save \u2014 try again'); });
+          function () { if (btn) btn.disabled = false; toast('Couldn\u2019t save. Try again'); });
       };
       if (nt.id) send(nt.id); else nt.after = send;
     }
@@ -4198,14 +4199,14 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var D = state.prov; if (!D) return;
       D.needs = (D.needs || []).filter(function (x) { return x.key !== it.key; });
       saveProvCache(); renderProviders();
-      var my = showUndo('Done \u2014 hidden');
+      var my = showUndo('Done, hidden');
       my.restore = function () {
         run('provUndismiss', [{ key: it.key }], function () { loadProviders(true); toast('Back on the list'); },
           function () { toast('Couldn\u2019t undo'); loadProviders(true); });
       };
       run('provDismiss', [{ key: it.key, sig: it.sig, text: it.text }],
         function () { my.pending = false; if (my.wantUndo) my.restore(); else loadProviders(true); },
-        function () { my.pending = false; hideUndo(); toast('Couldn\u2019t save \u2014 try again'); loadProviders(true); });
+        function () { my.pending = false; hideUndo(); toast('Couldn\u2019t save. Try again'); loadProviders(true); });
     }
     function otCheckin(p) {
       var today = ymdLocal(new Date()), prevLast = p.last, btn = $('otLog');
@@ -4223,7 +4224,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           if (state.otNote && state.otNote.pid === p.id) { state.otNote.id = my.id; if (state.otNote.after && my.id) state.otNote.after(my.id); }
           if (my.wantUndo) my.restore(); else loadProviders(true);
         },
-        function () { my.pending = false; hideUndo(); p.last = prevLast; delete p.checkinToday; state.otNote = null; renderProviders(); toast('Couldn\u2019t save \u2014 try again'); });
+        function () { my.pending = false; hideUndo(); p.last = prevLast; delete p.checkinToday; state.otNote = null; renderProviders(); toast('Couldn\u2019t save. Try again'); });
     }
 
     /* ---------- Load + boot hardening ---------- */
@@ -4295,7 +4296,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         if (seq === loadSeq) showUpdating(false);
         if (seq !== loadSeq || (booting && window.__booted)) return;
         if (window.__booted) {
-          if (toastOk || window.__fromCache) toast('Couldn\u2019t refresh \u2014 showing saved list');
+          if (toastOk || window.__fromCache) toast('Couldn\u2019t refresh. Showing saved list');
           window.__fromCache = false;
           return;
         }
@@ -4488,7 +4489,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       btn.disabled = true;
       run('addItem', [f],
         function () { if (input.value.trim() === name.trim()) input.value = ''; btn.disabled = false; shopForReset(); renderShopFor(); toast(shopAddDone(store, forP)); loadData(false); },
-        function () { btn.disabled = false; toast('Couldn\u2019t add \u2014 try again'); });
+        function () { btn.disabled = false; toast('Couldn\u2019t add. Try again'); });
     }
     /* Several items from one line: add them all, then "Added 3 items · Keep as one" for a few seconds. */
     function addSplit(raw, items) {
@@ -4508,11 +4509,11 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           my.restore = function () {
             run('joinItems', [{ ids: ids, item: whole }],
               function () { toast('Kept as one item'); loadData(false); },
-              function () { toast('Couldn\u2019t change it \u2014 try again'); loadData(false); });
+              function () { toast('Couldn\u2019t change it. Try again'); loadData(false); });
           };
           loadData(false);
         },
-        function () { btn.disabled = false; toast('Couldn\u2019t add \u2014 try again'); });
+        function () { btn.disabled = false; toast('Couldn\u2019t add. Try again'); });
     }
     /* Not sure how to split: show the words as big buttons. Tap a word = the next item starts there;
        tap the first word of a box = join it back. No dragging. */
@@ -4614,20 +4615,20 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       renderGrocery();
       run('editItem', [f],
         function () { toast(moved ? 'Moved to ' + moved : (f.addedBy ? 'Now on ' + f.addedBy + '\u2019s list' : 'Saved')); loadData(false); },
-        function () { Object.keys(prev).forEach(function (k) { s[k] = prev[k]; }); renderGrocery(); toast('Couldn\u2019t save \u2014 try again'); });
+        function () { Object.keys(prev).forEach(function (k) { s[k] = prev[k]; }); renderGrocery(); toast('Couldn\u2019t save. Try again'); });
     });
     function autoUploadList() {
       closeAllMore();
       var store = normalizeStore(state.selectedStore || 'Lidl');
       var items = storeItems(store).filter(function (s) { return !s.checked; });
-      var lines = [store + ' \u2014 shopping list', ''];
+      var lines = [store + ': shopping list', ''];
       if (!items.length) lines.push('(nothing open)');
       else items.forEach(function (s) {
         var q = fmtQty(s);
         lines.push('\u2022 ' + s.item + (q ? ' (' + q + ')' : ''));
       });
       lines.push('');
-      lines.push('\u2014 Gafni House');
+      lines.push('Gafni House');
       var text = lines.join('\n');
       function ok() { toast('Copied'); }
       function fallback() {
@@ -4635,7 +4636,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         ta.value = text;
         document.body.appendChild(ta);
         ta.select();
-        try { document.execCommand('copy'); ok(); } catch (e) { toast('Copy failed \u2014 select manually'); }
+        try { document.execCommand('copy'); ok(); } catch (e) { toast('Copy failed. Select manually'); }
         document.body.removeChild(ta);
       }
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok).catch(fallback);
@@ -4656,7 +4657,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           closeAllMore();
           loadData(false);
         },
-        function () { btn.disabled = false; toast('Couldn\u2019t add the list \u2014 try again'); });
+        function () { btn.disabled = false; toast('Couldn\u2019t add the list. Try again'); });
     }
     function saveDinner() {
       var btn = $('saveDinnerBtn');
@@ -4917,7 +4918,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         } else {
           upl.files = upl.files.filter(function (f) { return f.state !== 'done'; });
           upl.files.forEach(function (f) { if (f.state === 'error' && f.data) f.state = 'ready'; });
-          uplView(upl.files.length ? 'ready' : 'pick', done ? done + ' uploaded. ' + failed + ' didn\u2019t go through \u2014 tap Upload to try again.' : (upl.files[0] && upl.files[0].err) || 'Couldn\u2019t upload. Try again.');
+          uplView(upl.files.length ? 'ready' : 'pick', done ? done + ' uploaded. ' + failed + ' didn\u2019t go through. Tap Upload to try again.' : (upl.files[0] && upl.files[0].err) || 'Couldn\u2019t upload. Try again.');
         }
       });
     }
@@ -4938,7 +4939,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (p) p.hidden = !off;
       document.body.classList.toggle('is-offline', off);
     }
-    window.addEventListener('offline', function () { netSync(); toast('You\u2019re offline \u2014 showing saved data'); });
+    window.addEventListener('offline', function () { netSync(); toast('You\u2019re offline. Showing saved data'); });
     window.addEventListener('online', function () { netSync(); toast('Back online'); loadData(false); });
     netSync();
 
@@ -4976,7 +4977,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       } else if (what === 'range') {
         b._rloading = true; renderBudget();
         ledRun('getLedger', [{ from: r.from, to: r.to }]).then(function (L) { b._rloading = false; b.rangeLed = L; b.led = b.led || L; renderBudget(); },
-          function () { b._rloading = false; toast('Couldn\u2019t load \u2014 try again'); renderBudget(); });
+          function () { b._rloading = false; toast('Couldn\u2019t load. Try again'); renderBudget(); });
       } else {
         b._wloading = true; renderBudget();
         ledRun('getLedger', [{ week: b.openWeek }]).then(function (L) { b._wloading = false; b.weekLed = L; renderBudget(); },
@@ -5038,7 +5039,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       renderBudget();
       var my = showUndo('Removed ' + money2(p.amount) + ' ' + (p.store || p.category)); my.pending = false;
       var del = ledRun('deletePurchase', [p.id]);
-      del.then(function () { if (!my.wantUndo) loadLedger(); }, function () { toast('Couldn\u2019t remove \u2014 try again'); loadLedger(); });
+      del.then(function () { if (!my.wantUndo) loadLedger(); }, function () { toast('Couldn\u2019t remove. Try again'); loadLedger(); });
       my.restore = function () { ledRun('restorePurchase', [p.id]).then(function () { toast('Restored'); loadLedger(); if (state.bud.openWeek) loadLedger('week'); }, function () { toast('Couldn\u2019t undo'); loadLedger(); }); };
     }
     function renderBudget() {
@@ -5057,7 +5058,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
           if (state.goals.err) {   // goals didn't load: still show this week's spend, plus a quiet note
             var pe = el('div', 'card');
             [['Food', wt.food], ['Amazon non-food (logged)', wt.amazon]].forEach(function (x) { var o = el('div', 'tot__r'); o.appendChild(el('span', '', x[0] + ' this week')); o.appendChild(el('b', '', money2(x[1] || 0))); pe.appendChild(o); });
-            root.appendChild(pe); root.appendChild(el('p', 'amz-goal__s', 'Goals didn\u2019t load \u2014 tap refresh to try again.'));
+            root.appendChild(pe); root.appendChild(el('p', 'amz-goal__s', 'Goals didn\u2019t load. Tap refresh to try again.'));
           } else root.appendChild(skel(2));
         }
         else { root.appendChild(goalCard('Food', 'food', G.thisWeek.food, G)); root.appendChild(goalCard('Amazon (non-food)', 'amazon', G.thisWeek.amazon, G)); }
@@ -5103,7 +5104,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         var my = showUndo('Logged ' + money2(amount) + (store ? ' at ' + store : ' \u00b7 ' + cat)); my.pending = false;
         my.restore = function () { ledRun('deletePurchase', [res.id]).then(function () { toast('Undone'); loadLedger(); }, function () { toast('Couldn\u2019t undo'); }); };
         loadLedger(); loadData(false);
-      }, function (e) { btn.disabled = false; toast((e && e.message && e.message.length < 60) ? e.message : 'Couldn\u2019t log it \u2014 try again'); });
+      }, function (e) { btn.disabled = false; toast((e && e.message && e.message.length < 60) ? e.message : 'Couldn\u2019t log it. Try again'); });
     }
     $('budLogForm').addEventListener('submit', function (e) { e.preventDefault(); logPurchase(); });
     function renderBudHistory() {
@@ -5324,7 +5325,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       btn.disabled = true;
       ledRun('setGoals', [arg]).then(function () {
         state.goals.edit = ''; toast(label + ' goal: ' + money0(v) + ' a week'); loadGoals();
-      }, function (e) { btn.disabled = false; toast((e && e.message && /Roni/.test(e.message)) ? 'Only Roni can change goals' : 'Couldn\u2019t save \u2014 try again'); G.goals[key] = old; });
+      }, function (e) { btn.disabled = false; toast((e && e.message && /Roni/.test(e.message)) ? 'Only Roni can change goals' : 'Couldn\u2019t save. Try again'); G.goals[key] = old; });
     }
     function renderGoalWeeks(root, L) {
       var G = state.goals.data, ws = G.weeks;
@@ -5449,7 +5450,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         pp.appendChild(r);
       });
       c.appendChild(pp); box.appendChild(c);
-      if (W.food.length) box.appendChild(el('p', 'amz-rule', 'Plus ' + money2(W.foodTotal) + ' of food from Amazon this week (' + plural(W.food.length, 'order') + ') \u2014 listed under Grocery \u203a Bought this week and counted toward Food only.'));
+      if (W.food.length) box.appendChild(el('p', 'amz-rule', 'Plus ' + money2(W.foodTotal) + ' of food from Amazon this week (' + plural(W.food.length, 'order') + ', listed under Grocery \u203a Bought this week and counted toward Food only.'));
       return box;
     }
     function renderAmazon() {
