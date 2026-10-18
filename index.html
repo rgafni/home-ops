@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-yOFD6xAWizD3wDOwTWMGkdof1+Sk599Y7QPzYj+Vajc='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-zKDULb4WMG2HCxo2+EdZg/1PYmBhGXfQ+nrzyQrScjg='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -1904,6 +1904,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
     function sqNext() {
       if (sq.busy) return;
       if (!sqActive().length || navigator.onLine === false) { sqBadge(); return; }
+      if (window.__homeopsSigninWait) return;                            // sign-in lapsed: hold everything; the page reloads after sign-in
       var pk = sqPick();
       if (!pk.e) { sqBadge(); if (pk.wait < Infinity) { clearTimeout(sq.timer); sq.timer = setTimeout(sqNext, pk.wait + 20); } return; }
       var e = pk.e;
