@@ -5,6 +5,7 @@
         AppInstall.visible()  true unless running as the installed app (or just installed / snoozed)
         AppInstall.install()  the right thing for this browser (call from a tap)
         AppInstall.onChange(fn), AppInstall.snooze(days), AppInstall.handedOff
+        AppInstall.ios, AppInstall.iosSafari (real Safari, not Chrome/Firefox/an in-app browser), AppInstall.standalone()
    Privacy: a personal link token only ever goes into an intent:// URL that Android handles on the phone itself
    (it is never fetched, logged or sent anywhere). The "?ih=1" marker that rides along carries no data. */
 (function () {
@@ -121,15 +122,21 @@
   /* ---- 2-line help sheet ---- */
   var I = {
     dots: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg>',
+    more: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>',
     share: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4" fill="none"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" fill="none"/></svg>'
   };
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function steps(kind) {
     if (kind === 'inapp' && ANDROID) return ['Tap ' + I.dots + ' at the top and pick <b>Open in Chrome</b> (or <b>Open in browser</b>).',
       'In Chrome, tap <b>Install app</b>. Or copy the link below and paste it in Chrome.'];
-    if (IOS && !IOS_SAFARI) return ['Open this page in <b>Safari</b> (tap ' + I.dots + ' or the compass, then <b>Open in Safari</b>).',
-      'In Safari, tap Share ' + I.share + ' then <b>Add to Home Screen</b>.'];
-    if (IOS) return ['Open your link in <b>Safari</b>, then tap Share ' + I.share + ' at the bottom.', 'Tap <b>Add to Home Screen</b>, then <b>Add</b>. Open it from the new icon.'];
+    // iPhone: Safari on iOS 26 (Compact tabs, the default) hides Share behind the ••• button, and the Share sheet
+    // may need View More or Edit Actions before Add to Home Screen shows (support.apple.com/guide/iphone/iphea86e5236). In-app browsers have no Add to Home Screen.
+    if (IOS && !IOS_SAFARI) return ['Open this page in <b>Safari</b>: tap ' + I.more + ' or the compass, then <b>Open in Safari</b>. Or tap <b>Copy link</b> and paste it in Safari.',
+      'In Safari, tap Share ' + I.share + '. No Share button? Tap ' + I.more + ' first, then Share.',
+      'Tap <b>Add to Home Screen</b>, then <b>Add</b>. Open it from the new icon.'];
+    if (IOS) return ['Tap Share ' + I.share + '. No Share button? Tap ' + I.more + ' first, then Share.',
+      'Scroll down or tap <b>View More</b>, then tap <b>Add to Home Screen</b>. Not there? Tap <b>Edit Actions</b> and add it, or open this page in Safari.',
+      'Keep <b>Open as Web App</b> on, tap <b>Add</b>, then open it from the new icon.'];
     if (ANDROID) return ['Tap ' + I.dots + ' at the top right of Chrome.', 'Tap <b>Add to Home screen</b>, then <b>Install</b>.'];
     return ['Open the browser menu ' + I.dots + '.', 'Choose <b>Install app</b> (or <b>Add to Home screen</b>).'];
   }
@@ -160,7 +167,7 @@
 
   window.AppInstall = {
     mode: mode, visible: visible, install: install, showSheet: showSheet, intentUrl: intentUrl, handedOff: handedOff,
-    android: ANDROID, ios: IOS, inApp: IN_APP,
+    android: ANDROID, ios: IOS, inApp: IN_APP, iosSafari: IOS_SAFARI, standalone: standalone,
     onChange: function (f) { listeners.push(f); },
     snooze: function (days) { set('snooze', String(Date.now() + (days || 7) * 864e5)); emit(); }
   };

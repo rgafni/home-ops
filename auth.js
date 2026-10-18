@@ -350,9 +350,41 @@
      Chrome, or a 2-step sheet). Shown at the top of the app whenever it's open in a browser, never in the app. ---- */
   function $i() { return window.AppInstall; }
   function removeBanner() { var b = $('installBar'); if (b) b.remove(); }
+  /* iPhone / iPad: a one-time hint instead of the install bar. Shown only in a browser tab (never in the Home Screen
+     app: navigator.standalone and display-mode both checked), until it is closed once (remembered on this phone).
+     Real Safari: tap Share, then Add to Home Screen. Chrome, Firefox or an in-app browser: open it in Safari first. */
+  var IOS_HINT = 'homeops.install.ioshint';
+  function iosHintDone() { try { return localStorage.getItem(IOS_HINT) === '1'; } catch (e) { return false; } }
+  function inApp() {
+    return navigator.standalone === true || !!(window.matchMedia && (matchMedia('(display-mode: standalone)').matches ||
+      matchMedia('(display-mode: fullscreen)').matches || matchMedia('(display-mode: minimal-ui)').matches));
+  }
+  function renderIosHint(AI) {
+    if (inApp() || iosHintDone()) { removeBanner(); return; }
+    var app = $('app');
+    if (!app || app.hidden) { setTimeout(renderBanner, 400); return; }
+    var safari = !!AI.iosSafari;
+    var bar = $('installBar');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'installBar';
+      bar.setAttribute('role', 'region'); bar.setAttribute('aria-label', 'Add to Home Screen');
+      bar.innerHTML = '<span class="inst__icon" aria-hidden="true"><img src="icons/icon-192.png" alt=""></span>' +
+        '<span class="inst__text">Add to Home Screen<small id="installSub"></small></span>' +
+        '<button type="button" class="inst__btn" id="installBtn">Show me</button>' +
+        '<button type="button" class="inst__x" id="installX" aria-label="Close">\u2715</button>';
+      app.insertBefore(bar, app.firstChild);
+      $('installX').addEventListener('click', function () { try { localStorage.setItem(IOS_HINT, '1'); } catch (e) {} removeBanner(); });
+      $('installBtn').addEventListener('click', function () { AI.showSheet(); });
+    }
+    bar.className = 'inst inst--ios' + (safari ? '' : ' inst--ios-other');
+    $('installSub').textContent = safari ? 'Tap Share, then Add to Home Screen' : 'Open it in Safari first, then tap Share';
+  }
   function renderBanner() {
     var AI = $i();
-    if (!AI || !token || !AI.visible()) { removeBanner(); return; }
+    if (!AI || !token) { removeBanner(); return; }
+    if (AI.ios) { renderIosHint(AI); return; }
+    if (!AI.visible()) { removeBanner(); return; }
     var app = $('app');
     if (!app || app.hidden) { setTimeout(renderBanner, 400); return; }
     var sub = AI.mode() === 'handoff' ? 'Opens in Chrome first' : 'Opens like an app';
