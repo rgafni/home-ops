@@ -209,7 +209,7 @@
       body: JSON.stringify({ k: token, s: session || undefined, d: device || undefined, dl: deviceLabel(), action: action, args: args }),
       redirect: 'follow'
     }).then(function (r) {
-      if (!r.ok) throw new Error('Server error ' + r.status);
+      if (!r.ok) { var se = new Error('Server error ' + r.status); se.status = r.status; throw se; }
       return r.text();
     }).then(function (txt) {
       var res;
@@ -245,7 +245,7 @@
         showGate(res.error);
         return;
       }
-      fail(new Error((res && res.error) || 'Unknown server error'));
+      var er = new Error((res && res.error) || 'Unknown server error'); er.status = (res && res.status) || 0; fail(er);   // status lets the save queue tell 'refused' from 'try again'
     }).catch(function (e) { fail(e); });
   }
 
