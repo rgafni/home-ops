@@ -18,6 +18,13 @@
   var KEEP_IN_HASH = IOS && !STANDALONE;
   function fnvq(str) { var h = 0x811c9dc5; for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(36); }
   var launchK = '';
+  // Backup copy of the saved link in a first-party cookie (only this app's own path), in case the phone clears
+  // localStorage. Read back only when localStorage has no link. Never set by anything but this file.
+  var CK = 'homeops_k', CKPATH = (location.pathname || '/').replace(/[^\/]*$/, '') || '/';
+  function ckGet() { try { var m = /(?:^|;\s*)homeops_k=([A-Za-z0-9_-]{16,128})(?:;|$)/.exec(document.cookie || ''); return m ? m[1] : ''; } catch (e) { return ''; } }
+  function ckSet(v) { try { document.cookie = CK + '=' + v + '; Max-Age=34560000; Path=' + CKPATH + '; SameSite=Strict; Secure'; } catch (e) {} }
+  function ckDel() { try { document.cookie = CK + '=; Max-Age=0; Path=' + CKPATH + '; SameSite=Strict; Secure'; } catch (e) {} }
+  function skip(tk) { try { if (tk) localStorage.setItem('homeops.kskip', fnvq('homeops:' + tk)); } catch (e) {} }
   try {
     var u = new URL(location.href);
     var k = u.searchParams.get('k');
@@ -27,14 +34,19 @@
     if (k && !/^[A-Za-z0-9_-]{16,128}$/.test(k)) k = null;
     // An iPhone Home Screen icon re-opens with the #k= it was saved with. If someone pasted their own link in the app
     // ("Not you?"), that old icon link is skipped from then on (only a one-way hash of it is kept).
-    if (k && hk && STANDALONE && localStorage.getItem('homeops.kskip') === fnvq('homeops:' + k)) k = null;
-    if (k && k !== localStorage.getItem(KEY)) {
+    // The same goes for an old link the server turned down, and for one replaced on the paste-your-link screen.
+    if (k && localStorage.getItem('homeops.kskip') === fnvq('homeops:' + k)) k = null;
+    if (!localStorage.getItem(KEY) && ckGet()) localStorage.setItem(KEY, ckGet());   // localStorage was cleared: use the backup
+    var prevK = localStorage.getItem(KEY);
+    if (k && prevK && k !== prevK) localStorage.setItem('homeops.kprev', prevK);   // kept until the new link is confirmed
+    if (k && k !== prevK) {
       // A different person's link: it replaces the saved one; the old person's sign-in session and data cache go too.
       localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp');
       localStorage.setItem('homeops.switched', '1');
     }
     if (k) localStorage.setItem(KEY, k);
     var saved = localStorage.getItem(KEY);
+    if (saved) ckSet(saved);
     var rest = (u.hash || '').replace(/(^#|&)k=[^&]*/, '$1').replace(/^#&/, '#').replace(/^#$/, '');
     u.searchParams.delete('k');
     if (KEEP_IN_HASH && saved) {
@@ -125,7 +137,9 @@
         .then(function (res) {
           btn.disabled = false;
           if (res && (res.ok || res.status === 428)) {           // 428 = right link, Google sign-in comes next
-            try { localStorage.setItem(KEY, tk); localStorage.removeItem(SKEY); } catch (e) {}
+            try { localStorage.setItem(KEY, tk); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.kprev'); } catch (e) {}
+            if (launchK && launchK !== tk) skip(launchK);   // an old link on the Home Screen icon no longer overrides this one
+            ckSet(tk);
             inp.value = '';
             if (KEEP_IN_HASH) location.replace(location.pathname + '#k=' + tk); else location.reload();
             return;
@@ -147,10 +161,12 @@
       .then(function (res) {
         if (!(res && (res.ok || res.status === 428))) return { ok: false, error: res && res.status === 429 ? 'Too many tries. Wait a minute and try again.' : 'That link didn\u2019t work. Ask Roni to send it again.' };
         try {
-          if (STANDALONE && launchK && launchK !== tk) localStorage.setItem('homeops.kskip', fnvq('homeops:' + launchK));
+          if (launchK && launchK !== tk) skip(launchK);
+          localStorage.removeItem('homeops.kprev');
           localStorage.setItem(KEY, tk); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp');
           localStorage.setItem('homeops.switched', '1');
         } catch (e) {}
+        ckSet(tk);
         clearDataCache();
         var who = (res.user && res.user.person) || '';
         setTimeout(function () { if (KEEP_IN_HASH) location.replace(location.pathname + '#k=' + tk); else location.reload(); }, 50);
@@ -163,7 +179,9 @@
     var m = /(?:^#|&)k=([A-Za-z0-9_-]{16,128})/.exec(location.hash || '');
     if (!m || m[1] === token) return;
     try {
+      if (localStorage.getItem('homeops.kskip') === fnvq('homeops:' + m[1])) return;   // a link already turned down or replaced
       if (localStorage.getItem(KEY) === m[1]) { location.reload(); return; }
+      if (localStorage.getItem(KEY)) localStorage.setItem('homeops.kprev', localStorage.getItem(KEY));   // kept until the new link is confirmed
       localStorage.setItem(KEY, m[1]); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp');
       localStorage.setItem('homeops.switched', '1'); localStorage.removeItem('homeops.kskip');
     } catch (e) {}
@@ -181,7 +199,7 @@
     if (document.visibilityState !== 'visible') return;
     try { var cur = localStorage.getItem(KEY); if (cur && token && cur !== token) followLink(cur); } catch (e) {}
   });
-  window.__homeopsForget = function () { try { localStorage.removeItem(KEY); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp'); } catch (e) {} clearDataCache(); location.reload(); };
+  window.__homeopsForget = function () { ckDel(); try { localStorage.removeItem('homeops.kprev'); localStorage.removeItem(KEY); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp'); } catch (e) {} clearDataCache(); location.reload(); };
 
   // Read-only calls are retried (twice, with a short pause) when Google's redirect hiccups and hands back the
   // plain "Home Ops API" page instead of JSON. Writes are never retried, so nothing is saved twice.
@@ -207,7 +225,7 @@
         }
         throw new Error('The server answered oddly. Try again.');
       }
-      if (res && res.ok) { window.__homeopsUser = res.user; return ok(res.result); }
+      if (res && res.ok) { window.__homeopsUser = res.user; try { localStorage.removeItem('homeops.kprev'); } catch (e) {} return ok(res.result); }
       if (res && res.status === 428) {        // Google sign-in needed (Roni's link only)
         try { localStorage.removeItem(SKEY); localStorage.setItem('homeops.si', '1'); } catch (e) {}
         session = null;
@@ -216,6 +234,17 @@
         return;
       }
       if (res && res.status === 401) {
+        // The server says this link is not valid. Don't let it come back from the address bar or an icon, and if a
+        // link that worked before was replaced by it, go back to that one instead of asking.
+        skip(token);
+        var prev = null; try { prev = localStorage.getItem('homeops.kprev'); localStorage.removeItem('homeops.kprev'); } catch (e) {}
+        if (prev && prev !== token) {
+          try { localStorage.setItem(KEY, prev); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp'); } catch (e) {}
+          ckSet(prev); clearDataCache();
+          if (KEEP_IN_HASH) location.replace(location.pathname + '#k=' + prev); else location.reload();
+          return;
+        }
+        ckDel();
         try { localStorage.removeItem(KEY); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp'); } catch (e) {}
         clearDataCache();
         token = null;
