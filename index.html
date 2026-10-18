@@ -46,6 +46,11 @@
   font-size: 1.05rem; border-radius: 50%; }
 .inst__btn { white-space: nowrap; }
 .inst--hi { border-color: #265CDA; box-shadow: 0 0 0 3px rgba(38,92,218,.18), 0 6px 18px rgba(38,92,218,.14); }
+/* iPhone one-time hint: same card, tighter so the title stays on one line at 375px */
+.inst--ios { gap: 8px; padding-left: 14px; }
+.inst--ios .inst__btn { height: 44px; padding: 0 14px; font-size: .9375rem; }
+.inst--ios .inst__x { width: 40px; }
+@media (max-width: 399px) { .inst--ios .inst__icon { display: none; } }
 :root { --ai-accent: #265CDA; }
 @media (prefers-reduced-motion: reduce) { .inst { animation: none; } }
 #gateMsg { max-width: 320px; font-size: .9375rem; font-weight: 700; color: #B41E44; }
