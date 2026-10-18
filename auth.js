@@ -75,6 +75,8 @@
   // Short id for the per-link data cache: a one-way hash, so no part of the token shows up in key names.
   function fnv(str) { var h = 0x811c9dc5; for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(36); }
   window.__homeopsKeyId = token ? fnv('homeops:' + token) : '';
+  /* A link's save queue (index.html, homeops.outbox.<link id>) goes with that link when it is forgotten or refused. */
+  function clearOutbox() { try { if (window.__homeopsKeyId) localStorage.removeItem('homeops.outbox.' + window.__homeopsKeyId); } catch (e) {} }
   function clearDataCache(keepId) {
     try {
       Object.keys(localStorage).forEach(function (k) {
@@ -159,7 +161,7 @@
           localStorage.setItem(KEY, tk); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp');
           localStorage.setItem('homeops.switched', '1');
         } catch (e) {}
-        clearDataCache();
+        clearOutbox(); clearDataCache();
         var who = (res.user && res.user.person) || '';
         setTimeout(function () { if (KEEP_IN_HASH) location.replace(location.pathname + '#k=' + tk); else location.reload(); }, 50);
         return { ok: true, person: who };
@@ -194,7 +196,7 @@
     if (document.visibilityState !== 'visible') return;
     try { var cur = localStorage.getItem(KEY); if (cur && token && cur !== token) followLink(cur); } catch (e) {}
   });
-  window.__homeopsForget = function () { try { localStorage.removeItem('homeops.kprev'); localStorage.removeItem(KEY); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp'); } catch (e) {} clearDataCache(); location.reload(); };
+  window.__homeopsForget = function () { try { localStorage.removeItem('homeops.kprev'); localStorage.removeItem(KEY); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp'); } catch (e) {} clearOutbox(); clearDataCache(); location.reload(); };
 
   // Read-only calls are retried (twice, with a short pause) when Google's redirect hiccups and hands back the
   // plain "Home Ops API" page instead of JSON. Writes are never retried, so nothing is saved twice.
@@ -224,7 +226,7 @@
       if (res && res.status === 428) {        // Google sign-in needed (the owner's link only)
         try { localStorage.removeItem(SKEY); localStorage.setItem('homeops.si', '1'); } catch (e) {}
         session = null;
-        clearDataCache();
+        clearOutbox(); clearDataCache();
         showSignin(res.signin || {}, res.error);
         return;
       }
@@ -235,12 +237,12 @@
         var prev = null; try { prev = localStorage.getItem('homeops.kprev'); localStorage.removeItem('homeops.kprev'); } catch (e) {}
         if (prev && prev !== token) {
           try { localStorage.setItem(KEY, prev); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp'); } catch (e) {}
-          clearDataCache();
+          clearOutbox(); clearDataCache();
           if (KEEP_IN_HASH) location.replace(location.pathname + '#k=' + prev); else location.reload();
           return;
         }
         try { localStorage.removeItem(KEY); localStorage.removeItem(SKEY); localStorage.removeItem('homeops.sexp'); } catch (e) {}
-        clearDataCache();
+        clearOutbox(); clearDataCache();
         token = null;
         showGate(res.error);
         return;
