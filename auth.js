@@ -226,7 +226,8 @@
       if (res && res.status === 428) {        // Google sign-in needed (the owner's link only)
         try { localStorage.removeItem(SKEY); localStorage.setItem('homeops.si', '1'); } catch (e) {}
         session = null;
-        clearOutbox(); clearDataCache();
+        clearDataCache();                     // unsent saves stay: the queue pauses and replays after sign-in on this link
+        window.__homeopsSigninWait = true;
         showSignin(res.signin || {}, res.error);
         return;
       }
