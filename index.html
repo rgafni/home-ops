@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-3sQ0nyDNtGi767WsXcedGtp4K/XoLnAoPkqkNL/a1V4=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-zAO+dzbfPx4cUrrUZ5f0CzNenArG5VQprAXdC9IusPY='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -1257,7 +1257,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
   color: var(--muted); font-size: var(--fs-nav); font-weight: 700; }
 .name-tag:has(+ .row__x) { margin-right: 0; }
 </style>
-<style id="v10-skin">.shoe-add{display:flex;flex-direction:column;gap:8px}.shoe-add__row{display:flex;gap:8px}.shoe-add__row .field{flex:1;min-width:0}.shoe-add__row .shoe-add__size{flex:0 0 84px}.shoe-add__chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch}.shoe-add__chips .chip{flex:0 0 auto}.sq-badge{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:40;min-height:32px;padding:0 12px;border:0;border-radius:999px;background:var(--surface);color:var(--muted);font:700 .75rem/1 Manrope,system-ui,sans-serif;box-shadow:var(--sh-raise)}.sq-badge[hidden]{display:none}.nav__item{min-width:0}.nav__pill{width:100%;max-width:56px}.nav:has(#meNavBtn:not([hidden])) .nav__item{font-size:.6875rem;letter-spacing:-.01em}.md-head{margin:16px 0 4px}.md-prog{margin:0;font-weight:800;font-size:var(--fs-h3)}.md-next{margin:2px 0 0;color:var(--muted);font-weight:700;font-size:var(--fs-meta)}.md-seg{margin:12px 0 4px}.md-seg .seg__btn{font-size:.8125rem;padding:0 4px}.md-gh{display:flex;align-items:baseline;gap:8px;margin:20px 0 8px}.md-gh__t{font-size:var(--fs-h3);font-weight:800;margin:0}.md-gh__m{color:var(--muted);font-size:var(--fs-meta);font-weight:700}.md-gh__n{margin-left:auto;color:var(--muted);font-size:var(--fs-meta);font-weight:800}.md-card{padding:0;overflow:hidden}.md-row{display:flex;align-items:center;gap:12px;width:100%;min-height:var(--tap);padding:12px 16px;background:none;border:0;border-top:1px solid var(--line);text-align:left;font:inherit;color:var(--ink)}.md-row:first-child{border-top:0}.md-row:disabled{opacity:1;cursor:default}.md-row__time{flex:0 0 52px;display:flex;flex-direction:column;line-height:1.15}.md-row__t{font-weight:800}.md-row__ap,.md-row__any{color:var(--muted);font-size:.75rem;font-weight:700}.md-row__body{flex:1;min-width:0;display:flex;flex-direction:column}.md-row__title{font-weight:700;font-size:var(--fs-item);overflow-wrap:anywhere}.md-row__sub{color:var(--muted);font-size:var(--fs-meta);overflow-wrap:anywhere}.md-row.is-done .md-row__title{text-decoration:line-through;color:var(--muted)}.md-row__chk{flex:0 0 24px;height:24px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}.md-row__chk.is-on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}.md-empty{color:var(--muted);margin:16px 0}:root{--bg:#F5F6F8}.card{box-shadow:0 1px 2px rgba(28,52,90,.06),0 4px 16px rgba(28,52,90,.06)}</style>
+<style id="v10-skin">.shoe-add{display:flex;flex-direction:column;gap:8px}.shoe-add__row{display:flex;gap:8px}.shoe-add__row .field{flex:1;min-width:0}.shoe-add__row .shoe-add__size{flex:0 0 84px}.shoe-add__chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch}.shoe-add__chips .chip{flex:0 0 auto}.sq-badge{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:40;min-height:32px;padding:0 12px;border:0;border-radius:999px;background:var(--surface);color:var(--muted);font:700 .75rem/1 Manrope,system-ui,sans-serif;box-shadow:var(--sh-raise)}.sq-badge[hidden]{display:none}.nav__item{min-width:0}.nav__pill{width:100%;max-width:56px}.nav:has(#meNavBtn:not([hidden])) .nav__item{font-size:.6875rem;letter-spacing:-.01em}.md-head{margin:16px 0 4px}.md-prog{margin:0;font-weight:800;font-size:var(--fs-h3)}.md-next{margin:2px 0 0;color:var(--muted);font-weight:700;font-size:var(--fs-meta)}.md-seg{margin:12px 0 4px}.md-seg .seg__btn{font-size:.8125rem;padding:0 4px}.md-gh{display:flex;align-items:baseline;gap:8px;margin:20px 0 8px}.md-gh__t{font-size:var(--fs-h3);font-weight:800;margin:0}.md-gh__m{color:var(--muted);font-size:var(--fs-meta);font-weight:700}.md-gh__n{margin-left:auto;color:var(--muted);font-size:var(--fs-meta);font-weight:800}.md-card{padding:0;overflow:hidden}.md-row{display:flex;align-items:center;gap:12px;width:100%;min-height:var(--tap);padding:12px 16px;background:none;border:0;border-top:1px solid var(--line);text-align:left;font:inherit;color:var(--ink)}.md-row:first-child{border-top:0}.md-row:disabled{opacity:1;cursor:default}.md-row__time{flex:0 0 52px;display:flex;flex-direction:column;line-height:1.15}.md-row__t{font-weight:800}.md-row__ap,.md-row__any{color:var(--muted);font-size:.75rem;font-weight:700}.md-row__body{flex:1;min-width:0;display:flex;flex-direction:column}.md-row__title{font-weight:700;font-size:var(--fs-item);overflow-wrap:anywhere}.md-row__sub{color:var(--muted);font-size:var(--fs-meta);overflow-wrap:anywhere}.md-row.is-done .md-row__title{text-decoration:line-through;color:var(--muted)}.md-row__chk{flex:0 0 24px;height:24px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}.md-row__chk.is-on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}.md-empty{color:var(--muted);margin:16px 0}.md-big{display:inline-block;vertical-align:2px;padding:1px 6px;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:.625rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}.sc-bar{display:flex;gap:8px;margin:12px 0 0}.sc-bar__btn{display:inline-flex;align-items:center;gap:4px}.sc-bar__btn svg{width:16px;height:16px}.sc-form{display:flex;flex-direction:column;gap:8px;padding:12px;margin:8px 0 0}.sc-form__chips{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}.sc-form__chips .chip{flex:0 0 auto}.sc-form__row{display:flex;gap:8px}.sc-form__row .field{flex:1;min-width:0}:root{--bg:#F5F6F8}.card{box-shadow:0 1px 2px rgba(28,52,90,.06),0 4px 16px rgba(28,52,90,.06)}</style>
 </head>
 <body>
 <div id="gate" hidden>
@@ -1840,7 +1840,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         if (err) { if (cb && cb.fail) cb.fail(err); else toast('Couldn\u2019t save. Try again'); loadData(false); }
         else if (cb && cb.ok) cb.ok(res);
         sqBadge();
-        if (!sq.list.length) { clearTimeout(sq.after); sq.after = setTimeout(function () { loadData(false); }, 800); }
+        if (!sq.list.length) { clearTimeout(sq.after); sq.after = setTimeout(function () { loadData(false); loadSchool(true); }, 800); }
         sqKick(0);
       }
       sqLanded(e, function (landed) {
@@ -2809,6 +2809,22 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         if (isToday ? w.due > ymd : w.due !== ymd) return;
         add({ kind: 'wk', time: w.time || '', title: w.title, sub: w.due < ymd ? 'Was due ' + dayTitle(w.due) : '', topic: 'Work', screen: 'me', doable: true, done: false });
       });
+      var S = state.school || null;
+      if (S) {
+        (S.items || []).forEach(function (x) {
+          if (!x.due || (isToday ? x.due > ymd : x.due !== ymd)) return;
+          if (x.done && x.due !== ymd) return;
+          add({ kind: 'sc', time: x.time || '', title: x.title, sub: [x.cls, SC_LABEL[x.kind] || x.kind, x.due < ymd ? 'Was due ' + dayTitle(x.due) : ''].filter(Boolean).join(', '),
+            topic: 'School', doable: true, done: !!x.done, big: !!SC_BIG[x.kind], tap: function () { scToggle(x); } });
+        });
+        Object.keys(S.kids || {}).forEach(function (kid) {          // grown-ups: each kid's items, read only
+          (S.kids[kid] || []).forEach(function (x) {
+            if (x.done || !x.due || (isToday ? x.due > ymd : x.due !== ymd)) return;
+            add({ kind: 'sk', time: x.time || '', title: x.title, sub: [kid, x.cls, SC_LABEL[x.kind] || x.kind, x.due < ymd ? 'Was due ' + dayTitle(x.due) : ''].filter(Boolean).join(', '),
+              topic: 'School', big: !!SC_BIG[x.kind] });
+          });
+        });
+      }
       if (d) {
         visibleTodos().forEach(function (t) {
           if (t.who && t.who !== me) return;
@@ -2835,12 +2851,15 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       else tm.appendChild(el('span', 'md-row__any', 'Any time'));
       b.appendChild(tm);
       var tx = el('span', 'md-row__body');
-      tx.appendChild(el('span', 'md-row__title', it.title));
+      var ttl = el('span', 'md-row__title', it.title);
+      if (it.big) { var bg = el('span', 'md-big', 'Big'); ttl.appendChild(document.createTextNode(' ')); ttl.appendChild(bg); }
+      tx.appendChild(ttl);
       var sub = [it.sub, showTopic ? it.topic : ''].filter(Boolean).join(' \u00b7 ');
       if (sub) tx.appendChild(el('span', 'md-row__sub', sub));
       b.appendChild(tx);
       if (it.doable) b.appendChild(el('span', 'md-row__chk' + (it.done ? ' is-on' : ''), it.done ? '\u2713' : ''));
-      if (it.screen) b.addEventListener('click', function () { state._navTouched = true; showScreen(it.screen); });
+      if (it.tap) b.addEventListener('click', it.tap);
+      else if (it.screen) b.addEventListener('click', function () { state._navTouched = true; showScreen(it.screen); });
       else b.disabled = true;
       return b;
     }
@@ -2887,7 +2906,9 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         root.appendChild(seg);
       }
       var V = state.mdView;
+      scTools(root);
       if (V === 'soon') { soon.forEach(function (g) { mdGroup(root, g.label, '', g.items, true); }); return; }
+      scChecklists(root);
       if (!items.length) { root.appendChild(el('p', 'md-empty', 'Nothing left for today.')); return; }
       if (V === 'full') { mdGroup(root, 'Today', '', items, true); return; }
       if (V === 'topic') {
@@ -2903,7 +2924,119 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         mdGroup(root, bk.name, bk.range, items.filter(function (i) { var m = mdMins(i.time); return m >= lo && m < bk.to; }), true);
       });
     }
+    /* ---------- School organizer (v13): each kid's homework, tests, quizzes, projects and daily checklists ----------
+       Server: getSchool (per person from the link; grown-ups also get each kid's items, read only), schoolSave,
+       checklistSave, checklistCheck. Every save goes through the save queue with a phone-made id, so retries add no copies.
+       Checklist ticks count only for the day they were ticked, so lists start fresh every morning. */
+    var SC_KINDS = ['Homework', 'Test', 'Quiz', 'Project'];
+    var SC_LABEL = { Homework: 'Homework', Test: 'Test', Quiz: 'Quiz', Project: 'Project or essay' };
+    var SC_BIG = { Test: 1, Quiz: 1, Project: 1 };
+    function scMine() { return !!(state.data && state.data.schoolApi && !isParent(state.viewer)); }
+    function loadSchool(again) {
+      if (!state.data || !state.data.schoolApi || (state._scAsked && !again)) return;
+      state._scAsked = true;
+      run('getSchool', [], function (r) { if (r && typeof r === 'object') { state.school = r; scOverlay(r); renderHome(); } }, function () {});
+    }
+    /* What is still waiting in the save queue, on top of the server copy. */
+    function scOverlay(S) {
+      if (!S) return;
+      var it = S.items || (S.items = []), cl = S.checklists || (S.checklists = []);
+      sq.list.forEach(function (e) {
+        var a = e.args || [], f = a[0] || {};
+        if (e.fn === 'schoolSave') {
+          var x = it.filter(function (y) { return y.id === f.id; })[0];
+          if (!x) { x = { id: f.id, kind: 'Homework', cls: '', title: '', due: '', time: '', done: false, source: 'manual' }; it.push(x); }
+          ['kind', 'cls', 'title', 'due', 'time'].forEach(function (k) { if (f[k] != null) x[k] = f[k]; });
+          if (f.done != null) x.done = !!f.done;
+        } else if (e.fn === 'schoolDelete') {
+          S.items = it = it.filter(function (y) { return y.id !== a[0]; });
+        } else if (e.fn === 'checklistSave') {
+          var c = cl.filter(function (y) { return y.id === f.id; })[0];
+          if (!c) { c = { id: f.id, list: f.list || 'Checklist', item: f.item || '', sort: f.sort || 0, done: false }; cl.push(c); }
+          else { if (f.list != null) c.list = f.list; if (f.item != null) c.item = f.item; }
+        } else if (e.fn === 'checklistCheck') {
+          cl.forEach(function (y) { if (y.id === a[0]) y.done = !!a[1]; });
+        } else if (e.fn === 'checklistDelete') {
+          S.checklists = cl = cl.filter(function (y) { return y.id !== a[0]; });
+        }
+      });
+    }
+    function scSync(fn, args) {
+      sync(fn, args, { fail: function () { toast('Couldn\u2019t save. Try again'); loadSchool(true); } });
+      scOverlay(state.school);
+      renderHome();
+    }
+    function scToggle(x) { scSync('schoolSave', [{ id: x.id, done: !x.done }]); }
+    function scChecklists(root) {
+      var S = state.school; if (!S || !scMine()) return;
+      var by = {}, order = [];
+      (S.checklists || []).forEach(function (c) { if (!by[c.list]) { by[c.list] = []; order.push(c.list); } by[c.list].push(c); });
+      order.forEach(function (name) {
+        mdGroup(root, name, 'Today', by[name].sort(function (a, b) { return a.sort - b.sort; }).map(function (c) {
+          return { kind: 'ck', time: '', title: c.item, doable: true, done: !!c.done, tap: function () { scSync('checklistCheck', [c.id, !c.done]); } };
+        }), false);
+      });
+    }
+    function scTools(root) {
+      if (!scMine()) return;
+      var bar = el('div', 'sc-bar');
+      [['item', 'School'], ['check', 'Checklist']].forEach(function (m) {
+        var b = el('button', 'chip sc-bar__btn' + (state.scForm === m[0] ? ' is-active' : '')); b.type = 'button';
+        b.innerHTML = svg('plus'); b.appendChild(document.createTextNode(m[1]));
+        b.setAttribute('aria-expanded', state.scForm === m[0] ? 'true' : 'false');
+        b.addEventListener('click', function () { state.scForm = state.scForm === m[0] ? '' : m[0]; renderHome(); });
+        bar.appendChild(b);
+      });
+      root.appendChild(bar);
+      if (state.scForm === 'item') root.appendChild(scItemForm());
+      else if (state.scForm === 'check') root.appendChild(scCheckForm());
+    }
+    function scField(ph, type) { var i = el('input', 'field'); i.type = type || 'text'; i.placeholder = ph; i.setAttribute('aria-label', ph); i.autocomplete = 'off'; return i; }
+    function scItemForm() {
+      var box = el('div', 'card sc-form'), kind = state.scKind || 'Homework';
+      var chips = el('div', 'sc-form__chips');
+      SC_KINDS.forEach(function (k) {
+        var c = el('button', 'chip' + (k === kind ? ' is-active' : ''), SC_LABEL[k]); c.type = 'button';
+        c.addEventListener('click', function () { kind = state.scKind = k; chips.querySelectorAll('.chip').forEach(function (x) { x.classList.toggle('is-active', x === c); }); });
+        chips.appendChild(c);
+      });
+      var cls = scField('Class'), ttl = scField('What is it?'), due = scField('Due date', 'date'), tm = scField('Time (optional)', 'time');
+      due.value = mdYmd(mdToday());
+      var r = el('div', 'sc-form__row'); r.appendChild(due); r.appendChild(tm);
+      var go = el('button', 'btn'); go.type = 'button'; go.innerHTML = svg('plus') + 'Add';
+      go.addEventListener('click', function () {
+        var t = ttl.value.trim(); if (!t) { ttl.focus(); return; }
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(due.value)) { due.focus(); return; }
+        if (!state.school) state.school = { items: [], checklists: [] };
+        scSync('schoolSave', [{ id: 'sc-' + sqRand(5), kind: kind, cls: cls.value.trim(), title: t, due: due.value, time: /^\d{2}:\d{2}$/.test(tm.value) ? tm.value : '', done: false }]);
+        toast('Added ' + t);
+        state.scForm = ''; renderHome();
+      });
+      box.appendChild(chips); box.appendChild(cls); box.appendChild(ttl); box.appendChild(r); box.appendChild(go);
+      return box;
+    }
+    function scCheckForm() {
+      var box = el('div', 'card sc-form'), lists = [];
+      ((state.school && state.school.checklists) || []).forEach(function (c) { if (lists.indexOf(c.list) < 0) lists.push(c.list); });
+      var ln = scField('List (backpack, after school\u2026)'), it = scField('Item');
+      if (lists.length) {
+        var chips = el('div', 'sc-form__chips');
+        lists.forEach(function (l) { var c = el('button', 'chip', l); c.type = 'button'; c.addEventListener('click', function () { ln.value = l; it.focus(); }); chips.appendChild(c); });
+        box.appendChild(chips);
+      }
+      var go = el('button', 'btn'); go.type = 'button'; go.innerHTML = svg('plus') + 'Add';
+      go.addEventListener('click', function () {
+        var l = ln.value.trim() || 'Checklist', t = it.value.trim(); if (!t) { it.focus(); return; }
+        if (!state.school) state.school = { items: [], checklists: [] };
+        var n = (state.school.checklists || []).filter(function (c) { return c.list === l; }).length;
+        scSync('checklistSave', [{ id: 'sk-' + sqRand(5), list: l, item: t, sort: n + 1 }]);
+        it.value = ''; it.focus();
+      });
+      box.appendChild(ln); box.appendChild(it); box.appendChild(go);
+      return box;
+    }
     function loadMyDay() {
+      loadSchool(false);
       if (!state.data || !state.data.mydayApi || state._mdAsked) return;
       state._mdAsked = true;
       run('getMyDay', [], function (r) { if (r && typeof r === 'object') { state.myday = r; renderHome(); } }, function () {});
