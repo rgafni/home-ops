@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-EHDN86/tKrJK3TbZeLubrQr6XlacD+BVpZWITQayVOE='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-HHWBBgoYydc6Ezdb8B4f+T6rBpasIGwhIq07ekcP7xk='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -47,6 +47,7 @@
 .inst__btn { white-space: nowrap; }
 .inst--hi { border-color: #265CDA; box-shadow: 0 0 0 3px rgba(38,92,218,.18), 0 6px 18px rgba(38,92,218,.14); }
 /* iPhone one-time hint: same card, tighter so the title stays on one line at 375px */
+.md-note { margin: 4px 2px 8px; font-size: .8125rem; font-weight: 600; color: var(--muted, #5B6478); }
 .inst--ios { gap: 8px; padding-left: 14px; }
 .inst--ios .inst__btn { height: 44px; padding: 0 14px; font-size: .9375rem; }
 .inst--ios .inst__x { width: 40px; }
@@ -2919,6 +2920,57 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       return ws && di >= 0 ? new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + di) : new Date();
     }
     function mdMins(hm) { var x = hmParts(hm); return x ? x.mins : -1; }
+    /* ---------- Default routine (v17): school-day routine from the server (getData.routine) ----------
+       The server sends data.routine only to the links that should see it; without it nothing shows.
+       Read only: there is no routine editor in the app, so the note (from the server) is shown on tap.
+       Real items for the same slot win (same keyword, or a real timed item within 10 minutes).
+       Shabbos and Yom Tov (both days): nothing. Fridays and erev Yom Tov: only items before candle-lighting.
+       Dates come from a fixed 5787 table for New York (Hebcal: candles 18 min, havdalah 8.5 deg, diaspora Yom Tov),
+       2026-09-11 to 2027-10-01. Outside the table, or anything unclear: hidden (fail closed). */
+    var RT_FROM = '2026-09-11', RT_TO = '2027-10-01';
+    var RT_YT = '260912 260913 260921 260926 260927 261003 261004 270422 270423 270428 270429 270611 270612';
+    var RT_CANDLES = '260911=1853 260912=1951 260918=1841 260920=1838 260925=1830 260926=1927 261002=1818 261003=1915 261009=1806 261016=1756 261023=1745 261030=1736 261106=1628 261113=1621 261120=1616 261127=1612 261204=1610 261211=1610 261218=1612 261225=1616 270101=1621 270108=1627 270115=1635 270122=1643 270129=1651 270205=1700 270212=1709 270219=1717 270226=1725 270305=1733 270312=1741 270319=1848 270326=1856 270402=1903 270409=1910 270416=1918 270421=1923 270422=2026 270423=1925 270427=1929 270428=2033 270430=1933 270507=1940 270514=1947 270521=1953 270528=1959 270604=2005 270610=2008 270611=2009 270618=2011 270625=2013 270702=2012 270709=2011 270716=2007 270723=2002 270730=1955 270806=1947 270813=1938 270820=1929 270827=1918 270903=1907 270910=1855 270917=1843 270924=1832 271001=1820';
+    var RT_HAVDALAH = '260913=1949 260919=1939 260921=1935 260927=1925 261004=1913 261010=1904 261017=1853 261024=1844 261031=1835 261107=1728 261114=1722 261121=1717 261128=1715 261205=1714 261212=1714 261219=1716 261226=1720 270102=1725 270109=1732 270116=1739 270123=1746 270130=1754 270206=1802 270213=1810 270220=1818 270227=1826 270306=1833 270313=1841 270320=1949 270327=1956 270403=2004 270410=2012 270417=2020 270424=2028 270429=2034 270501=2037 270508=2045 270515=2053 270522=2101 270529=2108 270605=2114 270612=2118 270619=2121 270626=2122 270703=2121 270710=2118 270717=2113 270724=2107 270731=2059 270807=2050 270814=2040 270821=2029 270828=2017 270904=2005 270911=1953 270918=1941 270925=1929';
+    function rtMap(str) { var m = {}; str.split(' ').forEach(function (x) { var p = x.split('='); m['20' + p[0].slice(0, 2) + '-' + p[0].slice(2, 4) + '-' + p[0].slice(4, 6)] = p[1] ? p[1].slice(0, 2) + ':' + p[1].slice(2) : true; }); return m; }
+    var RT_Y = rtMap(RT_YT), RT_C = rtMap(RT_CANDLES), RT_H = rtMap(RT_HAVDALAH);
+    function rtData() {
+      var r = state.data && state.data.routine;
+      return r && Array.isArray(r.items) && r.items.length ? r : null;
+    }
+    function rtNote() { var r = rtData(); return (r && typeof r.note === 'string') ? r.note : ''; }
+    function rtDefaults(date, real) {
+      var R = rtData();
+      if (!R) return [];
+      if (!(date instanceof Date) || isNaN(date)) return [];
+      var ymd = mdYmd(date), dow = date.getDay();
+      if (ymd < RT_FROM || ymd > RT_TO) return [];
+      if (dow === 6 || RT_Y[ymd]) return [];                      // Shabbos, Yom Tov (both days)
+      var cut = RT_C[ymd] ? mdMins(RT_C[ymd]) : 1e9;               // Friday or erev Yom Tov: stop at candle-lighting
+      if (dow === 5 && !(cut < 1e9)) return [];                    // a Friday without a time: unclear, hide
+      var note = rtNote();
+      var L = R.items.filter(function (x) {
+        return x && typeof x.title === 'string' && typeof x.at === 'number' && (x.dow == null || x.dow === dow);
+      }).map(function (x) {
+        var keys = Array.isArray(x.keys) ? x.keys.map(function (k) { return String(k).toLowerCase(); }) : [];
+        var sub = x.untilHm ? (x.school ? 'until about ' : 'until ') + hmShort(x.untilHm) : (x.sub || '');
+        return { at: (dow === 4 && typeof x.atThu === 'number') ? x.atThu : x.at, time: x.time || '', tlabel: x.tlabel || '',
+          title: x.title, sub: sub, end: x.end, keys: keys, school: !!x.school };
+      });
+      return L.filter(function (x) {
+        if (x.at >= cut) return false;
+        return !real.some(function (r) {
+          var n = mdNormTitle(r.title), m = mdMins(r.time);
+          if (x.keys.some(function (k) { return (' ' + n + ' ').indexOf(' ' + k + ' ') >= 0; })) return true;
+          return x.time && m >= 0 && Math.abs(m - x.at) <= 10;
+        });
+      }).map(function (x) {
+        var sub = x.sub || '';
+        if (x.school && x.end >= cut) sub = '';                    // school ends after candle-lighting on a short Friday
+        return { kind: 'df', src: 'df', time: x.time || '', at: x.at, tlabel: x.tlabel || '', title: x.title, sub: sub,
+          topic: 'Default routine', recurring: true, isDefault: true, tap: function () { if (note) toast(note); } };
+      });
+    }
+    function mdKey(it) { return it.at != null ? it.at : mdMins(it.time); }
     function mdItemsFor(date, isToday) {
       var d = state.data, me = state.viewer, ymd = mdYmd(date), dow = date.getDay(), out = [], seen = {};
       var P = state.portal || null, M = state.myday || null;
@@ -2977,7 +3029,8 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         }
       }
       out = mdDedupe(out, mdMins);
-      out.sort(function (a, b) { var x = mdMins(a.time), y = mdMins(b.time); return (x < 0 ? 1e9 : x) - (y < 0 ? 1e9 : y); });
+      if (isToday) out = out.concat(rtDefaults(date, out));
+      out.sort(function (a, b) { var x = mdKey(a), y = mdKey(b); return (x < 0 ? 1e9 : x) - (y < 0 ? 1e9 : y); });
       return out;
     }
     /* md-dedupe:start (unit tested on its own)
@@ -3034,6 +3087,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       var b = el('button', 'md-row' + (it.done ? ' is-done' : '')); b.type = 'button';
       var x = hmParts(it.time), tm = el('span', 'md-row__time');
       if (x) { var tt = el('span', 'md-row__t', hmShort(it.time)); tt.setAttribute('aria-label', hmLabel(it.time)); tm.appendChild(tt); }
+      else if (it.tlabel) tm.appendChild(el('span', 'md-row__any', it.tlabel));
       else tm.appendChild(el('span', 'md-row__any', 'Any time'));
       b.appendChild(tm);
       var tx = el('span', 'md-row__body');
@@ -3107,9 +3161,10 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
         return;
       }
       scChecklists(root);
+      if (items.some(function (i) { return i.isDefault; }) && rtNote()) root.appendChild(el('p', 'md-note', rtNote()));
       if (!items.length) { root.appendChild(el('p', 'md-empty', 'Nothing left for today.')); return; }
       if (V === 'full') { mdGroup(root, 'Today', '', items, true); return; }
-      var untimed = items.filter(function (i) { return mdMins(i.time) < 0; });
+      var untimed = items.filter(function (i) { return mdKey(i) < 0; });
       if (V === 'topic') {                                               // chips: Any time (default: everything, grouped by topic), then each topic
         var order = [], by = {};
         items.forEach(function (it) { if (!by[it.topic]) { by[it.topic] = []; order.push(it.topic); } by[it.topic].push(it); });
@@ -3124,7 +3179,7 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       MD_BLOCKS.forEach(function (bk) {
         var lo = from; from = bk.to;
         if (nowM >= lo && nowM < bk.to) cur = bk.key;
-        var its = items.filter(function (i) { var m = mdMins(i.time); return m >= lo && m < bk.to; });
+        var its = items.filter(function (i) { var m = mdKey(i); return m >= lo && m < bk.to; });
         if (its.length) groups.push({ key: bk.key, name: bk.name, n: its.length, meta: bk.range, items: its, lo: lo });
       });
       var def = groups.filter(function (g) { return g.key === cur; })[0];
