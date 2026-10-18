@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-gJ+ZduNXvhF7HTakIgYurF0HqJghmi2F+7GF3dvhNlA='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-Hyfp1ZEjgpunp6BHR7DqVOB+Bio4+a713V7fwbjRc9E=' 'sha256-an31liRMsCtzIfj/7PS+zPidyYFqOM+frow8IT1xmQQ=' 'sha256-+7277bWhF5/PGfhNeOLRS2dAl6pIdh+OncpsqCstk80='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -2921,18 +2921,18 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       [((P && P.events) || []), ((M && M.events) || [])].forEach(function (list, li) {
         list.forEach(function (e) {
           if (e.date !== ymd) return;
-          add({ kind: 'ev', src: li ? 'fam' : 'cal', time: e.allDay ? '' : e.start, title: e.title, until: e.end && !e.allDay ? 'until ' + hmLabel(e.end) : '', where: e.where || '',
+          add({ kind: 'ev', src: li ? 'fam' : 'cal', id: e.id || '', owner: e.person || e.owner || '', time: e.allDay ? '' : e.start, title: e.title, until: e.end && !e.allDay ? 'until ' + hmLabel(e.end) : '', where: e.where || '',
             sub: [e.end && !e.allDay ? 'until ' + hmLabel(e.end) : '', e.where].filter(Boolean).join(', '),
             topic: /^family$/i.test(e.cal || '') ? 'Family' : 'Calendar', screen: P ? 'me' : '' });
         });
       });
       ((P && P.learning) || []).forEach(function (l) {
         if ((l.days || []).indexOf(dow) < 0 || (l.starts && l.starts > ymd)) return;
-        add({ kind: 'ln', src: 'ln', time: l.time, title: l.title, where: l.where || '', sub: l.where || '', topic: 'Learning', screen: 'me', recurring: true });
+        add({ kind: 'ln', src: 'ln', owner: l.person || l.owner || '', time: l.time, title: l.title, where: l.where || '', sub: l.where || '', topic: 'Learning', screen: 'me', recurring: true });
       });
       ((M && M.routines) || []).forEach(function (r) {
         if ((r.days || []).indexOf(dow) < 0) return;
-        add({ kind: 'rt', src: 'rt', time: r.time, title: r.title, where: r.where || '', sub: r.where || '', topic: r.topic || 'Routines', screen: '', recurring: true });
+        add({ kind: 'rt', src: 'rt', owner: r.person || r.owner || '', time: r.time, title: r.title, where: r.where || '', sub: r.where || '', topic: r.topic || 'Routines', screen: '', recurring: true });
       });
       ((P && P.work) || []).forEach(function (w) {
         if (w.done || !w.due) return;
@@ -2976,29 +2976,35 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       return out;
     }
     /* md-dedupe:start (unit tested on its own)
-       The same event from two sources (calendar and learning, routines, work...) shows once: both have a time within
-       15 minutes and the titles match once case and punctuation are dropped (or one contains the other, e.g. "Maariv").
+       The same event from two sources shows once, under strict rules (never across owners, never two rows of one source):
+       - personal calendar and family calendar: only the same event id, or the same start, title and end;
+       - calendar and learning or routine (or learning and routine): titles equal once case and punctuation are dropped,
+         within 15 minutes; one title inside the other (e.g. "Maariv (shul)") only with the exact same start.
        The kept row takes the calendar's time and end ("until ..."), the fuller place, and the learning or routine topic. */
     function mdNormTitle(t) { return String(t || '').toLowerCase().replace(/[^a-z0-9\u0590-\u05ff]+/g, ' ').replace(/\s+/g, ' ').trim(); }
-    function mdSameTitle(a, b) {
+    function mdContains(a, b) {
       var x = mdNormTitle(a), y = mdNormTitle(b);
-      if (!x || !y) return false;
-      if (x === y) return true;
+      if (!x || !y || x === y) return false;
       var s = x.length < y.length ? x : y, l = s === x ? y : x;
       return s.length >= 3 && (' ' + l + ' ').indexOf(' ' + s + ' ') >= 0;
     }
-    var MD_TIMED = { cal: 1, fam: 1, ln: 1, rt: 1, wk: 1 };
+    var MD_TIMED = { cal: 1, fam: 1, ln: 1, rt: 1 };
+    function mdIsEv(x) { return x.src === 'cal' || x.src === 'fam'; }
+    function mdSame(o, it, mins) {
+      if (!MD_TIMED[o.src] || !MD_TIMED[it.src] || o.src === it.src) return false;
+      if ((o.owner || '') !== (it.owner || '')) return false;
+      var om = mins(o.time), m = mins(it.time);
+      if (om < 0 || m < 0) return false;
+      var eq = !!mdNormTitle(o.title) && mdNormTitle(o.title) === mdNormTitle(it.title);
+      if (mdIsEv(o) && mdIsEv(it)) return (!!o.id && o.id === it.id) || (om === m && eq && (o.until || '') === (it.until || ''));
+      if (eq) return Math.abs(om - m) <= 15;
+      return om === m && mdContains(o.title, it.title);
+    }
     function mdDedupe(items, mins) {
       var out = [];
       items.forEach(function (it) {
-        var m = mins(it.time), hit = null;
-        if (MD_TIMED[it.src] && m >= 0) {
-          for (var i = 0; i < out.length; i++) {
-            var o = out[i], om = mins(o.time);
-            if (!MD_TIMED[o.src] || o.src === it.src || om < 0 || Math.abs(om - m) > 15) continue;
-            if (mdSameTitle(o.title, it.title)) { hit = o; break; }
-          }
-        }
+        var hit = null;
+        for (var i = 0; i < out.length; i++) { if (mdSame(out[i], it, mins)) { hit = out[i]; break; } }
         if (!hit) { out.push(it); return; }
         var cal = /^(cal|fam)$/.test(hit.src) ? hit : (/^(cal|fam)$/.test(it.src) ? it : null);
         var other = cal === hit ? it : hit;
@@ -3099,16 +3105,13 @@ button.ot-stu > svg.i { flex: none; color: var(--faint); }
       if (!items.length) { root.appendChild(el('p', 'md-empty', 'Nothing left for today.')); return; }
       if (V === 'full') { mdGroup(root, 'Today', '', items, true); return; }
       var untimed = items.filter(function (i) { return mdMins(i.time) < 0; });
-      if (V === 'topic') {                                               // chips: Any time first (default), then each topic
+      if (V === 'topic') {                                               // chips: Any time (default: everything, grouped by topic), then each topic
         var order = [], by = {};
-        items.forEach(function (it) { if (mdMins(it.time) < 0) return; if (!by[it.topic]) { by[it.topic] = []; order.push(it.topic); } by[it.topic].push(it); });
-        var tg = (untimed.length ? [{ key: '_any', name: 'Any time', n: untimed.length }] : []).concat(order.map(function (t) { return { key: t, name: t, n: by[t].length }; }));
-        var pickT = mdChips(root, 'topic', tg, tg[0].key);
-        if (pickT === '_any') {
-          var ao = [], ab = {};
-          untimed.forEach(function (it) { if (!ab[it.topic]) { ab[it.topic] = []; ao.push(it.topic); } ab[it.topic].push(it); });
-          ao.forEach(function (t) { mdGroup(root, t, 'Any time', ab[t], false); });
-        } else mdGroup(root, pickT, '', by[pickT], false);
+        items.forEach(function (it) { if (!by[it.topic]) { by[it.topic] = []; order.push(it.topic); } by[it.topic].push(it); });
+        var tg = [{ key: '_any', name: 'Any time', n: items.length }].concat(order.map(function (t) { return { key: t, name: t, n: by[t].length }; }));
+        var pickT = mdChips(root, 'topic', tg, '_any');
+        if (pickT === '_any' || !by[pickT]) order.forEach(function (t) { mdGroup(root, t, '', by[t], false); });
+        else mdGroup(root, pickT, '', by[pickT], false);
         return;
       }
       var groups = [], from = 0, cur = '';                               // Day: one chip per block with items, the current block first picked
