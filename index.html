@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-B4UpSqzs12PnbdYA4U8Rh1Y+Qy+C2v7Koo4Hc/aXgkg=' 'sha256-wa+AduYcWrg+F2ifzr4zGsep8ZcHOGqmd7ahMoJphCM=' 'sha256-vTxFYZ0x1CY6ELjvoW7b3MWLRscLCAoAz3EOqOJFhwM='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-B4UpSqzs12PnbdYA4U8Rh1Y+Qy+C2v7Koo4Hc/aXgkg=' 'sha256-wa+AduYcWrg+F2ifzr4zGsep8ZcHOGqmd7ahMoJphCM=' 'sha256-rxRAMaDy92yxrft5g0pN9dQcYm/GvhQY7zrl6XVizS8='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -1297,7 +1297,6 @@ color: var(--muted); font-size: var(--fs-nav); font-weight: 700; }
 .pl-band__sum{margin:0;padding:6px 12px 10px 32px;font-size:.8125rem;color:#5F6368;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-top:1px solid #F1F3F4}
 .pl-grid{margin:10px 6px 10px 60px}
 .pl-day>.md-empty{margin:12px}
-.gc-ev.is-meet{border-left-style:double;border-left-width:5px}
 .pl-legend{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:8px 2px 0;font-size:.75rem;color:#70757A}
 .pl-legend span{display:inline-flex;align-items:center;gap:4px}
 .pl-legend i{display:inline-block;width:10px;height:10px;border-radius:3px}
@@ -3020,7 +3019,7 @@ return !!(d && me && d.role === 'kid' && !isParent(me) && d.profiles && /^(male|
 }
 function gcColor(it) {
 if (it.isDefault) return GC_COLORS[0];
-if (it.plc && PL_COLOR[it.plc]) return PL_COLOR[it.plm && it.plc === 'family' ? 'meet' : it.plc];   // v19 Plan colors
+if (it.plc && PL_COLOR[it.plc]) return PL_COLOR[it.plc];   // v19 Plan colors (Work / Personal)
 var h = 0, s = String(it.topic || '');
 for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
 return GC_COLORS[1 + h % (GC_COLORS.length - 1)];
@@ -3410,41 +3409,35 @@ return days;
 }
 /* ---------- v19 Plan: the portal person's My day (and the Work calendar on top of My day > Work) ----------
 Same items as before (mdItemsFor: calendar, family calendar, learning, routines, work, to-dos, dinner).
-Needs-you strip on top, one filter row (All, Work, Meetings, Family, Torah, Clear) for Day, Week and Month,
-Day = hour grid in four collapsible bands. Classification is by keywords only and fails toward Family:
+Needs-you strip on top, one filter row (All, Work, Personal, Clear) for Day, Week and Month,
+Day = hour grid in four collapsible bands. Two kinds only, Work and Personal; it fails toward Personal:
 Work only from the Work list, a calendar named Work, the word "work" in a title, or the server's
 work_keywords setting. Kids' school items the server marks hidden never show (the server also never sends them). */
-var PL_FILTERS = [['all', 'All'], ['work', 'Work'], ['meet', 'Meetings'], ['family', 'Family'], ['torah', 'Torah'], ['clear', 'Clear']];
+var PL_FILTERS = [['all', 'All'], ['work', 'Work'], ['personal', 'Personal'], ['clear', 'Clear']];
 var PL_BANDS = [['morning', 'Morning', 360, 720], ['afternoon', 'Afternoon', 720, 1020], ['evening', 'Evening', 1020, 1260], ['night', 'Night', 1260, 1440]];
-var PL_COLOR = { work: ['#E8F0FE', '#1967D2'], meet: ['#F3E8FD', '#8430CE'], torah: ['#FEF7E0', '#B06000'], family: ['#E6F4EA', '#137333'] };
+var PL_COLOR = { work: ['#E8F0FE', '#1967D2'], personal: ['#E6F4EA', '#137333'] };
 var PL_H = 44;
 /* pl-class:start (unit tested on its own) */
 var PL_TORAH_RE = /\b(shacharit|shacharis|shachris|mincha|minchah|maariv|ma'ariv|arvit|kollel|chavruta|chavrusa|chavrutah|chavrusah|chavrusa|shiur|shiurim|daf|daf yomi|parasha|parashah|parsha|parshah|sedra|learning|aish kodesh|esh kodesh|gemara|gemora|mishna|mishnah|mishnayos|halacha|halachah|chumash|tehillim|tanya|mussar|musar|rambam|beis medrash|beis midrash|beit midrash|bais medrash|davening|daven|tefila|tefilla|tefillah|shul|seder|limud|torah|mesechta|siyum)\b/i;
-var PL_MEET_RE = /\b(meeting|meetings|mtg|call|calls|zoom|webex|interview|1:1)\b/i;
-var PL_LINK_RE = /(zoom\.us|meet\.google\.com|teams\.microsoft\.com|webex\.com)/i;
 var PL_WORK_RE = /\bwork\b/i, PL_NOTWORK_RE = /\b(home\s?work|work\s?out|workout|house\s?work|needle\s?work)\b/i;
 function plWordHit(text, words) {
 var t = ' ' + String(text || '').toLowerCase().replace(/[^a-z0-9\u0590-\u05ff]+/g, ' ') + ' ';
 return (words || []).some(function (w) { w = String(w || '').toLowerCase().replace(/[^a-z0-9\u0590-\u05ff]+/g, ' ').trim(); return w.length > 1 && t.indexOf(' ' + w + ' ') >= 0; });
 }
-/* -> { c: 'work' | 'torah' | 'family', meet: bool }. Anything unclear is family (never work). */
+/* -> 'work' | 'personal'. Anything unclear is personal (never work). Torah titles and items naming a kid are never Work by keywords. */
 function plClassify(it, workWords, kids) {
 var k = it.kind || '', t = String(it.title || ''), all = [t, it.where, it.sub, it.details].join(' ');
-if (k === 'wk') return { c: 'work', meet: false };
-if (k === 'ln') return { c: 'torah', meet: false };
-var timed = k === 'ev' || k === 'rt';
-var meet = k === 'ev' && (PL_MEET_RE.test(t) || PL_LINK_RE.test(all) || /\s<>\s/.test(t) || (+it.attendees || 0) > 1);
-if (!timed) return { c: 'family', meet: false };                    // to-dos, dinner, grocery: household, never work
-if (PL_TORAH_RE.test(t)) return { c: 'torah', meet: meet };
-var kidNamed = plWordHit(all, kids);   // names a kid: keywords alone never make it Work (IEPs, therapy, school forms)
-if (k === 'ev' && (/\bwork\b/i.test(String(it.cal || '')) || (!kidNamed && ((PL_WORK_RE.test(t) && !PL_NOTWORK_RE.test(t)) || plWordHit(t, workWords))))) return { c: 'work', meet: meet };
-return { c: 'family', meet: meet };
+if (k === 'wk') return 'work';
+if (k !== 'ev') return 'personal';                                  // learning, routines, to-dos, dinner, grocery
+if (PL_TORAH_RE.test(t)) return 'personal';
+if (/\bwork\b/i.test(String(it.cal || ''))) return 'work';
+if (plWordHit(all, kids)) return 'personal';                        // names a kid (IEPs, therapy, school forms)
+return (PL_WORK_RE.test(t) && !PL_NOTWORK_RE.test(t)) || plWordHit(t, workWords) ? 'work' : 'personal';
 }
 function plMatch(it, f) {
 if (f === 'clear') return false;
-if (f === 'all' || !f) return true;
-if (f === 'meet') return !!it.plm;
-return it.plc === f;
+if (f === 'work' || f === 'personal') return it.plc === f;
+return true;                                                         // all (and anything unknown)
 }
 /* pl-class:end */
 function plOn() { return portalOn() && isParent(state.viewer); }
@@ -3462,7 +3455,7 @@ function plItems(date, memo) {
 var k = mdYmd(date); if (memo && memo[k]) return memo[k];
 var words = (state.data && state.data.workWords) || [], kidList = (state.data && state.data.kids) || [];
 var its = mdItemsFor(date, k === mdYmd(mdToday())).filter(function (it) { return it.kind !== 'gr' && it.kind !== 'ck' && it.kind !== 'sc' && !plHiddenKid(it); });
-its.forEach(function (it) { var c = plClassify(it, words, kidList); it.plc = c.c; it.plm = c.meet; it.topic = it.topic || ''; });
+its.forEach(function (it) { it.plc = plClassify(it, words, kidList); it.topic = it.topic || ''; });
 if (memo) memo[k] = its;
 return its;
 }
@@ -3581,7 +3574,6 @@ var b = gcBlock(e.it, 'gc-ev'), ht = (e.en - e.st) * PL_H / 60;
 b.style.top = ((e.st - lo) * PL_H / 60) + 'px'; b.style.height = Math.max(20, ht - 2) + 'px';
 b.style.left = (e.col * 100 / e.cols) + '%'; b.style.width = 'calc(' + (100 / e.cols) + '% - 2px)';
 if (ht < 40) b.classList.add('is-short');
-if (e.it.plm) b.classList.add('is-meet');
 lane.appendChild(b);
 });
 if (isTd && nowM >= lo && nowM < hi) { var ln = el('div', 'gc-now'); ln.style.top = ((nowM - lo) * PL_H / 60) + 'px'; ln.setAttribute('aria-hidden', 'true'); lane.appendChild(ln); }
@@ -3590,7 +3582,7 @@ grid.appendChild(lane); wrap.appendChild(grid);
 root.appendChild(wrap);
 if (mode === 'work') return;   // the work calendar is one colour
 var lg = el('p', 'pl-legend');
-[['work', 'Work'], ['meet', 'Meeting'], ['torah', 'Torah'], ['family', 'Family']].forEach(function (x) { var sp = el('span'), i = el('i'); i.style.background = PL_COLOR[x[0]][1]; sp.appendChild(i); sp.appendChild(document.createTextNode(x[1])); lg.appendChild(sp); });
+[['work', 'Work'], ['personal', 'Personal']].forEach(function (x) { var sp = el('span'), i = el('i'); i.style.background = PL_COLOR[x[0]][1]; sp.appendChild(i); sp.appendChild(document.createTextNode(x[1])); lg.appendChild(sp); });
 root.appendChild(lg);
 }
 function renderHome() {
