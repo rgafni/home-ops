@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-B4UpSqzs12PnbdYA4U8Rh1Y+Qy+C2v7Koo4Hc/aXgkg=' 'sha256-wa+AduYcWrg+F2ifzr4zGsep8ZcHOGqmd7ahMoJphCM=' 'sha256-rxRAMaDy92yxrft5g0pN9dQcYm/GvhQY7zrl6XVizS8='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-B4UpSqzs12PnbdYA4U8Rh1Y+Qy+C2v7Koo4Hc/aXgkg=' 'sha256-wa+AduYcWrg+F2ifzr4zGsep8ZcHOGqmd7ahMoJphCM=' 'sha256-TRMqk70N4kWHe0STw7kn1FScc1NN76EXmmzesRLx9sA='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -5215,6 +5215,9 @@ root.appendChild(foldCard(sc, 'otSess', 3, '.ot-sess:not(.is-past)'));
 var all = el('button', 'ot-all', 'All providers'); all.type = 'button'; all.id = 'otAll';
 all.addEventListener('click', function () { otGo({ view: 'list', title: 'All providers', all: true, prev: { view: 'main' } }); });
 root.appendChild(all);
+var rep = el('button', 'ot-all', 'TTG reports'); rep.type = 'button'; rep.id = 'otReports'; rep.style.marginTop = '0';
+rep.addEventListener('click', function () { window.open('https://rgafni.github.io/ttg-ops/#/reports', '_blank', 'noopener'); });
+root.appendChild(rep);
 if (W) {
 var wl = el('button', 'ot-all', 'Your week'); wl.type = 'button'; wl.id = 'otWeek';
 wl.style.marginTop = '0';
