@@ -361,8 +361,12 @@
   }
   /* v20.2: the banner shows on the first visit only (kept for that whole visit, or after a Chrome hand-off). After that,
      "Get the app" lives in the name badge sheet. */
-  var SEEN = 'homeops.install.seen';
+  var SEEN = 'homeops.install.seen', DONE = 'homeops.install.done';   // v23: closed once or installed: never shown again on this phone
+  function bannerDone() { try { return localStorage.getItem(DONE) === '1'; } catch (e) { return false; } }
+  function markDone() { try { localStorage.setItem(DONE, '1'); } catch (e) {} }
+  window.addEventListener('appinstalled', markDone);
   function firstVisit(AI) {
+    if (bannerDone()) return false;
     try {
       if (AI && AI.handedOff) return true;
       if (sessionStorage.getItem(SEEN) === '1') return true;
@@ -371,7 +375,8 @@
     } catch (e) { return true; }
   }
   function renderIosHint(AI) {
-    if (inApp() || iosHintDone()) { removeBanner(); return; }
+    if (inApp()) markDone();
+    if (inApp() || iosHintDone() || bannerDone()) { removeBanner(); return; }
     var app = $('app');
     if (!app || app.hidden) { setTimeout(renderBanner, 400); return; }
     if (!firstVisit(AI)) { removeBanner(); return; }
@@ -386,7 +391,7 @@
         '<button type="button" class="inst__btn" id="installBtn">Show me</button>' +
         '<button type="button" class="inst__x" id="installX" aria-label="Close">\u2715</button>';
       app.insertBefore(bar, app.firstChild);
-      $('installX').addEventListener('click', function () { try { localStorage.setItem(IOS_HINT, '1'); } catch (e) {} removeBanner(); });
+      $('installX').addEventListener('click', function () { try { localStorage.setItem(IOS_HINT, '1'); } catch (e) {} markDone(); removeBanner(); });
       $('installBtn').addEventListener('click', function () { AI.showSheet(); });
     }
     bar.className = 'inst inst--ios' + (safari ? '' : ' inst--ios-other');
@@ -396,7 +401,8 @@
     var AI = $i();
     if (!AI || !token) { removeBanner(); return; }
     if (AI.ios) { renderIosHint(AI); return; }
-    if (!AI.visible()) { removeBanner(); return; }
+    if (AI.standalone()) markDone();
+    if (!AI.visible() || bannerDone()) { removeBanner(); return; }
     var app = $('app');
     if (!app || app.hidden) { setTimeout(renderBanner, 400); return; }
     if (!firstVisit(AI)) { removeBanner(); return; }
@@ -411,7 +417,7 @@
         '<button type="button" class="inst__btn" id="installBtn">Install app</button>' +
         '<button type="button" class="inst__x" id="installX" aria-label="Not now">\u2715</button>';
       app.insertBefore(bar, app.firstChild);
-      $('installX').addEventListener('click', function () { AI.snooze(7); removeBanner(); });
+      $('installX').addEventListener('click', function () { AI.snooze(7); markDone(); removeBanner(); });
       $('installBtn').addEventListener('click', function () { AI.install(); });
     }
     bar.className = 'inst inst--' + AI.mode() + (AI.handedOff ? ' inst--hi' : '');
