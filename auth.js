@@ -359,10 +359,22 @@
     return navigator.standalone === true || !!(window.matchMedia && (matchMedia('(display-mode: standalone)').matches ||
       matchMedia('(display-mode: fullscreen)').matches || matchMedia('(display-mode: minimal-ui)').matches));
   }
+  /* v20.2: the banner shows on the first visit only (kept for that whole visit, or after a Chrome hand-off). After that,
+     "Get the app" lives in the name badge sheet. */
+  var SEEN = 'homeops.install.seen';
+  function firstVisit(AI) {
+    try {
+      if (AI && AI.handedOff) return true;
+      if (sessionStorage.getItem(SEEN) === '1') return true;
+      if (localStorage.getItem(SEEN) === '1') return false;
+      localStorage.setItem(SEEN, '1'); sessionStorage.setItem(SEEN, '1'); return true;
+    } catch (e) { return true; }
+  }
   function renderIosHint(AI) {
     if (inApp() || iosHintDone()) { removeBanner(); return; }
     var app = $('app');
     if (!app || app.hidden) { setTimeout(renderBanner, 400); return; }
+    if (!firstVisit(AI)) { removeBanner(); return; }
     var safari = !!AI.iosSafari;
     var bar = $('installBar');
     if (!bar) {
@@ -387,6 +399,7 @@
     if (!AI.visible()) { removeBanner(); return; }
     var app = $('app');
     if (!app || app.hidden) { setTimeout(renderBanner, 400); return; }
+    if (!firstVisit(AI)) { removeBanner(); return; }
     var sub = AI.mode() === 'handoff' ? 'Opens in Chrome first' : 'Opens like an app';
     var bar = $('installBar');
     if (!bar) {

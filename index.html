@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-B4UpSqzs12PnbdYA4U8Rh1Y+Qy+C2v7Koo4Hc/aXgkg=' 'sha256-wa+AduYcWrg+F2ifzr4zGsep8ZcHOGqmd7ahMoJphCM=' 'sha256-X8WqJE9ylN8X580Z/YcMbV+4HxC996rKliCt7qYCpss='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-B4UpSqzs12PnbdYA4U8Rh1Y+Qy+C2v7Koo4Hc/aXgkg=' 'sha256-wa+AduYcWrg+F2ifzr4zGsep8ZcHOGqmd7ahMoJphCM=' 'sha256-rWYjFDgodqk2x2YBpkqudAV5KPf2VBZaKymiMHP3BhY='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -1308,6 +1308,8 @@ color: var(--muted); font-size: var(--fs-nav); font-weight: 700; }
 #screen-budget .sec{flex-wrap:wrap;row-gap:2px}#screen-budget .sec__title{white-space:nowrap}
 #screen-grocery .shop-for{flex-wrap:wrap;overflow-x:visible}
 .td-imp{align-self:flex-start;margin-top:8px}.td__imp{color:#B06000}
+.upl-coach{position:static;display:grid;max-width:none;margin:12px 16px 0;padding:10px 14px;background:var(--accent-soft);color:var(--ink);box-shadow:none;width:calc(100% - 32px)}.upl-coach::before{display:none}.upl-coach b{font-size:var(--fs-meta)}.tip-in{font-weight:700}.tip-x{font-size:12px;color:var(--muted)}
+#meInstall{margin-bottom:8px}
 .md-note{margin:14px 0 0}
 #meWorkCal{margin-bottom:14px}
 </style>
@@ -1603,6 +1605,7 @@ window.__bootShow('Couldn\u2019t load', String((e && e.reason && e.reason.messag
 <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="meTitle">
 <div class="sheet__top"><button type="button" class="navback" id="meBack" aria-label="Back"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><h3 class="sheet__title" id="meTitle">Signed in</h3></div>
 <p class="me__line" id="meLine"></p>
+<button type="button" class="btn btn--quiet btn--block" id="meInstall" hidden>Get the app</button>
 <button type="button" class="btn btn--quiet btn--block" id="meNotYou">Not you? Paste your link</button>
 <form class="me__form" id="meForm" hidden autocomplete="off">
 <label class="me__lbl" for="meLink">Paste your personal link</label>
@@ -2625,10 +2628,12 @@ var me = shopMe() || state.viewer || '';
 $('meTitle').textContent = 'Signed in as ' + dn(me);
 $('meLine').textContent = 'This phone uses ' + dn(me) + '\u2019s personal link. Everything you add is saved as ' + dn(me) + '.';
 $('meForm').hidden = true; $('meNotYou').hidden = false; $('meMsg').hidden = true; $('meLink').value = '';
+var AI = window.AppInstall; $('meInstall').hidden = !(AI && !AI.standalone());   // v20.2: the banner shows once; install stays here
 sheetShow('meBg');
 }
 $('viewerBadge').addEventListener('click', openMe);
 $('meBack').addEventListener('click', function () { sheetHide('meBg'); });
+$('meInstall').addEventListener('click', function () { var AI = window.AppInstall; sheetHide('meBg'); if (AI) { if (AI.ios) AI.showSheet(); else AI.install(); } });
 $('meBg').addEventListener('click', function (e) { if (e.target === $('meBg')) sheetHide('meBg'); });
 $('meNotYou').addEventListener('click', function () { $('meNotYou').hidden = true; $('meForm').hidden = false; $('meLink').focus(); });
 $('meForm').addEventListener('submit', function (ev) {
@@ -2646,7 +2651,8 @@ function switchedNotice() {
 try {
 if (localStorage.getItem('homeops.switched') !== '1') return;
 localStorage.removeItem('homeops.switched');
-toast('Signed in as ' + dn(shopMe()));
+var n = el('div', 'upl-coach tip-in', 'Signed in as ' + dn(shopMe())); n.setAttribute('role', 'status');   // v20.2: in the page, not over the tabs
+inlineTop(n); setTimeout(function () { n.remove(); }, 6000);
 } catch (e) {}
 }
 function openStoreSheet() {
@@ -3124,7 +3130,7 @@ grid.appendChild(lane); sc.appendChild(grid); wrap.appendChild(sc); root.appendC
 setTimeout(function () { sc.scrollTop = Math.max(0, (nowM - 60) * GC_H / 60); }, 0);
 }
 /* ---------- v18 kid links: My day checklists fold, schedule in blocks, Calendar screen (Day / Week / Month) ---------- */
-function kidCal() { return gcKid() && state.data.profiles[state.viewer] === 'male'; }   // v18 is for the son's link only
+function kidCal() { return gcKid(); }   // v20.2: every kid link gets the Calendar (asked for kids, not one kid); toddlers and grown-ups never
 function ckSection(root, name, items) {
 state.ckOpen = state.ckOpen || {};
 var open = !!state.ckOpen[name], done = items.filter(function (i) { return i.done; }).length;
@@ -3152,7 +3158,7 @@ var w = el('div', 'kd-blk' + (nowM >= b[1] && nowM < b[2] ? ' is-now' : '')); w.
 mdGroup(w, b[0], b[1] > 0 && b[2] < 1440 ? gcHm(b[1]) + ' to ' + gcHm(b[2]) : (b[1] > 0 ? 'From ' + gcHm(b[1]) : 'Until ' + gcHm(b[2])), its, true);
 root.appendChild(w);
 });
-if (!kidCal()) return;   // only the son's link has a Calendar tab
+if (!kidCal()) return;   // only kid links have a Calendar tab
 var go = el('button', 'btn btn--quiet kd-cal', 'Open calendar'); go.type = 'button';
 go.addEventListener('click', function () { state._navTouched = true; state.cal = { v: 'day', d: mdYmd(mdToday()) }; showScreen('cal'); });
 root.appendChild(go);
@@ -6056,21 +6062,22 @@ host.appendChild(c);
 }
 function uplCoach(show) {   // one-time hint under the new camera button
 var k = 'homeops.uplcoach', tip = $('uplCoach');
-var seen = false; try { seen = localStorage.getItem(k) === '1'; } catch (e) {}
+var seen = false; try { seen = localStorage.getItem(k) === '1' && sessionStorage.getItem(k) !== '1'; } catch (e) {}
 if (!show || seen) { if (tip) tip.remove(); return; }
 if (tip) return;
 tip = el('button', 'upl-coach'); tip.type = 'button'; tip.id = 'uplCoach';
 tip.appendChild(el('b', '', 'New: Upload'));
-tip.appendChild(el('span', '', 'Snap a receipt, list or form. We\u2019ll add it for you.'));
-function gone() { try { localStorage.setItem(k, '1'); } catch (e) {} tip.remove(); document.removeEventListener('pointerdown', gone, true); }
-tip.addEventListener('click', gone);
-setTimeout(function () { document.addEventListener('pointerdown', gone, true); }, 0);   // any tap anywhere dismisses it for good
-$('topBar').appendChild(tip);
+tip.appendChild(el('span', '', 'Tap the camera up top to add a receipt, list or form.'));
+try { localStorage.setItem(k, '1'); sessionStorage.setItem(k, '1'); } catch (e) {}   // v20.2: shown on one visit only; it sits in the page, so no tap-anywhere (that moved the page under your finger)
+tip.appendChild(el('span', 'tip-x', 'Tap to hide'));
+tip.addEventListener('click', function () { try { sessionStorage.removeItem(k); } catch (e) {} tip.remove(); });
+inlineTop(tip);   // v20.2: sits in the page under the header, never over it
 }
+function inlineTop(node) { var app = $('app'), bar = $('installBar'); app.insertBefore(node, bar && bar.parentNode === app ? bar.nextSibling : app.firstChild); }
 function openUpload() {
 var sec = uplCurrentSection();
 if (!uplAllowedHere(sec)) return;
-try { localStorage.setItem('homeops.uplcoach', '1'); } catch (e) {} var tip = $('uplCoach'); if (tip) tip.remove();
+try { localStorage.setItem('homeops.uplcoach', '1'); sessionStorage.removeItem('homeops.uplcoach'); } catch (e) {} var tip = $('uplCoach'); if (tip) tip.remove();
 upl = { section: sec, files: [], busy: false, forWho: sec === 'closet' ? state.person : state.viewer };
 $('uplTitle').textContent = UPL[sec].title;
 $('uplHint').textContent = UPL[sec].hint;
