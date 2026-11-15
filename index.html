@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-B4UpSqzs12PnbdYA4U8Rh1Y+Qy+C2v7Koo4Hc/aXgkg=' 'sha256-wa+AduYcWrg+F2ifzr4zGsep8ZcHOGqmd7ahMoJphCM=' 'sha256-46qpZWjr6QdQZPXfGBKtCTUA0cjofSJclmsardndfJQ='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-B4UpSqzs12PnbdYA4U8Rh1Y+Qy+C2v7Koo4Hc/aXgkg=' 'sha256-wa+AduYcWrg+F2ifzr4zGsep8ZcHOGqmd7ahMoJphCM=' 'sha256-X8WqJE9ylN8X580Z/YcMbV+4HxC996rKliCt7qYCpss='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -1305,6 +1305,9 @@ color: var(--muted); font-size: var(--fs-nav); font-weight: 700; }
 #screen-dinners .course--wide{grid-column:1/-1}
 #screen-dinners .course label{flex:none;text-transform:uppercase;letter-spacing:.04em}
 #screen-dinners .course .field{flex:none;height:48px}
+#screen-budget .sec{flex-wrap:wrap;row-gap:2px}#screen-budget .sec__title{white-space:nowrap}
+#screen-grocery .shop-for{flex-wrap:wrap;overflow-x:visible}
+.td-imp{align-self:flex-start;margin-top:8px}.td__imp{color:#B06000}
 .md-note{margin:14px 0 0}
 #meWorkCal{margin-bottom:14px}
 </style>
@@ -1505,9 +1508,12 @@ window.__bootShow('Couldn\u2019t load', String((e && e.reason && e.reason.messag
 <form class="card td-form" id="todoAddForm" autocomplete="off" novalidate>
 <input class="field" id="newTodo" type="text" placeholder="New to-do" aria-label="New to-do" autocomplete="off" enterkeyhint="done" maxlength="300">
 <div class="td-hint" id="todoHint" hidden></div>
+<div class="td-more" id="todoMore" hidden>
 <div class="td-lbl" id="todoForL">For</div><div class="td-for" id="todoFor" role="group" aria-labelledby="todoForL"></div>
 <label class="td-lbl" for="todoDue">Need it by</label><input class="field" id="todoDue" type="datetime-local">
 <div class="td-lbl">Remind parents (up to 2, optional) <span class="gtag">not sent yet</span></div><div class="td-rem" id="todoRem"></div>
+<button type="button" class="chip td-imp" id="todoImp" aria-pressed="false">Important</button>
+</div>
 <button type="submit" class="btn btn--block" id="addTodoBtn">Add to-do</button>
 </form>
 <div id="todoList"></div>
@@ -1774,7 +1780,7 @@ function budRange(ymd, long) {
 var s = parseYmd(ymd); if (!s) return '';
 var a = new Date(s.getFullYear(), s.getMonth(), s.getDate() - 1), e = new Date(s.getFullYear(), s.getMonth(), s.getDate() + 6);
 var r = MONTHS[a.getMonth()] + ' ' + a.getDate() + ' to ' + MONTHS[e.getMonth()] + ' ' + e.getDate();
-return long ? 'Motzei Shabbos ' + MONTHS[a.getMonth()] + ' ' + a.getDate() + ' \u2013 Shabbos ' + MONTHS[e.getMonth()] + ' ' + e.getDate() : r;
+return long ? 'Motzei Shabbos ' + MONTHS[a.getMonth()] + ' ' + a.getDate() + ' to Shabbos ' + MONTHS[e.getMonth()] + ' ' + e.getDate() : r;
 }
 function todayLabel() {
 var d = new Date();
@@ -2492,7 +2498,7 @@ toast('Couldn\u2019t save. Try again');
 }
 /* Past weeks: a list of archived weeks; tap one to see it (back arrow / system back steps out one level). */
 var bwk = { weeks: [] };
-function bwkRange(w) { var e = bwDate(w); e.setDate(e.getDate() + 6); return bwShort(w) + ' \u2013 ' + BW_MON[e.getMonth()] + ' ' + e.getDate(); }
+function bwkRange(w, long) { var x = shabbosWeek(w); return !x ? '' : long ? 'Motzei Shabbos ' + x.from + ' to Shabbos ' + x.to : x.from + ' to ' + x.to; }   // v20.1: motzei Shabbos to Shabbos (key = Sunday)
 function bwkList() {
 var b = state.data && state.data.bought, body = $('bwkBody');
 $('bwkTitle').textContent = 'Past weeks';
@@ -2512,7 +2518,7 @@ body.appendChild(list);
 }
 function bwkOpen(week) {
 var body = $('bwkBody');
-$('bwkTitle').textContent = bwkRange(week);
+$('bwkTitle').textContent = bwkRange(week, true);
 body.innerHTML = '';
 body.appendChild(el('p', 'bw__empty', 'Loading\u2026'));
 if (!navHas('bwkWeek')) navPush('bwkWeek', bwkList);
@@ -2522,7 +2528,7 @@ if (!navHas('bwkWeek')) return;
 body.innerHTML = '';
 var tot = res && res.money && res.total ? el('p', 'bw__sc', 'Food spent: ' + bwMoney(res.total)) : null;
 if (tot) body.appendChild(tot);
-if (!res || !bwCount(res)) body.appendChild(el('p', 'bw__empty', 'Nothing that week.'));
+if (!res || !bwCount(res)) body.appendChild(el('p', 'bw__empty', (tot ? 'No items were checked off that week.' : 'Nothing that week.')));
 else body.appendChild(bwStoresEl(res, true));
 },
 function () { body.innerHTML = ''; body.appendChild(el('p', 'bw__empty', 'Couldn\u2019t load that week')); });
@@ -3593,7 +3599,7 @@ if (folded) {
 if (ev.length) wrap.appendChild(el('p', 'pl-band__sum', ev.slice(0, 3).map(function (e) { return hmShort(('0' + Math.floor(e.st / 60)).slice(-2) + ':' + ('0' + e.st % 60).slice(-2)) + ' ' + e.it.title; }).join(' \u00b7 ') + (ev.length > 3 ? ' \u00b7 +' + (ev.length - 3) : '')));
 return;
 }
-if (mode !== 'work') { plList(wrap, ev); return; }   // v20 My day: full titles, same-time items stack (no side-by-side squeeze)
+plList(wrap, ev); return;   // v20/v20.1 My day and Work: full titles, same-time items stack (no side-by-side squeeze)
 gcLayout(ev);
 var grid = el('div', 'gc-grid pl-grid'), lane = el('div', 'gc-lane'), hrs = (hi - lo) / 60;
 grid.style.height = (hrs * PL_H) + 'px';
@@ -3994,7 +4000,8 @@ else if (counts.have && counts.have >= names.length) top.appendChild(pill('All s
 b.appendChild(top);
 var txt = el('div');
 txt.appendChild(el('div', 'cat__title', c.title));
-txt.appendChild(el('div', 'cat__items', (c.items.length ? c.items : names).join(' \u00b7 ')));
+var sub = (c.items.length ? c.items : names).join(' \u00b7 ');
+if (sub.toLowerCase() !== String(c.title).toLowerCase()) txt.appendChild(el('div', 'cat__items', sub));   // v20.1: no "Shoes / Shoes"
 b.appendChild(txt);
 b.addEventListener('click', function () {
 state.closetCat = c.id; renderCloset(); window.scrollTo(0, 0);
@@ -4354,12 +4361,25 @@ if (!t.done && due < today) red = 'overdue (' + DAY_KEYS[d.getDay()] + ')';
 else if (!t.done && due === today) red = 'due today' + tl;
 else bits.push('by ' + (ahead >= 0 && ahead < 7 ? DAY_KEYS[d.getDay()] : MONTHS[d.getMonth()] + ' ' + d.getDate()) + tl);
 }
-if (!bits.length && !red) return null;
-var m = el('span', 'td__meta', bits.join(' \u00b7 '));
+var imp = String(t.priority || '').toLowerCase() === 'high' && !t.done;
+if (!bits.length && !red && !imp) return null;
+var m = el('span', 'td__meta', '');
+if (imp) { m.appendChild(el('b', 'td__imp', 'Important')); if (bits.length || red) m.appendChild(document.createTextNode(' \u00b7 ')); }
+m.appendChild(document.createTextNode(bits.join(' \u00b7 ')));
 if (red) { if (bits.length) m.appendChild(document.createTextNode(' \u00b7 ')); m.appendChild(el('b', 'td__late', red)); }
 return m;
 }
-state.tdFor = [];
+state.tdFor = []; state.tdImp = false;
+function tdMoreSync() {   // v20.1: For / Need it by / reminders open once you start a to-do, so the list stays in view
+var f = $('todoAddForm'), r = $('todoRem');
+var on = !!($('newTodo').value.trim() || state.tdFor.length || state.tdImp || $('todoDue').value || r.querySelector('input') || f.contains(document.activeElement) || Date.now() - (state._tdPress || 0) < 500);
+$('todoMore').hidden = !on;
+}
+$('todoAddForm').addEventListener('pointerdown', function () { state._tdPress = Date.now(); });
+$('todoAddForm').addEventListener('focusin', tdMoreSync);
+$('todoAddForm').addEventListener('focusout', function () { setTimeout(tdMoreSync, 250); });
+$('newTodo').addEventListener('input', tdMoreSync);
+$('todoImp').addEventListener('click', function () { state.tdImp = !state.tdImp; this.classList.toggle('is-active', state.tdImp); this.setAttribute('aria-pressed', state.tdImp ? 'true' : 'false'); });
 function renderTodoFor() {
 var box = $('todoFor'); if (!box || !state.data) return;
 var me = state.viewer, prof = state.data.profiles || {};
@@ -4391,15 +4411,16 @@ if (!p.title) { input.focus(); return; }
 var who = state.tdFor.slice(); if (p.who && who.indexOf(p.who) < 0) who.push(p.who); if (!who.length) who = [state.viewer];
 var dv = String($('todoDue').value || '').match(/^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})/), rem = [];
 $('todoRem').querySelectorAll('input').forEach(function (i) { var m = String(i.value || '').match(/^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})/); if (m) rem.push(m[1] + ' ' + m[2]); });
-var t = { id: tdNewId(), title: p.title, who: who.join(', '), from: shopMe() || state.viewer, due: dv ? dv[1] : '', dueTime: dv ? dv[2] : '', remind: rem, type: 'family', priority: 'normal',
+var pri = state.tdImp ? 'high' : 'normal';
+var t = { id: tdNewId(), title: p.title, who: who.join(', '), from: shopMe() || state.viewer, due: dv ? dv[1] : '', dueTime: dv ? dv[2] : '', remind: rem, type: 'family', priority: pri,
 notes: '', done: false, _pending: true, _ord: 1e9 + (++tdSeq) };
 state.data.todos = state.data.todos || [];
 state.data.todos.push(t);
-input.value = ''; $('todoDue').value = ''; $('todoRem').innerHTML = ''; state.tdFor = []; renderTodoFor(); renderTodoRem();
+input.value = ''; $('todoDue').value = ''; $('todoRem').innerHTML = ''; state.tdFor = []; state.tdImp = false; $('todoImp').classList.remove('is-active'); $('todoImp').setAttribute('aria-pressed', 'false'); renderTodoFor(); renderTodoRem();
 $('todoHint').hidden = true;
 input.focus();
 renderTodo();
-tdRun(t.id, 'addTodo', [{ id: t.id, title: t.title, who: t.who, due: t.due, dueTime: t.dueTime, remind: rem, priority: 'normal', type: 'family' }],
+tdRun(t.id, 'addTodo', [{ id: t.id, title: t.title, who: t.who, due: t.due, dueTime: t.dueTime, remind: rem, priority: pri, type: 'family' }],
 function () { t._pending = false; saveCache(); var r = document.querySelector('.td[data-id="' + t.id + '"]'); if (r) r.classList.remove('is-pending'); },
 function () {
 state.data.todos = state.data.todos.filter(function (x) { return x !== t; });
@@ -6494,7 +6515,9 @@ state.goals.edit = ''; toast(label + ' goal: ' + money0(v) + ' a week'); loadGoa
 }, function (e) { btn.disabled = false; toast((e && e.message && /^Only /.test(e.message)) ? e.message : 'Couldn\u2019t save. Try again'); G.goals[key] = old; });
 }
 function renderGoalWeeks(root, L) {
-var G = state.goals.data, ws = G.weeks;
+var G = state.goals.data, ws = G.weeks, last = 0;
+ws.forEach(function (w, i) { if (w.current || w.food.state !== 'none' || w.amazon.state !== 'none') last = i; });
+ws = ws.slice(0, last + 1);   // v20.1: no long tail of empty weeks before anything was logged
 var past = ws.filter(function (w) { return !w.current; });
 function cnt(k, ok) { return past.filter(function (w) { return w[k].state !== 'none' && w[k].state !== 'partial' && (w[k].state === 'over') !== ok; }).length; }
 var nf = cnt('food', true), na = cnt('amazon', true), of = cnt('food', false), oa = cnt('amazon', false);
