@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-B4UpSqzs12PnbdYA4U8Rh1Y+Qy+C2v7Koo4Hc/aXgkg=' 'sha256-wa+AduYcWrg+F2ifzr4zGsep8ZcHOGqmd7ahMoJphCM=' 'sha256-rWYjFDgodqk2x2YBpkqudAV5KPf2VBZaKymiMHP3BhY='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-B4UpSqzs12PnbdYA4U8Rh1Y+Qy+C2v7Koo4Hc/aXgkg=' 'sha256-wa+AduYcWrg+F2ifzr4zGsep8ZcHOGqmd7ahMoJphCM=' 'sha256-L4kwIW5d2tCylqTx3lf7CeRZITx6EczzMRS67CfR2zM='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -1287,6 +1287,7 @@ color: var(--muted); font-size: var(--fs-nav); font-weight: 700; }
 .gro-items .row:not(:last-child){border-bottom:1px solid var(--line)}
 #screen-grocery .bw{margin-top:14px}
 .gshop{display:block;width:100%;min-height:48px;margin:10px 0 0;padding:10px 12px;border:1.5px solid var(--accent);border-radius:14px;background:#fff;color:var(--accent);font:inherit;font-weight:800;text-align:center}
+.gshop__note{margin:8px 2px 0;font-size:.86rem;line-height:1.35;color:#92400E;font-weight:600}
 .gtag{display:inline-block;margin-left:6px;padding:2px 6px;border-radius:6px;background:#FEF3C7;color:#92400E;font-size:.72rem;font-weight:800;vertical-align:middle;text-transform:none;letter-spacing:0}
 .td-form{display:flex;flex-direction:column;gap:6px;padding:14px 16px;margin:4px 0 12px}
 .td-form .field{flex:none;width:100%}
@@ -1464,7 +1465,8 @@ window.__bootShow('Couldn\u2019t load', String((e && e.reason && e.reason.messag
 <button type="button" class="btn" id="addBtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Add</button>
 </div>
 <div class="shop-for" id="shopFor" role="group" aria-label="Add for" hidden></div>
-<button type="button" class="gshop" id="goShopBtn" hidden>&#128227; I&rsquo;m going shopping at <span id="goShopStore"></span> <span class="gtag">not set up yet</span></button>
+<button type="button" class="gshop" id="goShopBtn" hidden>&#128227; I&rsquo;m going shopping at <span id="goShopStore"></span></button>
+<p class="gshop__note" id="goShopNote" role="status" hidden></p>
 <div class="more">
 <button type="button" class="more__toggle" data-more="morePanel" aria-expanded="false" aria-controls="morePanel">⋯ More <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
 <div class="more__panel" id="morePanel" hidden>
@@ -1758,12 +1760,12 @@ if (cls) e.className = cls;
 if (text != null) e.textContent = text;
 return e;
 }
-function toast(msg) {
+function toast(msg, ms) {
 var t = $('toast');
 t.textContent = msg;
 t.classList.add('is-show');
 clearTimeout(toast._t);
-toast._t = setTimeout(function () { t.classList.remove('is-show'); }, 1800);
+toast._t = setTimeout(function () { t.classList.remove('is-show'); }, ms || 1800);
 }
 function money(n) { return '$' + Math.round(Number(n) || 0); }
 function parseYmd(ymd) {
@@ -2307,7 +2309,22 @@ var b = state.data && state.data.bought, s = b && parseYmd(b.week); if (!s) retu
 var p = new Date(s.getFullYear(), s.getMonth(), s.getDate() - 7);
 openPastWeeks(); bwkOpen(p.getFullYear() + '-' + ('0' + (p.getMonth() + 1)).slice(-2) + '-' + ('0' + p.getDate()).slice(-2));
 });
-$('goShopBtn').addEventListener('click', function () { toast('Not set up yet. Nothing was sent.'); });   // v20 provisional: what it sends is still Abba's call
+/* v21: "I'm going shopping" texts Mama (and anyone in Settings shopping_text_to) the open list for this store.
+Only this tap sends it, after a confirm. The server picks the numbers (private sheet tab) and holds texts on Shabbos/Yom Tov. */
+function goShopNote(msg) { var n = $('goShopNote'); n.textContent = msg || ''; n.hidden = !msg; }
+$('goShopBtn').addEventListener('click', function () {
+var store = state.selectedStore, n = storeItems(store).filter(function (x) { return !x.checked; }).length;
+goShopNote('');
+askSheet('Going shopping at ' + store + '?', 'This sends a text to Mama (and anyone else on the shopping text list) with the open ' + store + ' list: ' + plural(n, 'item') + '.', 'Send text', function () {
+var b = $('goShopBtn'); b.disabled = true;
+run('goingShopping', [{ store: store }], function (r) {
+b.disabled = false;
+r = r || {};
+if (r.sent && r.sent.length && !(r.missing && r.missing.length) && !(r.failed && r.failed.length)) toast(r.dryRun ? 'Test mode: nothing was sent.' : r.message);
+else goShopNote(r.message || 'Nothing was sent.');
+}, function () { b.disabled = false; goShopNote('Couldn\u2019t send. Check the connection and try again. Nothing was sent.'); });
+}, true);
+});
 /* Lists dashboard: every store with something still to buy, in the usual store order. Tap = open that list. */
 function renderShopDash(sc) {
 renderBought();
@@ -2736,6 +2753,7 @@ $('shopOpen').hidden = !state.listOpen;
 renderStorePicker();
 var store = state.selectedStore;
 $('goShopBtn').hidden = !shopIsBuyer();
+if ($('goShopStore').textContent !== store) goShopNote('');
 $('goShopStore').textContent = store;
 renderShopFor();
 $('clearStoreBtn').textContent = shopIsBuyer() ? 'Clear ' + store + ' list' : 'Clear my ' + store + ' items';
@@ -2868,11 +2886,12 @@ serverDelete('deleteItem', [s.id], my);
 }
 /* ---------- Confirm sheet (Clear list / Clear week only) ---------- */
 var sheetCb = null;
-function askSheet(title, line, okLabel, onOk) {
+function askSheet(title, line, okLabel, onOk, calm) {
 sheetCb = onOk;
 $('sheetTitle').textContent = title;
 $('sheetLine').textContent = line || '';
 $('sheetOk').textContent = okLabel || 'Clear';
+$('sheetOk').classList.toggle('btn--danger', !calm);   // v21: a "Send text" is not a delete
 $('sheetBackdrop').classList.add('is-open');
 $('sheetBackdrop').setAttribute('aria-hidden', 'false');
 if (!navHas('confirm')) navPush('confirm', confirmHide);
@@ -3055,9 +3074,10 @@ return (it.tlabel ? 'About ' : '') + gcHm(st) + (en > 0 ? ' \u2013 ' + gcHm(en) 
 /* v18: important items (tests, quizzes, essays, finals, GSAT, open houses; title or School type) get red and a flag */
 var GC_IMP_RE = /\b(quiz(zes)?|tests?|exams?|essays?|finals?|midterms?|gsat|open[ -]?houses?)\b/i;
 function gcImp(it) { return !it.isDefault && (!!it.big || GC_IMP_RE.test(String(it.title || '') + ' ' + String(it.sub || ''))); }
+function gcImpShown(it) { return gcImp(it) && (!gcKid() || kidV18()); }   // v21: no test flags on the daughter's link
 function gcFlag() { var f = el('span', 'gc-flag'); f.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 22V3h12l-2 4.5L17 12H7v10z"/></svg>'; return f; }
 function gcBlock(it, cls) {
-var v18 = kidCal(), imp = v18 && gcImp(it);                         // v18 look only on the son's link
+var v18 = kidV18(), imp = v18 && gcImp(it);                         // v18 look only on the son's link
 var b = el('button', cls + (it.done ? ' is-done' : '') + (imp ? ' is-imp' : '') + (v18 && it.isDefault ? ' is-def' : '')); b.type = 'button';
 var c = gcColor(it); b.style.background = c[0]; b.style.color = c[1]; b.style.borderColor = c[1];
 var tt = el('span', 'gc-ev__t'); if (imp) tt.appendChild(gcFlag()); tt.appendChild(document.createTextNode(it.title)); b.appendChild(tt);
@@ -3131,6 +3151,7 @@ setTimeout(function () { sc.scrollTop = Math.max(0, (nowM - 60) * GC_H / 60); },
 }
 /* ---------- v18 kid links: My day checklists fold, schedule in blocks, Calendar screen (Day / Week / Month) ---------- */
 function kidCal() { return gcKid(); }   // v20.2: every kid link gets the Calendar (asked for kids, not one kid); toddlers and grown-ups never
+function kidV18() { return gcKid() && state.data.profiles[state.viewer] === 'male'; }   // v21: test flags + folding checklists are the son's look only (v20.2 gave them to the daughter by mistake)
 function ckSection(root, name, items) {
 state.ckOpen = state.ckOpen || {};
 var open = !!state.ckOpen[name], done = items.filter(function (i) { return i.done; }).length;
@@ -3203,7 +3224,8 @@ root.appendChild(seg);
 if (V === 'week') calWeek(root, calAdd(cur, -cur.getDay()), tdy, memo);
 else if (V === 'month') calMonth(root, cur, tdy, memo);
 else gcRender(root, calItems(cur, memo), cur);
-if (V !== 'day') { var lg = el('p', 'cal-legend'); lg.appendChild(el('i')); lg.appendChild(document.createTextNode('Important: tests, quizzes, essays, finals, GSAT, open houses')); root.appendChild(lg); }
+if (V !== 'day' && kidV18()) {   // v21: the flag key is the son's look only
+var lg = el('p', 'cal-legend'); lg.appendChild(el('i')); lg.appendChild(document.createTextNode('Important: tests, quizzes, essays, finals, GSAT, open houses')); root.appendChild(lg); }
 }
 function calWeek(root, ws, tdy, memo, fn, go) {
 fn = fn || calItems; go = go || calGo;
@@ -3252,11 +3274,11 @@ var wrap = el('div', 'gc'), g = el('div', 'gcm');
 DAY_SHORT.forEach(function (d) { g.appendChild(el('span', 'gcm-dow', d.charAt(0))); });
 for (var i = 0; i < rows * 7; i++) (function (d) {
 var ymd = mdYmd(d), its = fn(d, memo).filter(function (it) { return !it.recurring; });
-its.sort(function (a, b) { return (gcImp(b) ? 1 : 0) - (gcImp(a) ? 1 : 0); });
+its.sort(function (a, b) { return (gcImpShown(b) ? 1 : 0) - (gcImpShown(a) ? 1 : 0); });
 var c = el('button', 'gcm-cell' + (d.getMonth() !== cur.getMonth() ? ' is-out' : '') + (ymd === tdy ? ' is-today' : '')); c.type = 'button';
 c.appendChild(el('span', 'gcm-n', String(d.getDate())));
 its.slice(0, 2).forEach(function (it) {
-var imp = gcImp(it), x = el('span', 'gcm-chip' + (imp ? ' is-imp' : '')), col = gcColor(it);
+var imp = gcImpShown(it), x = el('span', 'gcm-chip' + (imp ? ' is-imp' : '')), col = gcColor(it);
 x.style.background = col[0]; x.style.color = col[1]; x.style.borderColor = col[1];
 if (imp) x.appendChild(gcFlag()); x.appendChild(document.createTextNode(it.title)); c.appendChild(x);
 });
@@ -3762,7 +3784,7 @@ order.forEach(function (name) {
 var its = by[name].sort(function (a, b) { return a.sort - b.sort; }).map(function (c) {
 return { kind: 'ck', time: '', title: c.item, doable: true, done: !!c.done, tap: function () { scSync('checklistCheck', [c.id, !c.done]); } };
 });
-if (kidCal()) ckSection(root, name, its); else mdGroup(root, name, 'Today', its, false);
+if (kidV18()) ckSection(root, name, its); else mdGroup(root, name, 'Today', its, false);
 });
 }
 function scTools(root) {
@@ -4356,7 +4378,7 @@ inp.addEventListener('blur', function () { finish(true); });
 inp.focus();
 try { inp.setSelectionRange(inp.value.length, inp.value.length); } catch (e) {}
 }
-/* v20: who it is for (several), when it is needed, up to two parent reminder times (saved; nothing sends them yet). */
+/* v20: who it is for (several), when it is needed, up to two reminder times. v21: each reminder is texted to the "For" people at that time (not on Shabbos/Yom Tov). */
 function tdWho(t) { return String((t && t.who) || '').split(',').map(function (x) { return x.trim(); }).filter(Boolean); }
 function tdMeta(t) {
 var w = tdWho(t).map(dn).join(', '), bits = [], due = /^\d{4}-\d{2}-\d{2}$/.test(t.due || '') ? t.due : '', red = '';
@@ -4427,7 +4449,10 @@ $('todoHint').hidden = true;
 input.focus();
 renderTodo();
 tdRun(t.id, 'addTodo', [{ id: t.id, title: t.title, who: t.who, due: t.due, dueTime: t.dueTime, remind: rem, priority: pri, type: 'family' }],
-function () { t._pending = false; saveCache(); var r = document.querySelector('.td[data-id="' + t.id + '"]'); if (r) r.classList.remove('is-pending'); },
+function (res) {
+t._pending = false; saveCache(); var r = document.querySelector('.td[data-id="' + t.id + '"]'); if (r) r.classList.remove('is-pending');
+if (res && res.remindMissing && res.remindMissing.length) toast('Saved. No number for ' + res.remindMissing.join(' and ') + ' yet, so that reminder can\u2019t be texted.', 5000);   // v21
+},
 function () {
 state.data.todos = state.data.todos.filter(function (x) { return x !== t; });
 if (tdQueue[t.id]) tdQueue[t.id].splice(1);   // nothing else for a to-do that never saved
