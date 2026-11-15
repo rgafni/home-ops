@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-B4UpSqzs12PnbdYA4U8Rh1Y+Qy+C2v7Koo4Hc/aXgkg=' 'sha256-wa+AduYcWrg+F2ifzr4zGsep8ZcHOGqmd7ahMoJphCM=' 'sha256-H7WrgiGEGc249SBRCX0PJmn3ZHn8GhLgK/KVC0pSEN8='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-B4UpSqzs12PnbdYA4U8Rh1Y+Qy+C2v7Koo4Hc/aXgkg=' 'sha256-wa+AduYcWrg+F2ifzr4zGsep8ZcHOGqmd7ahMoJphCM=' 'sha256-LJx/aZ/R6Tl1HbtPFu4OJnzQxsKMAjq61TF9oziTxac='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -2343,7 +2343,7 @@ var p = new Date(s.getFullYear(), s.getMonth(), s.getDate() - 7);
 openPastWeeks(); bwkOpen(p.getFullYear() + '-' + ('0' + (p.getMonth() + 1)).slice(-2) + '-' + ('0' + p.getDate()).slice(-2));
 });
 /* v21: "I'm going shopping" texts Mama (and anyone in Settings shopping_text_to) the open list for this store.
-Only this tap sends it, after a confirm. The server picks the numbers (private sheet tab); texts go out any day (Parent1, Nov 15 2026). */
+Only this tap sends it, after a confirm. The server picks the numbers (private sheet tab); texts go out any day (rule change Nov 15 2026). */
 function goShopNote(msg) { var n = $('goShopNote'); n.textContent = msg || ''; n.hidden = !msg; }
 $('goShopBtn').addEventListener('click', function () {
 var store = state.selectedStore, n = storeItems(store).filter(function (x) { return !x.checked; }).length;
