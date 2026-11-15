@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-B4UpSqzs12PnbdYA4U8Rh1Y+Qy+C2v7Koo4Hc/aXgkg=' 'sha256-wa+AduYcWrg+F2ifzr4zGsep8ZcHOGqmd7ahMoJphCM=' 'sha256-6P/F6sm4qVIGED97e3VPHuI//BYOMaqgH9n9j9+Y/cc='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-B4UpSqzs12PnbdYA4U8Rh1Y+Qy+C2v7Koo4Hc/aXgkg=' 'sha256-wa+AduYcWrg+F2ifzr4zGsep8ZcHOGqmd7ahMoJphCM=' 'sha256-aHwOiCfsfAg9EXQ9OGbLcuxhTLQyuYAhgDf8deTCIA0='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -1433,7 +1433,7 @@ window.__bootShow('Couldn\u2019t load', String((e && e.reason && e.reason.messag
 <main id="app" hidden>
 <!-- MY DAY (personal; the server only sends it for the right link) -->
 <section class="screen" id="screen-school" hidden><div id="schoolRoot"></div></section>
-<section class="screen" id="screen-home" hidden><div id="homeRoot"></div></section>
+<section class="screen" id="screen-home" hidden><div id="callsSlot" hidden></div><div id="homeRoot"></div></section>
 <section class="screen" id="screen-cal" hidden><div id="calRoot"></div></section>
 <section class="screen" id="screen-me" hidden>
 <div class="seg me-seg" id="meSeg" role="tablist" aria-label="My day">
@@ -3691,6 +3691,7 @@ function renderHome() {
 var root = $('homeRoot'); if (!root) return;
 root.textContent = '';
 if (!state.data) return;
+callsCard();
 if (plOn()) { plRender(root, 'plan'); return; }   // v19: the portal person's My day is the Plan view
 var today = mdToday(), items = mdItemsFor(today, true), soon = mdComing(today);
 var doable = items.filter(function (i) { return i.doable; }), done = doable.filter(function (i) { return i.done; }).length;
@@ -4845,6 +4846,17 @@ getPortal/portal* calls for anyone else, so nothing personal ever reaches other 
 var PORTAL_CACHE_KEY = 'homeops.data.portal.' + (window.__homeopsKeyId || 'app');
 var DAY_SHORT = DAY_KEYS;
 function portalOn() { return !!(state.data && state.data.portal); }
+/* Calls card (Wake me up, Goodnight): portal person only; lazy-loaded from the shared Calls card, which checks its own key. */
+function callsCard() {
+var s = $('callsSlot'); if (!s) return;
+if (!portalOn()) { s.hidden = true; s.textContent = ''; return; }
+if (window.CallsCard) { window.CallsCard.mount(s, 'home'); return; }
+if (state._ccLoad) return; state._ccLoad = 1;
+var t = document.createElement('script'); t.src = '/hub/calls-card.js?v=1';
+t.onload = function () { if (portalOn() && window.CallsCard) window.CallsCard.mount($('callsSlot'), 'home'); };
+t.onerror = function () { state._ccLoad = 0; };
+document.head.appendChild(t);
+}
 function savePortalCache() {
 try { if (state.portal && portalOn()) localStorage.setItem(PORTAL_CACHE_KEY, JSON.stringify({ at: Date.now(), data: state.portal })); } catch (e) {}
 }
