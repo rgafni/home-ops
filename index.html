@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-B4UpSqzs12PnbdYA4U8Rh1Y+Qy+C2v7Koo4Hc/aXgkg=' 'sha256-wa+AduYcWrg+F2ifzr4zGsep8ZcHOGqmd7ahMoJphCM=' 'sha256-LJx/aZ/R6Tl1HbtPFu4OJnzQxsKMAjq61TF9oziTxac='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client 'sha256-B4UpSqzs12PnbdYA4U8Rh1Y+Qy+C2v7Koo4Hc/aXgkg=' 'sha256-wa+AduYcWrg+F2ifzr4zGsep8ZcHOGqmd7ahMoJphCM=' 'sha256-YuQlnHxdtlrHMztMFAy4cRMmy6HkSgjWw+wUGr/Ob70='; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
 <link rel="preload" href="fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -77,14 +77,10 @@ font-size: 1.05rem; border-radius: 50%; }
 .gc-ev.is-def{opacity:.8}
 .nav:has(#calNavBtn:not([hidden])) .nav__item{font-size:.6875rem;letter-spacing:-.01em}
 .nav:has(#schoolNavBtn:not([hidden])) .nav__item{font-size:.625rem;letter-spacing:-.02em}.nav:has(#schoolNavBtn:not([hidden])) .nav__pill{max-width:44px}
-.sv-seg{margin:4px 0 12px}.sv-qa{display:flex;align-items:center;gap:8px;min-height:56px;padding:0 6px 0 14px;border:1.5px solid var(--line-strong,#D3D9E2);border-radius:16px;background:var(--paper)}
-.sv-qa:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(38,92,218,.2)}.sv-qa input{flex:1;min-width:0;height:52px;border:0;background:none;font:inherit;font-size:1.0625rem;font-weight:600;color:var(--ink);outline:none}
+.sv-qa{display:flex;align-items:center;gap:8px;min-height:56px;padding:0 6px 0 14px;border:1.5px solid var(--line-strong,#D3D9E2);border-radius:16px;background:var(--paper)}
+.sv-qa input:focus,.sv-qa input:focus-visible{outline:none;box-shadow:none}.sv-qa:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(38,92,218,.2)}.sv-qa input{flex:1;min-width:0;height:52px;border:0;background:none;font:inherit;font-size:1.0625rem;font-weight:600;color:var(--ink);outline:none}
 .sv-qa button{flex:none;width:44px;height:44px;border:0;border-radius:12px;background:var(--accent);color:#fff;display:grid;place-items:center}.sv-qa button:disabled{background:var(--surface);color:var(--faint,#8A94A6)}
-.sv-prev{margin:10px 0 0;padding:12px 14px;border-radius:16px;background:var(--accent-soft)}.sv-prev__l{font-size:.75rem;font-weight:800;color:var(--accent-dark);text-transform:uppercase;letter-spacing:.05em}
-.sv-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.sv-pill{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border:1px solid #CFDCFA;border-radius:999px;background:#fff;font:inherit;font-size:.9375rem;font-weight:800;color:var(--ink)}
-.sv-pill small{font-size:.6875rem;font-weight:800;color:var(--muted);text-transform:uppercase}.sv-pick{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.sv-pick input{min-width:0;flex:1 1 140px;height:44px}
 .sv-hint{margin:8px 2px 0;font-size:.8125rem;color:var(--muted);font-weight:600}
-.sv-h{display:flex;align-items:baseline;justify-content:space-between;margin:18px 2px 8px}.sv-h b{font-size:1.25rem;font-weight:800;letter-spacing:-.01em}.sv-h span{font-size:.875rem;color:var(--muted);font-weight:700}
 .sv-sec{margin:20px 2px 8px;font-size:.8125rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 .sv-card{padding:0;overflow:hidden}.sv-row{display:flex;align-items:center;gap:12px;min-height:58px;padding:8px 12px 8px 10px;border-top:1px solid var(--line)}.sv-row:first-child{border-top:0}
 .sv-ck{flex:none;width:44px;height:44px;border:0;background:none;display:grid;place-items:center;padding:0}.sv-ck i{width:30px;height:30px;border-radius:50%;border:2.5px solid #B7C0CF;display:grid;place-items:center}
@@ -93,21 +89,14 @@ font-size: 1.05rem; border-radius: 50%; }
 .sv-row.is-done .sv-t{color:var(--faint,#8A94A6);text-decoration:line-through}.sv-cls{display:inline-block;padding:1px 8px;margin-right:6px;border-radius:999px;background:var(--surface);color:var(--muted);font-size:.75rem;font-weight:800}
 .sv-tag{flex:none;padding:3px 9px;border-radius:999px;background:#FDF0E6;color:#A34A17;font-size:.75rem;font-weight:800}
 .sv-del{flex:none;height:40px;padding:0 12px;border:0;border-radius:10px;background:#FCE8EE;color:#951838;font:inherit;font-weight:800;font-size:.875rem}
-.sv-big{display:flex;gap:12px;align-items:center;padding:12px 14px;margin-top:8px;border:1px solid #F3D9C4;border-radius:18px;background:#FDF0E6}.sv-big__d{flex:none;width:54px;height:54px;border-radius:14px;background:#fff;display:grid;place-content:center;text-align:center;line-height:1;color:#A34A17}
-.sv-big__d small{font-size:.6875rem;font-weight:800;text-transform:uppercase}.sv-big__d b{display:block;font-size:1.375rem;font-weight:800}.sv-big__t{font-size:1.0625rem;font-weight:800}.sv-big__m{font-size:.875rem;font-weight:600;color:#7A4A2A}
 .sv-ok{display:flex;gap:12px;align-items:center;margin-top:14px;padding:14px;border:1px solid #CBE8D6;border-radius:18px;background:#E6F5EC;color:#145C39}.sv-ok__i{flex:none;width:44px;height:44px;border-radius:50%;background:#fff;display:grid;place-items:center;color:#1E7A4E}
 .sv-ok b{display:block;font-size:1.0625rem;font-weight:800}.sv-ok span{font-size:.875rem;font-weight:600}
 .sv-lh{display:flex;align-items:center;gap:10px;padding:12px 14px 4px}.sv-lh b{flex:1;font-size:1.0625rem;font-weight:800}.sv-lh span{font-size:.875rem;font-weight:700;color:var(--muted)}
 .sv-bar{height:6px;margin:6px 14px 4px;border-radius:999px;background:var(--surface);overflow:hidden}.sv-bar i{display:block;height:100%;background:var(--accent)}
 .sv-add{display:flex;align-items:center;gap:8px;width:100%;min-height:48px;padding:0 14px;border:0;border-top:1px solid var(--line);background:none;color:var(--accent);font:inherit;font-weight:800;font-size:.9375rem;text-align:left}
 .sv-addf{display:flex;gap:8px;padding:8px 10px;border-top:1px solid var(--line)}.sv-addf .field{flex:1;min-width:0;height:44px}.sv-addf .btn{height:44px;padding:0 14px}
-.sv-days{display:flex;gap:5px;margin:2px 0 4px}.sv-day{flex:1;min-width:0;padding:7px 0 8px;border:1px solid var(--line);border-radius:14px;background:var(--paper);text-align:center}.sv-day small{display:block;font-size:.6875rem;font-weight:800;color:var(--muted);text-transform:uppercase}
-.sv-day b{display:block;font-size:1.125rem;font-weight:800;margin:1px 0 3px}.sv-dots{display:flex;justify-content:center;gap:3px;height:6px}.sv-dots i{width:6px;height:6px;border-radius:50%;background:var(--accent)}.sv-dots i.t{background:#B4531E}
-.sv-day.is-on{background:var(--accent);border-color:var(--accent);color:#fff}.sv-day.is-on small{color:#D6E2FF}.sv-day.is-on .sv-dots i{background:#fff}
-.sv-ch{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;display:flex;align-items:center;gap:8px;padding:12px 14px 4px;font-size:1rem;font-weight:800}.sv-ch>span{flex:1}.sv-ch button{border:0;background:none;color:var(--accent);font:inherit;font-size:.8125rem;font-weight:800;min-height:40px;padding:0 4px}
-.sv-wr{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:6px 14px;border:0;background:none;font:inherit;color:var(--ink);text-align:left}.sv-wr .d{flex:none;width:38px;font-size:.8125rem;font-weight:800;color:var(--muted)}.sv-wr .t{flex:1;min-width:0;font-size:1rem;font-weight:700;overflow-wrap:anywhere}
-.sv-wr.is-done .t{color:var(--faint,#8A94A6);text-decoration:line-through}.sv-div{border-top:1px solid var(--line)}.sv-empty{margin:14px 2px;color:var(--muted);font-weight:600}
 #scUndo{z-index:47}
+.sv-opts{margin:8px 0 0;padding:10px 12px;border-radius:16px;background:var(--accent-soft)}.sv-orow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-height:44px}.sv-orow+.sv-orow{margin-top:4px}.sv-olab{flex:0 0 100%;font-size:.75rem;font-weight:800;color:var(--accent-dark);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}.sv-opts input.field{width:100%;height:44px;margin-top:6px}.sv-late{color:#A31B3C}
 .cal-bar{display:flex;align-items:center;gap:6px;margin:8px 0 6px}
 .cal-bar__nav{flex:0 0 44px;height:44px;border:1px solid #DADCE0;border-radius:50%;background:#fff;color:#3C4043;font:700 20px/1 Roboto,system-ui,sans-serif}
 .cal-bar__t{flex:1;min-width:0;margin:0;text-align:center;font:700 16px Roboto,-apple-system,system-ui,sans-serif;color:#3C4043;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -3785,8 +3774,6 @@ else { if (f.list != null) c.list = f.list; if (f.item != null) c.item = f.item;
 cl.forEach(function (y) { if (y.id === a[0]) y.done = !!a[1]; });
 } else if (e.fn === 'checklistDelete') {
 S.checklists = cl = cl.filter(function (y) { return y.id !== a[0]; });
-} else if (e.fn === 'schoolRenameClass') {
-it.forEach(function (y) { if (String(y.cls).toLowerCase() === String(a[0]).toLowerCase()) y.cls = a[1]; });
 }
 });
 }
@@ -3818,11 +3805,10 @@ return { kind: 'ck', time: '', title: c.item, doable: true, done: !!c.done, tap:
 if (kidV18()) ckSection(root, name, its); else mdGroup(root, name, 'Today', its, false);
 });
 }
-/* ---------- v22 School tab (kid links only; mockups approved Nov 15) ----------
-Kids open on School. One line adds an item ("math test fri ch 4" is understood), one tap marks it done (Undo).
-Full view: Today / This week, big things coming, week by class. Simple view (server says view 'simple'):
-due tomorrow, quick add, All set card and the daily checklists. Classes are learned from what the kid types
-(no preset list) and can be renamed (schoolRenameClass, own rows only). Same School / Checklists rows as before. */
+/* ---------- School tab (kid links only) ----------
+One box adds an item ("math test fri" is understood; Due and Test options sit under it). One list shows what is late,
+then each day in order. One tap on the circle marks it done (Undo); tap the words to delete. Daily lists sit at the
+bottom. Classes are learned from what the kid types and show small on the row. Same School / Checklists rows as before. */
 /* scparse:start */
 var SC_KW = { test: 'Test', exam: 'Test', final: 'Test', midterm: 'Test', quiz: 'Quiz', project: 'Project', essay: 'Project', paper: 'Project', report: 'Project', presentation: 'Project', homework: 'Homework', hw: 'Homework' };
 var SC_SUBJ = 'math,english,science,history,hebrew,chumash,gemara,navi,mishna,mishnah,halacha,spanish,french,art,bio,biology,chemistry,chem,physics,reading,writing,spelling,ela,ivrit,parsha,dikduk,geography,music,computers,algebra,geometry,grammar,vocab,latin'.split(',');
@@ -3883,7 +3869,6 @@ return { kind: kind || 'Homework', cls: cls, due: due || scNextSchool(today), du
 }
 /* scparse:end */
 function scKid() { return !!(gcKid() && state.data && state.data.schoolApi); }
-function scView() { return 'full'; }
 function scItems() { return ((state.school && state.school.items) || []).filter(function (x) { return x && x.id && x.title; }); }
 function scClasses() {
 var n = {}, name = {};
@@ -3937,57 +3922,46 @@ else { var t = scTag(x.kind); if (t) r.appendChild(t); }
 return r;
 }
 function scCard(list, metaFn) { var c = el('div', 'card sv-card'); list.forEach(function (x) { c.appendChild(scRow(x, metaFn ? metaFn(x) : '')); }); return c; }
+/* One box adds an item. Typing "math test fri" fills the options below it; tap an option to change it. */
 function scQuick(root, today) {
 var S = state.sc, f = el('form', 'sv-qa'); f.setAttribute('autocomplete', 'off');
-var inp = el('input'); inp.id = 'scQuick'; inp.type = 'text'; inp.enterKeyHint = 'done';
-inp.placeholder = 'Add: math test fri';
-inp.setAttribute('aria-label', 'Add school work, like: math test fri'); inp.value = S.text || '';
+var inp = el('input'); inp.id = 'scQuick'; inp.type = 'text'; inp.enterKeyHint = 'done'; inp.maxLength = 120;
+inp.placeholder = 'Add homework or a test';
+inp.setAttribute('aria-label', 'Add homework or a test'); inp.value = S.text || '';
 var go = el('button'); go.type = 'submit'; go.innerHTML = svg('plus'); go.setAttribute('aria-label', 'Add'); go.disabled = !S.text.trim();
 f.appendChild(inp); f.appendChild(go); root.appendChild(f);
 var pv = el('div'); root.appendChild(pv);
 function cur() {
-var p = scParse(S.text, scClasses(), today), o = S.ov;
-if (o.kind) p.kind = o.kind;
-if (o.cls != null) p.cls = o.cls;
-if (o.due) p.due = parseYmd(o.due) || p.due;
+var p = scParse(S.text, scClasses(), today);
+if (S.test != null) p.kind = S.test ? 'Test' : 'Homework';
+if (S.due) p.due = parseYmd(S.due) || p.due;
 return p;
 }
+function chip(lab, on, fn) { var b = el('button', 'chip chip--sm' + (on ? ' is-active' : ''), lab); b.type = 'button'; b.setAttribute('aria-pressed', on ? 'true' : 'false'); b.addEventListener('click', fn); return b; }
 function paint() {
 pv.textContent = ''; go.disabled = !S.text.trim();
 if (!S.text.trim()) return;
-var p = cur(), box = el('div', 'sv-prev'), pills = el('div', 'sv-pills');
-box.appendChild(el('div', 'sv-prev__l', 'Got it'));
-function pill(lab, val, key) {
-var b = el('button', 'sv-pill'); b.type = 'button'; b.appendChild(el('small', '', lab)); b.appendChild(document.createTextNode(val));
-b.setAttribute('aria-label', lab + ': ' + val + '. Tap to change');
-b.addEventListener('click', function () {
-if (key === 'kind') { S.ov.kind = SC_KINDS[(SC_KINDS.indexOf(p.kind) + 1) % SC_KINDS.length]; S.edit = ''; }
-else S.edit = S.edit === key ? '' : key;
-paint();
-});
-pills.appendChild(b);
+var p = cur(), due = mdYmd(p.due), box = el('div', 'sv-opts'), r1 = el('div', 'sv-orow'), d = scNextSchool(today), seen = false;
+r1.appendChild(el('span', 'sv-olab', 'Due'));
+for (var i = 0; i < 5; i++) {
+(function (day) {
+var y = mdYmd(day), on = y === due; seen = seen || on;
+r1.appendChild(chip(day.getTime() === scAdd(today, 1).getTime() ? 'Tomorrow' : SC_DN[day.getDay()].slice(0, 3), on, function () { S.due = y; S.pick = false; paint(); }));
+})(d);
+d = scNextSchool(d);
 }
-pill('What', p.kind, 'kind');
-pill('Class', p.cls || 'None', 'cls');
-pill('Due', scDayLab(mdYmd(p.due), today), 'due');
-box.appendChild(pills);
-if (S.edit === 'cls') {
-var pk = el('div', 'sv-pick');
-scClasses().concat(['']).forEach(function (c) {
-var b = el('button', 'chip chip--sm' + (c === p.cls ? ' is-active' : ''), c || 'No class'); b.type = 'button';
-b.addEventListener('click', function () { S.ov.cls = c; S.edit = ''; paint(); });
-pk.appendChild(b);
-});
-var ni = el('input', 'field'); ni.placeholder = 'New class'; ni.setAttribute('aria-label', 'New class');
-ni.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); var v = ni.value.trim().slice(0, 60); if (v) { S.ov.cls = scCap(v); S.edit = ''; paint(); } } });
-pk.appendChild(ni); box.appendChild(pk);
-} else if (S.edit === 'due') {
-var dk = el('div', 'sv-pick'), di = el('input', 'field'); di.type = 'date'; di.value = mdYmd(p.due); di.setAttribute('aria-label', 'Due date');
-di.addEventListener('change', function () { if (/^\d{4}-\d{2}-\d{2}$/.test(di.value)) { S.ov.due = di.value; S.edit = ''; paint(); } });
-dk.appendChild(di); box.appendChild(dk);
+r1.appendChild(chip(seen ? 'Other' : scDayLab(due, today), !seen || S.pick, function () { S.pick = !S.pick; paint(); }));
+box.appendChild(r1);
+if (!seen || S.pick) {
+var di = el('input', 'field'); di.type = 'date'; di.value = due; di.setAttribute('aria-label', 'Due date'); di.min = mdYmd(today);
+di.addEventListener('change', function () { if (/^\d{4}-\d{2}-\d{2}$/.test(di.value)) { S.due = di.value; S.pick = false; paint(); } });
+box.appendChild(di);
 }
+var r2 = el('div', 'sv-orow'), big = !!SC_BIG[p.kind];
+r2.appendChild(el('span', 'sv-olab', 'Is it a test?'));
+r2.appendChild(chip('Yes, test or quiz', big, function () { S.test = !big; paint(); }));
+box.appendChild(r2);
 pv.appendChild(box);
-pv.appendChild(el('p', 'sv-hint', 'Tap a part to change it. Press Add to save.'));
 }
 inp.addEventListener('input', function () { S.text = inp.value; paint(); });
 f.addEventListener('submit', function (e) {
@@ -3996,7 +3970,7 @@ var p = cur(); if (!S.text.trim() || !p.title) { inp.focus(); return; }
 if (!state.school) state.school = { items: [], checklists: [] };
 scSync('schoolSave', [{ id: 'sc-' + sqRand(5), kind: p.kind, cls: p.cls, title: p.title, due: mdYmd(p.due), time: '', done: false }]);
 toast('Added ' + p.title);
-S.text = ''; S.ov = {}; S.edit = ''; S.refocus = true; renderSchool();
+S.text = ''; S.due = ''; S.test = null; S.pick = false; S.refocus = true; renderSchool();
 });
 paint();
 }
@@ -4047,105 +4021,44 @@ f.addEventListener('submit', function (e) { e.preventDefault(); var t = it.value
 card.appendChild(f);
 if (state.sc.refocusList) { state.sc.refocusList = false; setTimeout(function () { it.focus(); }, 0); }
 }
-function scToday(root, today) {
-var T = mdYmd(today), nx = scNextSchool(today), NX = mdYmd(nx), its = scItems();
-var nxLab = Math.round((nx - today) / 864e5) === 1 ? 'tomorrow' : SC_DN[nx.getDay()];
-var late = its.filter(function (x) { return !x.done && x.due && x.due < T; });
-var tod = its.filter(function (x) { return x.due === T; });
-var next = its.filter(function (x) { return x.due > T && x.due <= NX; });
-var open = next.filter(function (x) { return !x.done; });
-if (late.length) { root.appendChild(el('div', 'sv-sec', 'Late')); root.appendChild(scCard(late, function (x) { return scDayLab(x.due, today); })); }
-if (tod.some(function (x) { return !x.done; })) { root.appendChild(el('div', 'sv-sec', 'Due today')); root.appendChild(scCard(tod)); }
-var later = its.filter(function (x) { return !x.done && x.due > NX; }).sort(function (a, b) { return a.due < b.due ? -1 : a.due > b.due ? 1 : 0; });
-if (!open.length) {
+/* The list: what is late, then every open day in order. Tests and quizzes carry an orange tag. */
+function scList(root, today) {
+var T = mdYmd(today), NX = mdYmd(scNextSchool(today)), its = scItems().filter(function (x) { return x.done ? x.due >= T : true; });
+its.sort(function (a, b) { return a.due < b.due ? -1 : a.due > b.due ? 1 : (a.done ? 1 : 0) - (b.done ? 1 : 0); });
+var openSoon = its.filter(function (x) { return !x.done && x.due <= NX; }).length;
+if (!openSoon) {
+var nxLab = NX === mdYmd(scAdd(today, 1)) ? 'tomorrow' : SC_DN[parseYmd(NX).getDay()];
+var ckLeft = ((state.school && state.school.checklists) || []).filter(function (c) { return !c.done; }).length;   // not "All set" while a list is unfinished
+var nu = its.filter(function (x) { return !x.done; })[0];
 var ok = el('div', 'sv-ok'), oi = el('span', 'sv-ok__i'); oi.innerHTML = svg('check'); ok.appendChild(oi);
-var ckLeft = ((state.school && state.school.checklists) || []).filter(function (c) { return !c.done; }).length;   // v23: not "All set" while a list is unfinished
 var tx = el('div'); tx.appendChild(el('b', '', (ckLeft ? 'No homework due ' : 'All set for ') + nxLab));
-var nu = later.filter(function (x) { return SC_BIG[x.kind]; })[0] || later[0];
-tx.appendChild(el('span', '', ckLeft ? 'Lists: ' + ckLeft + ' left' : nu ? 'Next up: ' + nu.title + ', ' + scDayLab(nu.due, today) : (its.length ? 'Nothing else coming up' : 'Type what you need to do, like: math test fri')));
+tx.appendChild(el('span', '', ckLeft ? 'Lists: ' + ckLeft + ' left' : nu ? 'Next: ' + nu.title + ', ' + scDayLab(nu.due, today) : 'Type what you need to do above.'));
 ok.appendChild(tx); root.appendChild(ok);
-if (next.length) root.appendChild(scCard(next)).style.marginTop = '10px';
-} else {
-var h = el('div', 'sv-h'); h.appendChild(el('b', '', 'Due ' + nxLab)); h.appendChild(el('span', '', open.length + ' left')); root.appendChild(h);
-root.appendChild(scCard(next));
 }
-{
-var lim = mdYmd(scAdd(today, 14)), big = later.filter(function (x) { return SC_BIG[x.kind] && x.due <= lim; }).slice(0, 3);
-if (big.length) {
-root.appendChild(el('div', 'sv-sec', 'Big things coming'));
-big.forEach(function (x) {
-var d = parseYmd(x.due), c = el('div', 'sv-big'), dd = el('div', 'sv-big__d');
-dd.appendChild(el('small', '', SC_DN[d.getDay()].slice(0, 3))); dd.appendChild(el('b', '', String(d.getDate()))); c.appendChild(dd);
-var t = el('div'); t.appendChild(el('div', 'sv-big__t', x.title));
-var dn2 = Math.round((d - today) / 864e5); t.appendChild(el('div', 'sv-big__m', (x.cls ? x.cls + ', ' : '') + 'in ' + dn2 + ' days'));
-c.appendChild(t); root.appendChild(c);
+var groups = [], by = {};
+its.forEach(function (x) {
+var k = x.due < T ? 'late' : x.due || 'none';
+if (!by[k]) { by[k] = []; groups.push(k); }
+by[k].push(x);
 });
-}
-}
-scLists(root);
-}
-function scWeek(root, today) {
-var start = scAdd(today, today.getDay() === 6 ? 1 : -today.getDay()), end = scAdd(start, 5), A = mdYmd(start), B = mdYmd(end), T = mdYmd(today);
-var its = scItems().filter(function (x) { return x.due >= A && x.due <= B; }).sort(function (a, b) { return a.due < b.due ? -1 : a.due > b.due ? 1 : 0; });
-var days = el('div', 'sv-days');
-for (var i = 0; i < 6; i++) {
-var d = scAdd(start, i), y = mdYmd(d), c = el('div', 'sv-day' + (y === T ? ' is-on' : '')), dots = el('div', 'sv-dots');
-c.appendChild(el('small', '', SC_DN[i].slice(0, 3))); c.appendChild(el('b', '', String(d.getDate())));
-its.filter(function (x) { return x.due === y && !x.done; }).slice(0, 4).forEach(function (x) { dots.appendChild(el('i', SC_BIG[x.kind] ? 't' : '')); });
-c.appendChild(dots); days.appendChild(c);
-}
-root.appendChild(days);
-var h = el('div', 'sv-sec'); h.textContent = 'By class'; root.appendChild(h); root.appendChild(el('p', 'sv-hint', 'Press and hold a class to rename it.'));
-if (!its.length) { root.appendChild(el('p', 'sv-empty', 'Nothing due this week.')); return; }
-var order = [], by = {};
-its.forEach(function (x) { var k = String(x.cls || '').trim(); if (!by[k]) { by[k] = []; order.push(k); } by[k].push(x); });
-order.sort(function (a, b) { return !a ? 1 : !b ? -1 : 0; });
-var card = el('div', 'card sv-card');
-order.forEach(function (k, n) {
-if (n) card.appendChild(el('div', 'sv-div'));
-var ch = el('div', 'sv-ch');
-if (state.sc.rename === k && k) {
-var f = el('form', 'sv-addf'), ri = el('input', 'field'), ok = el('button', 'btn', 'Save'); ok.type = 'submit'; ri.value = k; ri.setAttribute('aria-label', 'Rename ' + k);
-f.style.borderTop = '0'; f.style.padding = '0'; f.style.flex = '1'; f.appendChild(ri); f.appendChild(ok);
-f.addEventListener('submit', function (e) { e.preventDefault(); var v = ri.value.trim().slice(0, 60); state.sc.rename = ''; if (v && v !== k) scSync('schoolRenameClass', [k, v]); else renderSchool(); });
-ch.appendChild(f); setTimeout(function () { ri.focus(); ri.select(); }, 0);
-} else {
-ch.appendChild(el('span', '', k || 'No class'));
-if (k) { var lp = 0; ch.title = 'Press and hold to rename'; ch.addEventListener('pointerdown', function () { clearTimeout(lp); lp = setTimeout(function () { state.sc.rename = k; renderSchool(); }, 550); });
-['pointerup', 'pointerleave', 'pointercancel'].forEach(function (ev) { ch.addEventListener(ev, function () { clearTimeout(lp); }); }); ch.addEventListener('contextmenu', function (e) { e.preventDefault(); }); }
-}
-card.appendChild(ch);
-by[k].forEach(function (x) {
-var r = el('button', 'sv-wr' + (x.done ? ' is-done' : '')); r.type = 'button'; r.setAttribute('aria-pressed', x.done ? 'true' : 'false');
-r.appendChild(el('span', 'd', SC_DN[parseYmd(x.due).getDay()].slice(0, 3))); r.appendChild(el('span', 't', x.title));
-var t = scTag(x.kind); if (t) r.appendChild(t);
-r.addEventListener('click', function () { scDone(x); });
-card.appendChild(r);
+groups.forEach(function (k) {
+var lab = k === 'late' ? 'Late' : k === 'none' ? 'No date' : scDayLab(k, today);
+var h = el('div', 'sv-sec' + (k === 'late' ? ' sv-late' : ''), lab); root.appendChild(h);
+root.appendChild(scCard(by[k], function (x) { return k === 'late' ? scDayLab(x.due, today) : ''; }));
 });
-});
-root.appendChild(card);
 }
 function renderSchool() {
 var root = $('schoolRoot'); if (!root) return;
 if (!scKid()) { root.textContent = ''; return; }
-state.sc = state.sc || { tab: 'today', text: '', ov: {}, edit: '', open: '', rename: '', addList: '' };
+state.sc = state.sc || { text: '', due: '', test: null, pick: false, open: '', addList: '' };
 var keep = document.activeElement && document.activeElement.id === 'scQuick';
 root.textContent = '';
 if (!state.school) { root.appendChild(el('p', 'sv-empty', 'Loading\u2026')); return; }
 var today = mdToday();
-{
-var seg = el('div', 'seg sv-seg'); seg.setAttribute('role', 'tablist'); seg.setAttribute('aria-label', 'School views');
-[['today', 'Today'], ['week', 'This week']].forEach(function (v) {
-var b = el('button', 'seg__btn' + (state.sc.tab === v[0] ? ' is-active' : ''), v[1]); b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', state.sc.tab === v[0] ? 'true' : 'false');
-b.addEventListener('click', function () { state.sc.tab = v[0]; state.sc.open = ''; renderSchool(); });
-seg.appendChild(b);
-});
-root.appendChild(seg);
-}
-if (state.sc.tab === 'week') { scWeek(root, today); return; }
 scQuick(root, today);
 if (keep || state.sc.refocus) { state.sc.refocus = false; var q = $('scQuick'); if (q) { q.focus(); try { q.setSelectionRange(q.value.length, q.value.length); } catch (e) {} } }
-scToday(root, today);
+scList(root, today);
+scLists(root);
 }
 function loadMyDay() {
 loadSchool(false);
